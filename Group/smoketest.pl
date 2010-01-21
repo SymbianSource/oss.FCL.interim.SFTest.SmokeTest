@@ -18,6 +18,7 @@ mkpath "temp/smoketest/resource/general";
 mkpath "temp/smoketest/localisation/general";
 mkpath "temp/smoketest/bitmap/general";
 mkpath "temp/smoketest/ethernet/general";
+mkpath "temp/smoketest/web/general";
 
 my $epoc=$ENV{'EPOCROOT'} . "epoc32/";
 copy("smoketest.xml",												"temp/test.xml");
@@ -139,5 +140,9 @@ copy($epoc . "data/c/smoketest/imapitest.ini",						"temp/smoketest/general/imap
 copy($epoc . "release/winscw/udeb/MediaMgmtSmokeTestModule.dll",	"temp/smoketest/winscw_udeb/MediaMgmtSmokeTestModule.dll");
 copy($epoc . "winscw/c/smoketest/UI_MediaMgmtSmokeTestModule.cfg",  "temp/smoketest/general/UI_MediaMgmtSmokeTestModule.cfg");
 copy($epoc . "winscw/c/smoketest/MediaMgmtSmokeTestModule.cfg",   	"temp/smoketest/general/MediaMgmtSmokeTestModule.cfg");
+copy($epoc . "data/c/smoketest/web/loadtest2.html",					"temp/smoketest/web/general/loadtest2.html");
+copy($epoc . "data/c/smoketest/web/img8.jpg",						"temp/smoketest/web/general/img8.jpg");
+copy($epoc . "winscw/c/smoketest/ui_browser_control_smoke.cfg",   	"temp/smoketest/general/ui_browser_control_smoke.cfg");
+copy($epoc . "release/winscw/udeb/BrCtlApiTest.dll",				"temp/smoketest/winscw_udeb/BrCtlApiTest.dll");
 
 system("7z a -tzip smoketest.zip ./temp/*");

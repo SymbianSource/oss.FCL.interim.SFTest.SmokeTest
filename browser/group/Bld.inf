@@ -1,0 +1,41 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  ?Description
+*
+*/
+
+
+
+PRJ_PLATFORMS
+DEFAULT
+
+PRJ_TESTEXPORTS
+//../init/testframework.ini           /epoc32/winscw/c/TestFramework/testframework.ini
+
+../data/ui_browser_control_smoke.cfg	c:/smoketest/ui_browser_control_smoke.cfg
+
+../data/loadtest2.html 					c:/smoketest/web/loadtest2.html
+
+../data/img8.jpg						c:/smoketest/web/img8.jpg
+
+PRJ_EXPORTS
+// Nothing to do 
+
+PRJ_TESTMMPFILES
+BrCtlApiTest.mmp
+
+PRJ_MMPFILES
+// Nothing to do 
+
+//  End of File

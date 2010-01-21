@@ -48,7 +48,8 @@ LIBRARY	euser.lib
 LIBRARY efsrv.lib
 
 // LBS libraries.
-LIBRARY	lbsselflocate.lib
+//LIBRARY	lbsselflocate.lib
+LIBRARY lbs.lib
 LIBRARY	lbsloccommon.lib
 LIBRARY lbsassistancedata.lib
 LIBRARY lbsloggerapi.lib

@@ -1417,7 +1417,7 @@ EXPORT_C TUint32 CT_MsgUtilsEnumConverter::ConvertDesToBearerTypes(const TDesC& 
 
 	STR_CASE(KStrBearerTypeCdma2000)
 		{
-		bearerTypes = KCommDbBearerCdma2000;
+//		bearerTypes = KCommDbBearerCdma2000;
 		break;
 		}
 

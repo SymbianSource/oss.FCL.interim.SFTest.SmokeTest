@@ -104,13 +104,13 @@ _LIT(KFbsCompress,									"EFbsCompress");
 _LIT(KFbsMessBitmapBgCompress,						"EFbsMessBitmapBgCompress");
 _LIT(KFbsSetSystemDefaultTypefaceName,				"EFbsSetSystemDefaultTypefaceName");
 _LIT(KFbsGetAllBitmapHandles,						"EFbsGetAllBitmapHandles");
-_LIT(KFbsMessCreateLinkedTypeface,					"EFbsMessCreateLinkedTypeface");
+//_LIT(KFbsMessCreateLinkedTypeface,					"EFbsMessCreateLinkedTypeface");
 _LIT(KFbsMessSetHeapFail,							"EFbsMessSetHeapFail");
 _LIT(KFbsMessHeapCount,								"EFbsMessHeapCount");
 _LIT(KFbsMessSetHeapReset,							"EFbsMessSetHeapReset");
 _LIT(KFbsMessSetHeapCheck,							"EFbsMessSetHeapCheck");
 _LIT(KFbsMessHeap,									"EFbsMessHeap");
-_LIT(KFbsMessLinkedCache,							"EFbsMessLinkedCache");
+//_LIT(KFbsMessLinkedCache,							"EFbsMessLinkedCache");
 _LIT(KFbsMessBitmapClean,							"EFbsMessBitmapClean");
 /*@}*/
 
@@ -707,10 +707,10 @@ TBool CT_DataFbsSession::GetFbsMessage(const TDesC& aSection, TInt& aMessage)
 			{
 			aMessage = EFbsGetAllBitmapHandles;
 			}
-		else if ( fbsMessage==KFbsMessCreateLinkedTypeface )
+/*		else if ( fbsMessage==KFbsMessCreateLinkedTypeface )
 			{
 			aMessage = EFbsMessCreateLinkedTypeface;
-			}
+			} */
 		else if ( fbsMessage==KFbsMessSetHeapFail )
 			{
 			aMessage = EFbsMessSetHeapFail;
@@ -731,10 +731,10 @@ TBool CT_DataFbsSession::GetFbsMessage(const TDesC& aSection, TInt& aMessage)
 			{
 			aMessage = EFbsMessHeap;
 			}
-		else if ( fbsMessage==KFbsMessLinkedCache )
+/*		else if ( fbsMessage==KFbsMessLinkedCache )
 			{
 			aMessage = EFbsMessLinkedCache;
-			}
+			} */
 		else if ( fbsMessage==KFbsMessBitmapClean )
 			{
 			aMessage = EFbsMessBitmapClean;

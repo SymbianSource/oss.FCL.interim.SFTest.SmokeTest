@@ -65,7 +65,7 @@
 							<param component-path="smoketest\emailsettings" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -74,7 +74,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -83,7 +83,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -92,7 +92,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -101,7 +101,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -110,7 +110,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -119,7 +119,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -128,7 +128,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -137,7 +137,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -146,7 +146,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -155,7 +155,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -164,7 +164,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -173,7 +173,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -182,7 +182,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -191,7 +191,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -200,7 +200,7 @@
 							<param component-path="smoketest\10003a3f" />
 						</params>
 					</step>					
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -209,7 +209,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -218,7 +218,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -227,7 +227,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -236,7 +236,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -245,7 +245,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -254,7 +254,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -263,7 +263,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -272,7 +272,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -281,7 +281,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -290,7 +290,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -299,7 +299,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -308,7 +308,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -317,7 +317,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -326,7 +326,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -335,7 +335,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -344,7 +344,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -353,7 +353,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -362,7 +362,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -371,7 +371,7 @@
 							<param component-path="smoketest\resource" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -380,7 +380,7 @@
 							<param component-path="smoketest\localisation" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -389,7 +389,7 @@
 							<param component-path="smoketest\localisation" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -398,7 +398,7 @@
 							<param component-path="smoketest\localisation" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -407,7 +407,7 @@
 							<param component-path="smoketest\localisation" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -479,7 +479,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -542,7 +542,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>						
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -551,7 +551,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>	
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -560,7 +560,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>	
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -569,7 +569,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -578,7 +578,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -587,7 +587,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -596,7 +596,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -605,7 +605,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -614,7 +614,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -623,7 +623,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -632,7 +632,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>					
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -641,7 +641,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -701,7 +701,7 @@
 							<param file="testexecute.exe"/>
 							<param parameters="c:\smoketest\smoketest_apploader.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_apploader.htm"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
@@ -712,7 +712,7 @@
 							<param file="testexecute.exe"/>
 							<param parameters="c:\smoketest\smoketest_agenda.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_agenda.htm"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
@@ -723,7 +723,7 @@
 							<param file="testexecute.exe"/>
 							<param parameters="c:\smoketest\smoketest_contacts.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_contacts.htm"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
@@ -734,18 +734,18 @@
 							<param file="testexecute.exe"/>
 							<param parameters="c:\smoketest\smoketest_mess.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_mess.htm"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
+					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
 							<param parameters="c:\smoketest\smoketest_timew.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_timew.htm"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
@@ -756,23 +756,23 @@
 							<param file="testexecute.exe"/>
 							<param parameters="c:\smoketest\smoketest_email.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_email.htm"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
+					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
 							<param parameters="c:\smoketest\smoketest_lbs.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_lbs.htm"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
+					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
@@ -801,7 +801,7 @@
 							<param file="perl"/>
 							<param dir="D:\ATS\winscw_smoketest\epoc32\winscw\c"/>
 							<param parameters="delproxy.pl ethernetced.xml"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 							<param async="false"/>
 						</params>
 					</step>
@@ -821,7 +821,7 @@
 						<params>
 							<param file="dbcreator.exe"/>
 							<param parameters="-dtextshell -- f:c:\S60_32_default_snaps.xml"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 						</params>
 					</step>
 					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
@@ -830,7 +830,7 @@
 							<param file="testexecute.exe"/>
 							<param parameters="c:\smoketest\smoketest_http.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_http.htm"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
@@ -995,7 +995,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="IMApiTest.dll (install)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="false">
+					<step id="" name="IMApiTest.dll (install)" harness="ATSINTERFACE" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -1004,7 +1004,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-                    <step id="" name="imapitest.ini (install)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="false">
+                    <step id="" name="imapitest.ini (install)" harness="ATSINTERFACE" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -1040,13 +1040,49 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
+                    <step id="" name="BrCtlApiTest.dll (install)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="false">
+						<command>install</command>
+						<params>
+							<param type="binary"/>
+							<param src="BrCtlApiTest.dll"/>
+							<param dst="c:\sys\bin\BrCtlApiTest.dll"/>
+							<param component-path="smoketest" />
+						</params>
+					</step>
+					<step id="" name="loadtest2.html (install)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="false">
+						<command>install</command>
+						<params>
+							<param type="data"/>
+							<param src="loadtest2.html"/>
+							<param dst="c:/smoketest/web/loadtest2.html"/>
+							<param component-path="smoketest\web" />
+						</params>
+					</step>
+					<step id="" name="img8.jpg (install)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="false">
+						<command>install</command>
+						<params>
+							<param type="data"/>
+							<param src="img8.jpg"/>
+							<param dst="c:/smoketest/web/img8.jpg"/>
+							<param component-path="smoketest\web" />
+						</params>
+					</step>
+					<step id="" name="ui_browser_control_smoke.cfg (install)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="false">
+						<command>install</command>
+						<params>
+							<param type="data"/>
+							<param src="ui_browser_control_smoke.cfg"/>
+							<param dst="c:\smoketest\ui_browser_control_smoke.cfg"/>
+							<param component-path="smoketest" />
+						</params>
+					</step>
 					<step id="" name="ProfileSmokeTestModule (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="atsinterface.exe"/>
 							<param parameters="-testmodule testscripter -config c:\smoketest\ProfileSmokeTestModule.cfg"/>
 							<param result-file="c:\spd_logs\xml\testscripter.xml"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 						</params>
 					</step>
 					<step id="" name="smoketest_notepad (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
@@ -1055,7 +1091,7 @@
 							<param file="atsinterface.exe"/>
 							<param parameters="-testmodule testcombiner -config c:\smoketest\smoketest_notepad.cfg"/>
 							<param result-file="c:\spd_logs\xml\testcombiner.xml"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 						</params>
 					</step>
 					<step id="" name="AppInstallSmokeTestModule (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
@@ -1073,7 +1109,7 @@
 							<param file="atsinterface.exe"/>
 							<param parameters="-testmodule testcombiner -config c:\smoketest\smoketest_uiresources.cfg"/>
 							<param result-file="c:\spd_logs\xml\testcombiner.xml"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 						</params>
 					</step>
 					<step id="" name="InputMethodSmokeTestModule (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
@@ -1082,16 +1118,16 @@
 							<param file="atsinterface.exe"/>
 							<param parameters="-testmodule testscripter -config c:\smoketest\InputMethodSmokeTestModule.cfg"/>
 							<param result-file="c:\spd_logs\xml\testscripter.xml"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 						</params>
 					</step>					
-					<step id="" name="IMApiTest (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
+					<step id="" name="IMApiTest (execute)" harness="ATSINTERFACE" enabled="false" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="atsinterface.exe"/>
 							<param parameters="-testmodule IMApiTest"/>
 							<param result-file="c:\spd_logs\xml\imapitest.xml"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 						</params>
 					</step>
 					<step id="" name="MediaMgmtSmokeTestModule (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
@@ -1101,6 +1137,15 @@
 							<param parameters="-testmodule testcombiner -config c:\smoketest\MediaMgmtSmokeTestModule.cfg"/>
 							<param result-file="c:\spd_logs\xml\testcombiner.xml"/>
 							<param timeout="600"/>
+						</params>
+					</step>
+					<step id="" name="ui_browser_control_smoke (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
+						<command>execute</command>
+						<params>
+							<param file="atsinterface.exe"/>
+							<param parameters="-testmodule testscripter -config c:\smoketest\ui_browser_control_smoke.cfg"/>
+							<param result-file="c:\spd_logs\xml\testscripter.xml"/>
+							<param timeout="1200"/>
 						</params>
 					</step>
 				</case>
@@ -1117,13 +1162,11 @@
 		<file>smoketest/general/smoketest_createsmsaccount.script</file>
 		<file>smoketest/general/smoketest_mess.ini</file>
 		<file>smoketest/general/smoketest_mess.script</file>
-		<file>smoketest/general/smoketest_timew.ini</file>
-		<file>smoketest/general/smoketest_timew.script</file>
+
 		<file>smoketest/general/smoketest_email.ini</file>
 		<file>smoketest/general/smoketest_email.script</file>
-		<file>smoketest/general/smoketest_lbs.ini</file>
-		<file>smoketest/general/smoketest_lbs.script</file>
-		<file>smoketest/general/smoketest_language.script</file>
+
+
 		<file>smoketest/general/smoketest_bitmap.ini</file>
 		<file>smoketest/general/smoketest_bitmap.script</file>
 		<file>smoketest/general/smoketest_http.ini</file>
@@ -1132,45 +1175,7 @@
 		<file>smoketest/general/MachineName.txt</file>
 		<file>smoketest/emailmessage/general/20KBody.txt</file>
 		<file>smoketest/emailsettings/general/popsettings_test908.txt</file>
-		<file>smoketest/10003a3f/general/openservice1a.rsc</file>
-		<file>smoketest/10003a3f/general/openservice1b.rsc</file>
-		<file>smoketest/10003a3f/general/serverapp2_reg.rsc</file>
-		<file>smoketest/10003a3f/general/serverapp3_reg.rsc</file>
-		<file>smoketest/10003a3f/general/serverapp4_reg.rsc</file>
-		<file>smoketest/10003a3f/general/serverapp6_reg.rsc</file>
-		<file>smoketest/10003a3f/general/serverapp7_reg.rsc</file>
-		<file>smoketest/10003a3f/general/serverapp_reg.rsc</file>
-		<file>smoketest/10003a3f/general/t_dataprioritysystem3_reg.rsc</file>
-		<file>smoketest/10003a3f/general/t_groupname_reg.rsc</file>
-		<file>smoketest/10003a3f/general/t_groupnamever1_reg.rsc</file>
-		<file>smoketest/10003a3f/general/t_groupnamever2_reg.rsc</file>
-		<file>smoketest/10003a3f/general/tctrlpnlapp_reg.rsc</file>
-		<file>smoketest/10003a3f/general/testtrustedpriorityapp1_reg.rsc</file>
-		<file>smoketest/10003a3f/general/testtrustedpriorityapp2_reg.rsc</file>
-		<file>smoketest/resource/general/customisedefaulticonapp_loc.rsc</file>
-		<file>smoketest/resource/general/default_app_icon.m02</file>
-		<file>smoketest/resource/general/serverapp_loc.rsc</file>
-		<file>smoketest/resource/general/t_groupname_loc.rsc</file>
-		<file>smoketest/resource/general/t_groupnamever1_loc.rsc</file>
-		<file>smoketest/resource/general/t_groupnamever2_loc.rsc</file>
-		<file>smoketest/resource/general/tstapp02.m02</file>
-		<file>smoketest/resource/general/tstapp.mbm</file>
-		<file>smoketest/resource/general/tstapp.rsc</file>
-		<file>smoketest/resource/general/tstapp_loc.r01</file>
-		<file>smoketest/resource/general/tstapp_loc.r02</file>
-		<file>smoketest/resource/general/tstapp_loc.r03</file>
-		<file>smoketest/resource/general/tstapp_loc.r04</file>
-		<file>smoketest/resource/general/tstapp_loc.r05</file>
-		<file>smoketest/resource/general/tstapp_loc.rsc</file>
-		<file>smoketest/resource/general/tstappview</file>
-		<file>smoketest/resource/general/tstappview01.m01</file>
-		<file>smoketest/resource/general/tstappview01.m02</file>
-		<file>smoketest/resource/general/tstappview02.k</file>
-		<file>smoketest/localisation/general/customisedefaulticonapp_reg.rsc</file>
-		<file>smoketest/localisation/general/testuntrustedpriorityapp1_reg.rsc</file>
-		<file>smoketest/localisation/general/testuntrustedpriorityapp2_reg.rsc</file>
-		<file>smoketest/localisation/general/tstapp_reg.rsc</file>
-		<file>smoketest/localisation/general/tstapp_embedded.rsc</file>
+
 		<file>smoketest/bitmap/general/uibench_16bit.mbm</file>
 		<file>smoketest/ethernet/general/delproxy.pl</file>
 		<file>smoketest/winscw_udeb/SmokeTestSecureFSclient.dll</file>
@@ -1180,23 +1185,13 @@
 		<file>smoketest/winscw_udeb/Smoketest_Contacts_Server.exe</file>
 		<file>smoketest/winscw_udeb/Smoketest_Mess_Server.exe</file>
 		<file>smoketest/winscw_udeb/Smoketest_System.exe</file>
-		<file>smoketest/winscw_udeb/Smoketest_Timew_Server.exe</file>
+
 		<file>smoketest/winscw_udeb/SmokeTest_Utils.dll</file>
 		<file>smoketest/winscw_udeb/t_msgutilityserver.dll</file>
 		<file>smoketest/winscw_udeb/t_msgpopserver.exe</file>
 		<file>smoketest/winscw_udeb/t_msgsmtpserver.exe</file>
-		<file>smoketest/winscw_udeb/lbstestutils.dll</file>
-		<file>smoketest/winscw_udeb/lbstestclient.dll</file>
-		<file>smoketest/winscw_udeb/lbstestchannel.dll</file>
-		<file>smoketest/winscw_udeb/lbstestserver.exe</file>
-		<file>smoketest/winscw_udeb/ctlbsexeclient.exe</file>
-		<file>smoketest/winscw_udeb/lbsclienttestserver.exe</file>
-		<file>smoketest/winscw_udeb/appfwk_test_AppUi.dll</file>
-		<file>smoketest/winscw_udeb/appfwk_test_utils.dll</file>
-		<file>smoketest/winscw_udeb/TIconLoaderAndIconArrayForLeaks.dll</file>
-		<file>smoketest/winscw_udeb/TSTAPP_embedded.dll</file>
-		<file>smoketest/winscw_udeb/apparctestserver.exe</file>
-		<file>smoketest/winscw_udeb/tstapp.exe</file>
+
+		
 		<file>smoketest/winscw_udeb/t_animplugin.dll</file>
 		<file>smoketest/winscw_udeb/t_graphicswservapi.exe</file>
 		<file>smoketest/winscw_udeb/twsgraphicshare.exe</file>
@@ -1217,10 +1212,13 @@
 		<file>smoketest/wallpaper/general/symbian_01_320x480.jpg</file>
         <file>smoketest/winscw_udeb/InputMethodSmokeTestModule.dll</file>
         <file>smoketest/general/InputMethodSmokeTestModule.cfg</file>
-		<file>smoketest/winscw_udeb/IMApiTest.dll</file>	
-		<file>smoketest/general/imapitest.ini</file>
+
 		<file>smoketest/winscw_udeb/MediaMgmtSmokeTestModule.dll</file>
 		<file>smoketest/general/UI_MediaMgmtSmokeTestModule.cfg</file>
 		<file>smoketest/general/MediaMgmtSmokeTestModule.cfg</file>
+		<file>smoketest/web/general/loadtest2.html</file>
+		<file>smoketest/web/general/img8.jpg</file>
+		<file>smoketest/general/ui_browser_control_smoke.cfg</file>
+		<file>smoketest/winscw_udeb/BrCtlApiTest.dll</file>
 	</files>
 </test>
