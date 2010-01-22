@@ -1100,7 +1100,7 @@
 							<param file="atsinterface.exe"/>
 							<param parameters="-testmodule testscripter -config c:\smoketest\AppInstallSmokeTestModule.cfg"/>
 							<param result-file="c:\spd_logs\xml\testscripter.xml"/>
-							<param timeout="600"/>
+							<param timeout="1200"/>
 						</params>
 					</step>
 					<step id="" name="smoketest_uiresources (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
@@ -1136,7 +1136,7 @@
 							<param file="atsinterface.exe"/>
 							<param parameters="-testmodule testscripter -config c:\smoketest\ui_browser_control_smoke.cfg"/>
 							<param result-file="c:\spd_logs\xml\testscripter.xml"/>
-							<param timeout="1200"/>
+							<param timeout="1500"/>
 						</params>
 					</step>
 					<step id="" name="MediaMgmtSmokeTestModule (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
