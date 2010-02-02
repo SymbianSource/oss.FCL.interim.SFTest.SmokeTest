@@ -47,7 +47,7 @@
 							<param component-path="smoketest\sms" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -56,7 +56,7 @@
 							<param component-path="smoketest\emailmessage" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -416,7 +416,7 @@
 							<param component-path="smoketest\localisation" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="data"/>
@@ -515,7 +515,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -524,7 +524,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>					
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -533,7 +533,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>					
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -650,7 +650,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -659,7 +659,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -668,7 +668,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-						<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+						<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -677,7 +677,7 @@
 							<param component-path="smoketest" />
 						</params>
 					</step>
-					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+					<step id="" name="Test Step 1 (install)" harness="GENERIC" enabled="false" passrate="100" significant="false">
 						<command>install</command>
 						<params>
 							<param type="binary"/>
@@ -750,7 +750,7 @@
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
+					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
@@ -783,7 +783,7 @@
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
+					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
@@ -835,7 +835,7 @@
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="Test Step 3 (fetch-log)" harness="GENERIC" enabled="true" passrate="100">
+					<step id="" name="Test Step 3 (fetch-log)" harness="GENERIC" enabled="false" passrate="100">
 						<command>fetch-log</command>
 						<params>
 							<param path="c:\logs\testexecute\screen.mbm" /> 
@@ -1172,11 +1172,7 @@
 		<file>smoketest/general/smoketest_http.ini</file>
 		<file>smoketest/general/smoketest_http.script</file>
 		<file>smoketest/sms/general/message1.txt</file>
-		<file>smoketest/general/MachineName.txt</file>
-		<file>smoketest/emailmessage/general/20KBody.txt</file>
-		<file>smoketest/emailsettings/general/popsettings_test908.txt</file>
 
-		<file>smoketest/bitmap/general/uibench_16bit.mbm</file>
 		<file>smoketest/ethernet/general/delproxy.pl</file>
 		<file>smoketest/winscw_udeb/SmokeTestSecureFSclient.dll</file>
 		<file>smoketest/winscw_udeb/SmokeTestSecureFSserver.exe</file>
@@ -1187,15 +1183,9 @@
 		<file>smoketest/winscw_udeb/Smoketest_System.exe</file>
 
 		<file>smoketest/winscw_udeb/SmokeTest_Utils.dll</file>
-		<file>smoketest/winscw_udeb/t_msgutilityserver.dll</file>
-		<file>smoketest/winscw_udeb/t_msgpopserver.exe</file>
-		<file>smoketest/winscw_udeb/t_msgsmtpserver.exe</file>
+
 
 		
-		<file>smoketest/winscw_udeb/t_animplugin.dll</file>
-		<file>smoketest/winscw_udeb/t_graphicswservapi.exe</file>
-		<file>smoketest/winscw_udeb/twsgraphicshare.exe</file>
-		<file>smoketest/winscw_udeb/twsgraphicunshare.exe</file>
 		<file>smoketest/winscw_udeb/testhttpsuite.exe</file>
         <file>smoketest/winscw_udeb/ProfileSmokeTestModule.dll</file>
         <file>smoketest/general/ProfileSmokeTestModule.cfg</file>
