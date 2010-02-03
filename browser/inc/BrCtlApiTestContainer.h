@@ -29,8 +29,10 @@
 // CONSTATNS
 const TInt KThisAppUid = 0xA0000181;
 
-_LIT( KUrlLoadTestHtml, "c:\\BrCtlTest\\loadtest.html" );
-_LIT( KUrlLoadTestHtml2, "file:///c:\\smoketest\\web\\loadtest2.html" );
+//_LIT( KUrlLoadTestHtml, "c:\\BrCtlTest\\loadtest.html" );
+_LIT( KUrlLoadTestHtml, "c:\\smoketest\\web\\loadtest2.html" );
+//_LIT( KUrlLoadTestHtml2, "file:///c:\\smoketest\\web\\loadtest2.html" );
+_LIT( KUrlLoadTestHtml2, "file:////c:\\smoketest\\web\\loadtest2.html" );
 _LIT( KUrlHistoryHandlerHtml1, "file:///c:\\BrCtlTest\\historytest1.html" );
 _LIT( KUrlHistoryHandlerHtml2, "file:///c:\\BrCtlTest\\historytest2.html" );
 _LIT( KUrlHistoryHandlerHtml3, "file:///c:\\BrCtlTest\\historytest3.html" );
