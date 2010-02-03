@@ -1163,12 +1163,9 @@
 		<file>smoketest/general/smoketest_mess.ini</file>
 		<file>smoketest/general/smoketest_mess.script</file>
 
-		<file>smoketest/general/smoketest_email.ini</file>
-		<file>smoketest/general/smoketest_email.script</file>
 
 
-		<file>smoketest/general/smoketest_bitmap.ini</file>
-		<file>smoketest/general/smoketest_bitmap.script</file>
+
 		<file>smoketest/general/smoketest_http.ini</file>
 		<file>smoketest/general/smoketest_http.script</file>
 		<file>smoketest/sms/general/message1.txt</file>
