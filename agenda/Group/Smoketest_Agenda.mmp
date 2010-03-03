@@ -15,6 +15,7 @@
 // 
 //
 
+#include <platform_paths.hrh>
 
 TARGET			Smoketest_Agenda_Server.exe
 TARGETTYPE		exe
@@ -40,6 +41,7 @@ USERINCLUDE		..\Inc ..\..\Group
 
 SYSTEMINCLUDE	\Epoc32\include
 SYSTEMINCLUDE	\Epoc32\include\Test
+APP_LAYER_SYSTEMINCLUDE
 
 LIBRARY			apparc.lib
 LIBRARY			euser.lib

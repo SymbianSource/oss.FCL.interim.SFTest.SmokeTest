@@ -15,6 +15,7 @@
 *
 */
 
+#include <platform_paths.hrh>
 
 TARGET		  twsgraphicunshare.exe
 TARGETTYPE	  exe
@@ -22,6 +23,7 @@ UID			 0 0xE0A688F8
 
 USERINCLUDE	 .
 SYSTEMINCLUDE   /epoc32/include
+MW_LAYER_SYSTEMINCLUDE
 
 SOURCEPATH	  .
 SOURCE		  TWsGraphicShare.cpp

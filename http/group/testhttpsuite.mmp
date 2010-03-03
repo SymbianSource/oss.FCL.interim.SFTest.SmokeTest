@@ -13,6 +13,8 @@
 // Description:
 //
 
+#include <platform_paths.hrh>
+
 //OPTION CW   -w off
 TARGET          testhttpsuite.exe 
 TARGETTYPE      EXE
@@ -20,8 +22,8 @@ CAPABILITY ALL -TCB
 
 UID		0x1000007A 0x102729DF
     
-
 SYSTEMINCLUDE 	/epoc32/include /epoc32/include/test  /epoc32/include/ecom
+MW_LAYER_SYSTEMINCLUDE
 USERINCLUDE		../inc
 
 SOURCEPATH		../src

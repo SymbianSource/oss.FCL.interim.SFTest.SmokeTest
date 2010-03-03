@@ -16,6 +16,8 @@
 // 
 //
 
+#include <platform_paths.hrh>
+
 TARGET			Smoketest_System.exe
 TARGETTYPE		exe
 UID				0x1000007A 0x101F7773
@@ -34,6 +36,7 @@ USERINCLUDE		..\Inc ..\..\Group
 
 SYSTEMINCLUDE	\Epoc32\include
 SYSTEMINCLUDE	\Epoc32\include\test
+MW_LAYER_SYSTEMINCLUDE
 
 LIBRARY	EUSER.LIB
 LIBRARY	EIKSRV.LIB

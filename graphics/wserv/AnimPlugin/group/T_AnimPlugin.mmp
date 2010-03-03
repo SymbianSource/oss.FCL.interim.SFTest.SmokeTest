@@ -14,13 +14,15 @@
 // Description:
 //
 
+#include <platform_paths.hrh>
+
 TARGET		  t_animplugin.dll
 TARGETTYPE	  ANI
 UID 268450594 0x100048F2
 
 USERINCLUDE	 ../inc
 SYSTEMINCLUDE   /epoc32/include
-
+MW_LAYER_SYSTEMINCLUDE
 
 
 //By default, the build tools look for the WINSCW def file in a BWINS directory

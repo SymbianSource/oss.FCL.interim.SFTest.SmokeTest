@@ -15,6 +15,8 @@
 // 
 //
 
+#include <platform_paths.hrh>
+
 TARGET			Smoketest_Contacts_Server.exe
 TARGETTYPE		exe
 UID				0x1000007A 0x101F7772
@@ -37,6 +39,7 @@ USERINCLUDE		..\Inc ..\..\Group
 
 SYSTEMINCLUDE	\Epoc32\include
 SYSTEMINCLUDE	\Epoc32\include\Test
+APP_LAYER_SYSTEMINCLUDE
 
 LIBRARY			efsrv.lib
 LIBRARY			estor.lib

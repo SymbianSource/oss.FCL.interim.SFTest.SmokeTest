@@ -15,6 +15,7 @@
 // 
 //
 
+#include <platform_paths.hrh>
 #include "..\..\Group\Configuration.cfg"
 
 TARGET			SmokeTest_Utils.dll
@@ -39,6 +40,7 @@ USERINCLUDE		..\..\Group
 
 SYSTEMINCLUDE	\epoc32\include
 SYSTEMINCLUDE	\epoc32\include\test
+MW_LAYER_SYSTEMINCLUDE
 
 LIBRARY			euser.lib
 LIBRARY			efsrv.lib

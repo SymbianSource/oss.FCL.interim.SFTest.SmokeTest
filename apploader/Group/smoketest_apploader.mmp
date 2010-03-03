@@ -15,6 +15,7 @@
 // 
 //
 
+#include <platform_paths.hrh>
 
 TARGET          smoketest_apploader.exe
 TARGETTYPE		exe
@@ -41,6 +42,7 @@ USERINCLUDE		..\Inc ..\..\Group
 
 SYSTEMINCLUDE	\Epoc32\include
 SYSTEMINCLUDE	\Epoc32\include\Test
+APP_LAYER_SYSTEMINCLUDE
 
 LIBRARY			apparc.lib
 LIBRARY			euser.lib

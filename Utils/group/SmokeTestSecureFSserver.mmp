@@ -15,6 +15,7 @@
 // 
 //
 
+#include <platform_paths.hrh>
 
 UID			0x1000008D 0x101FF346
 VENDORID 0x70000001
@@ -26,6 +27,7 @@ CAPABILITY		ALL
 USERINCLUDE		..\Inc
 SYSTEMINCLUDE		\epoc32\include
 SYSTEMINCLUDE		\epoc32\include\test
+MW_LAYER_SYSTEMINCLUDE
 
 SOURCEPATH		..\SRC
 SOURCE			SmokeTestSecureFSserver.cpp
