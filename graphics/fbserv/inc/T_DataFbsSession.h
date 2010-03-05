@@ -30,6 +30,7 @@ This contains CT_DataFbsSession
 //	EPOC includes
 #include <e32std.h>
 #include <fbs.h>
+#include <fbsmessage.h>
 
 class CT_DataFbsSession : public CDataWrapperBase
 	{

@@ -21,7 +21,7 @@
 	UID			0x1000007A 0x10274070
 	VENDORID 		0x70000001
 
-
+#include <platform_paths.hrh>
 // Include the Framework 
 #include "../../../framework/group/T_MsgFramework.mph"
 
@@ -29,6 +29,7 @@
 SYSTEMINCLUDE		/epoc32/include
 SYSTEMINCLUDE		/epoc32/include/test
 SYSTEMINCLUDE		/epoc32/include/comms-infras
+APP_LAYER_SYSTEMINCLUDE
 
 USERINCLUDE 	../inc
 

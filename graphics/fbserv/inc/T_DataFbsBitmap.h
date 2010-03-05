@@ -33,6 +33,7 @@ This contains CT_DataFbsBitmap
 #include <fbs.h>
 #include <s32file.h>
 #include <bitdev.h>
+#include <bitmapuid.h>
 
 class CT_DataFbsBitmap : public CDataWrapperBase
 	{
