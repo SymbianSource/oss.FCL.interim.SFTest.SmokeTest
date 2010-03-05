@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -17,6 +17,8 @@
 // ParentFolderName  :   Local folder name in which the message to be sent is 
 // present
 // Subject			  :	  Subject of the message to be sent 	
+// SmtpAccountName   :	  SMTP account name to be used for sending the message. If this is
+// not specified, message(s) would send using the default SMTP service.
 // Searches for the message with the specified subject and sends the message if the
 // message is found.  If the local folder name is invalid or if the message is 
 // not found in the given folder,the test step fails.
@@ -25,8 +27,6 @@
 // CMsvEntry::CopyL
 // 
 //
-
-
 
 /**
  @file
@@ -44,6 +44,7 @@
 // Literals Used
 _LIT(KSubject,"Subject");
 _LIT(KParentFolderName,"ParentFolderName");
+_LIT(KSmtpAccountName, "SmtpAccountName");
 
 
 /**
@@ -174,22 +175,30 @@ TVerdict CT_MsgSendSmtpMessage::doTestStepL()
 
 					// Retrieve the default Smtp service Id
 					TMsvId	smtpServiceId(0);
-					TRAPD(err, smtpServiceId = CT_MsgUtilsCentralRepository::GetDefaultSmtpServiceIdL());
+					TPtrC smtpAccountName;
+					TInt err;
+					if( !GetStringFromConfig(ConfigSection(), KSmtpAccountName, smtpAccountName ))
+						{
+						TRAP(err, smtpServiceId = CT_MsgUtilsCentralRepository::GetDefaultSmtpServiceIdL());
+						}
+					else
+						{
+						TRAP(err, smtpServiceId = CT_MsgUtilsCentralRepository::GetSmtpServiceIdL((TDes&)smtpAccountName));
+						}
+
 					if(err != KErrNone)
 						{
-						ERR_PRINTF2(_L("Failure while getting the default SMTP Service Id.  error = %d"),err);
+						ERR_PRINTF2(_L("Failure while getting the SMTP Service Id.  error = %d"),err);
 						SetTestStepResult(EFail);
 						}
 					else
 						{
-						INFO_PRINTF2(_L("The Default Smtp Service Id is %d"),smtpServiceId );
-
+						INFO_PRINTF2(_L("The SMTP Service Id is %d"),smtpServiceId );
 						// Setting the current context to the parent of the mesage
 						CMsvEntry*	folderEntry = CMsvEntry::NewL(*iSharedDataSMTP.iSession, messageId , TMsvSelectionOrdering());
 						CleanupStack::PushL(folderEntry);
 						folderEntry->SetEntryL(messageId);
 						folderEntry->SetEntryL(folderEntry->Entry().Parent());
-
 						// Sends the message
 						CT_MsgActive&	active=Active();
 						iOperation = folderEntry->CopyL(messageId, smtpServiceId, active.iStatus);

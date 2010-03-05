@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -36,7 +34,7 @@
 #include <pop3set.h>	// For including KUidMsgTypePOP3
 #include <barsread.h>	// TResourceReader
 
-#include <cmsvbodytext.h>
+#include "cmsvbodytext.h"
 
 #ifdef __WINS__
 #include <e32wins.h>    // for maxfilename lengths
@@ -1660,7 +1658,7 @@ TBool CLocalImRecvConvert::CreateAttachmentL()
 	if (addExtension)
 		AddFileExtension();
 
-	CMsvStore* store = iServerEntry->EditStoreL(); 
+	CMsvStore* store = iServerEntry->EditStoreL();	
 	CleanupStack::PushL(store);
 	CMsvAttachment* attachment = CMsvAttachment::NewL(CMsvAttachment::EMsvFile);
 	RFile file; 
@@ -1748,7 +1746,8 @@ void CLocalImRecvConvert::CloseAttachmentFileL()
 			RECVLOG(KDeletingAttachFile)
 			{ 
 			// NOTE - need the braces to stop error for re-definition of store
-			CMsvStore* store = iServerEntry->EditStoreL(); 
+
+			CMsvStore* store = iServerEntry->EditStoreL();	
 			CleanupStack::PushL(store);
 		
 			// Remove the attachment and commit the store.	
@@ -1784,7 +1783,7 @@ void CLocalImRecvConvert::CloseAttachmentFileL()
 			RECVLOG(KDeletingAttachFile)
 			{ 
 			// NOTE - need the braces to stop error for re-definition of store
-			CMsvStore* store = iServerEntry->EditStoreL(); 
+			CMsvStore* store = iServerEntry->EditStoreL();	
 			CleanupStack::PushL(store);
 		
 			// Remove the attachment and commit the store.	
@@ -2251,8 +2250,7 @@ void CLocalImRecvConvert::StoreEntryStreamsL(TInt aSettings)
 		{
 		CMsvStore* entryStore = NULL;
 		TBool commitStore = EFalse;
-
-		TRAPD(error, entryStore = iServerEntry->EditStoreL());
+		TRAPD(error, entryStore = iServerEntry->EditStoreL());	
 		if(error==KErrNone) // if store does not exist then the entry is the wrong type
 			{
 			CleanupStack::PushL(entryStore);
@@ -2274,9 +2272,9 @@ void CLocalImRecvConvert::StoreEntryStreamsL(TInt aSettings)
 				}
 
 			StoreEntryDataL();
-			CleanupStack::PopAndDestroy(); //entryStore		
+			CleanupStack::PopAndDestroy(); //entryStore	
 			}
-
+		
 		}
 	RECVLOG(KDoneStoringEntryStream);
 	}
@@ -2506,7 +2504,8 @@ void CLocalImRecvConvert::WritePartialFooterL(TInt aAmountLeft)
 				iOutputBody->InsertL(length,*msg);
 				CleanupStack::PopAndDestroy(msg);
 				store=NULL;
-				store = iServerEntry->EditStoreL();
+				store = iServerEntry->EditStoreL();	
+				
 				CleanupStack::PushL(store);
 				store->StoreBodyTextL(*iOutputBody);
 				store->Commit();
@@ -4018,3 +4017,4 @@ TMsvId CLocalImRecvConvert::EntryId()
 		return iServerEntry->Entry().Id();
 		}
 	}
+

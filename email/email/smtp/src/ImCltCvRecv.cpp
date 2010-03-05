@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
 */
@@ -24,7 +22,7 @@
 
 #include <imcvcodc.h>
 #include <imcvutil.h>
-#include <cmsvbodytext.h>
+#include "cmsvbodytext.h"
 #include "ImCltCvRecv.h"
 
 #ifdef __WINS__
@@ -1011,7 +1009,8 @@ TBool CImCltRecvConvert::CreateAttachmentL()
 		{
 		AddFileExtension();
 		}
-	CMsvStore* store = iClientEntry->EditStoreL(); 
+
+	CMsvStore* store = iClientEntry->EditStoreL();	
 	CleanupStack::PushL(store);
 	CMsvAttachment* attachment = CMsvAttachment::NewL(CMsvAttachment::EMsvFile);
 	CleanupStack::PushL(attachment);
@@ -1101,26 +1100,20 @@ void CImCltRecvConvert::StoreEntryStreamsL(TInt aSettings)
 		{
 		CMsvStore* entryStore = NULL;
 		TBool commitStore = EFalse;
-
-		TRAPD(error, entryStore = iClientEntry->EditStoreL());
+		TRAPD(error, entryStore = iClientEntry->EditStoreL());	
 		if(error==KErrNone) // if store does not exist then the entry is the wrong type
 			{
 			CleanupStack::PushL(entryStore);
 
 			if (aSettings & KStore822Header)
-				{
 				Store822HeaderL(*entryStore, commitStore);
-				}
 			
 			if (aSettings & KStoreMIMEHeader)
-				{
 				StoreMIMEHeaderL(*entryStore, commitStore);
-				}
 
 			if (aSettings & KStoreBodyText)
-				{
 				StoreBodyTextL(*entryStore, commitStore);
-				}
+
 			// only commit to the store if I wrote something into it
 			if (commitStore)
 				{
@@ -1129,7 +1122,7 @@ void CImCltRecvConvert::StoreEntryStreamsL(TInt aSettings)
 				}
 
 			StoreEntryDataL();
-			CleanupStack::PopAndDestroy(); //entryStore		
+			CleanupStack::PopAndDestroy(); //entryStore	
 			}
 
 		}
@@ -1442,3 +1435,5 @@ void CImCltRecvConvert::StoreMessageEntryDetailsL()
 		iParent->At(0).iSize=0;
 		}
 	}
+
+

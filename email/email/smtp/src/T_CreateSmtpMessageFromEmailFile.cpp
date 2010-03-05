@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -19,6 +19,8 @@
 // EmailFileName		: Email file from which the message is to be created
 // KilobytesExtra		: Number of lines of 1024 characters to add to body text
 // Default value is 0.
+// SmtpAccountName		: SMTP account name for the SMTP service that would be used for sending the message.
+// If SMTP account name is not specified then default SMTP service ID would be used.
 // [Test Step Description]
 // Creates an Email message reading the contents from the email file specified
 // from the config file.
@@ -26,8 +28,6 @@
 // CMsvEntry::SetEntryL
 // 
 //
-
-
 
 /**
  @file
@@ -41,6 +41,7 @@
 
 
 // Literals Used
+_LIT(KSmtpAccountName, "SmtpAccountName");
 _LIT(KEmailFileName, "EmailFileName");
 _LIT(KParentFolderName,"ParentFolderName");
 _LIT(KKilobytesExtra, "KilobytesExtra");
@@ -136,9 +137,18 @@ TVerdict CT_MsgCreateSmtpMessageFromEmailFile::doTestStepL()
 				{
 				INFO_PRINTF2(_L("The parent folder Id is %d"),parentFolderId );
 
-				// Retrieve the default Smtp service Id
+				// Retrieve the required SMTP service Id
 				TMsvId	smtpServiceId(0);
-				TRAPD(err,smtpServiceId = CT_MsgUtilsCentralRepository::GetDefaultSmtpServiceIdL());
+				TPtrC smtpAccountName;
+				TInt err;
+				if( !GetStringFromConfig(ConfigSection(), KSmtpAccountName, smtpAccountName ))
+					{
+					TRAP(err, smtpServiceId = CT_MsgUtilsCentralRepository::GetDefaultSmtpServiceIdL());
+					}
+				else
+					{
+					TRAP(err, smtpServiceId = CT_MsgUtilsCentralRepository::GetSmtpServiceIdL((TDes&)smtpAccountName));
+					}
 				if(smtpServiceId == KMsvNullIndexEntryId)
 					{
 					ERR_PRINTF1(_L("Invalid account name specified"));
@@ -251,6 +261,7 @@ TVerdict CT_MsgCreateSmtpMessageFromEmailFile::doTestStepL()
 							CleanupStack::PushL(emailAddress);
 							
 							entry->SetEntryL(messageId);
+								
 							CMsvStore* store = entry->EditStoreL();
 							CleanupStack::PushL(store);
 							

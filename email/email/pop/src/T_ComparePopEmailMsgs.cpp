@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -18,9 +18,6 @@
 // Compares the recieved mails with the expected numbers of lines to test POP3 TOP command
 // 
 //
-
-
-
 /**
  @file
 */
@@ -37,11 +34,16 @@
 #include <imcm.rsg>
 #include <miutmsg.h>
 #include <mmsvattachmentmanager.h>
-
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS  
+#include "msvconsts.h"
+#include "timrfc822datefield.h"
+#endif
 
 // Literals Used
 _LIT(KPopAccountName,"PopAccountName");
+_LIT(KParagraphDelimiter,"\x2029\x2029");
 
+const TInt KUnicodeValue = 0x0046;
 
 /**
 ConstructL()
@@ -599,6 +601,7 @@ Number of lines in the body text
 TInt CT_MsgComparePopEmailMsgs::CountLinesOfBodyTextL(CMsvEntry& aEntry, TBool& aFooterExists, TInt& aFooterSize)
 	{
 	TInt lines = 0;
+	TInt count =0;
 	aFooterExists=EFalse;
 	aFooterSize=0;
 	aEntry.SetEntryL(aEntry.EntryId());
@@ -618,17 +621,44 @@ TInt CT_MsgComparePopEmailMsgs::CountLinesOfBodyTextL(CMsvEntry& aEntry, TBool& 
 			{
 			msvStore1->RestoreBodyTextL(*bodyText1);
 			TUint16 val = CEditableText::ELineBreak;
+			TUint16 val1 = CEditableText::EParagraphDelimiter;
+			TUint16 val2 = KUnicodeValue;
+			
 			TInt n = 0;
 			TInt pos = 0;
 			for(;;)
 				{
 				TPtrC bodyText = bodyText1->Read(pos);
 				n = bodyText.Find(&val, 1);
+								
+				// if iStore8BitData flag is set, the line is terminated by "CEditableText::EParagraphDelimiter"			
+				if(msvStore1->IsPresentL(KMsvPlainBodyText8))
+					{
+					if ( 0 == count )
+						{
+						TPtrC buffer = bodyText.Mid(0,n+2);
+						// eg for 8bit the body look as : This is a simple email message.\x2028\x2029\x2029
+						// eg for 16bit the body look as: This is a simple email message.\x2028\x2028\x2029
+						if((bodyText.Right(2).Compare(KParagraphDelimiter)==KErrNone) && \
+									 buffer.Find(&val2,1) != 75)
+							{
+							lines++;	
+							count++;
+							}				
+							// Increment the line if EParagraphDelimiter or 0x0046 is found sequence as eg:1. \x2028\x2029
+							// 2. \x2028\x2029\x2028\x2029\x0046 3. \x2028\x2029\x2028\x2029\x2028\x2029
+						else if ( (buffer.Find(&val1,1)==0 && n==-1) || (buffer.Find(&val2,1)==1) \
+										|| (buffer.Find(&val1,1)>0) )
+							{
+							lines++;		
+							}
+						}
+					}
 				if(n < 0)
 					break;
 				lines++;
 				pos += n+1;
-				
+								
 				//This Check is needed to delete the extra line introduced by communigate Pro Server
 				TInt fpos = CheckIfServerMessageExists(bodyText);
 				if (fpos != KErrNotFound)
@@ -876,13 +906,13 @@ ProgressL()
 
 */
 
-//////////////////////////
-////
-////	I have no idea what this code is doing.
-////	It looks very messy.
-////	Someone is going to have to reowrk this code so that we can cancel and do progress
-////
-//////////////////////////
+//
+//
+//	I have no idea what this code is doing.
+//	It looks very messy.
+//	Someone is going to have to reowrk this code so that we can cancel and do progress
+//
+//
 void CT_MsgComparePopEmailMsgs::ProgressL(TBool bFinal)
 	{
 	//	TODO
@@ -997,3 +1027,4 @@ TVerdict CT_MsgComparePopEmailMsgs::doTestStepL()
 	INFO_PRINTF1(_L("T_ComparePopEmailMsgs Completed"));
 	return TestStepResult();
 	}
+

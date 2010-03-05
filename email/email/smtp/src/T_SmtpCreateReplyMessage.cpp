@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -34,8 +34,6 @@
 // 
 //
 
-
-
 // User includes 
 #include "T_SmtpCreateReplyMessage.h"
 #include <t_utilscentralrepository.h>
@@ -46,7 +44,9 @@
 // Epoc includes 
 #include <miutmsg.h>
 
-
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS  
+#include "cimmessagepart.h"
+#endif
 // Literals Used 
 _LIT(KServiceType, "ServiceType");
 
@@ -302,7 +302,7 @@ void CT_SmtpCreateReplyMessage::SetHeaderPartL()
 		CMsvEntry *entry = CMsvEntry::NewL(*(iSharedDataSMTP.iSession), newMessageId, TMsvSelectionOrdering(KMsvNoGrouping,EMsvSortByNone,ETrue));
 		CleanupStack::PushL(entry);
 		entry->SetEntryL(newMessageId);			// 
-		CMsvStore* store = entry->EditStoreL();
+		CMsvStore* store = entry->EditStoreL();	
 		CleanupStack::PushL(store);
 		
 		CImHeader* header = CImHeader::NewLC(); 
@@ -323,3 +323,4 @@ void CT_SmtpCreateReplyMessage::SetHeaderPartL()
 		CleanupStack::PopAndDestroy(3,entry); // header, store, entry			
 		}
 	}
+

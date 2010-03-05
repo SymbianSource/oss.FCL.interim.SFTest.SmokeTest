@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -40,10 +40,12 @@
 #include "T_CheckPopSNAPSetting.h"
 #include "T_RemovePopSNAPSetting.h"
 #include "T_CheckPopBMSetting.h"
+#include "t_cpop3clientmtm.h"
+#include "t_verifyheaders.h"
 
 /**
 MainL()
-This is the main function which installs the active scheduler and 
+This is the main function which installs the active scheduler and
 creates an object of the Email server
 */
 LOCAL_C void MainL()
@@ -91,20 +93,20 @@ Process entry point. Called by client using RProcess API
 */
 	{
 	__UHEAP_MARK;
-	
+
 	CTrapCleanup* cleanup = CTrapCleanup::New();
 	if(cleanup == NULL)
 		{
 		return KErrNoMemory;
 		}
-	TRAP_IGNORE(MainL());	
+	TRAP_IGNORE(MainL());
 	delete cleanup;
 	cleanup=NULL;
 	__UHEAP_MARKEND;
-	
+
 	return KErrNone;
     }
-    
+
 
 /**
 NewL()
@@ -124,8 +126,8 @@ CT_MsgPopServer* CT_MsgPopServer::NewL()
 	CleanupStack::Pop(server);
 	return server;
 	}
-	
-	
+
+
 /**
 CT_MsgPopServer()
 Intializes iSharedDataPOP with NULL
@@ -157,11 +159,11 @@ The name of the test step to be created
 
 @return
 The CTestStep object created
-*/ 
+*/
 CTestStep* CT_MsgPopServer::CreateTestStepL(const TDesC& aStepName)
 	{
 	CTestStep* testStep = NULL;
-	
+
 	if(aStepName == KVerifyPopSettings)
 		{
 		testStep = new(ELeave) CT_MsgVerifyPopSettings(*iSharedDataPOP);
@@ -246,6 +248,14 @@ CTestStep* CT_MsgPopServer::CreateTestStepL(const TDesC& aStepName)
  		{
  		testStep = new(ELeave) CT_MsgCheckPopBMSetting(*iSharedDataPOP);
  		}
+ 	else if(aStepName == KUnitTestCPop3ClientMtm)
+ 		{
+ 		testStep = new(ELeave) CT_CPop3ClientMtm(*iSharedDataPOP);
+ 		}
+ 	else if(aStepName == KVerifyHeaders)
+ 		{
+ 		testStep = new(ELeave) CT_MsgVerifyHeaders(*iSharedDataPOP);
+ 		}
 	else
 		{
 		testStep = CT_MsgServer::CreateTestStepL(aStepName);
@@ -253,3 +263,4 @@ CTestStep* CT_MsgPopServer::CreateTestStepL(const TDesC& aStepName)
 
 	return testStep;
 	}
+
