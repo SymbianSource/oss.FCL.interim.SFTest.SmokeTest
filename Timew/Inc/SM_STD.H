@@ -18,7 +18,6 @@
 
 // System includes
 #include <e32base.h>
-#include <t32wld.h>
 #include <asclisession.h>
 #include <asshdalarm.h>
 
@@ -51,18 +50,6 @@ public:
 private:
 	TAlarmId iAlarmId;
 	RASCliSession* iAlmSvr;
-	};
-
-class CWldModel;
-class CWldResponder : public CModelResponder
-	{
-public:
-	CWldResponder(RWorldServer& aSvr,CWldModel& aModel,TInt aResponderPriority);
-public:
-	virtual void DoStart();
-	virtual void DoCancel();
-protected:
-	RWorldServer* iWldSvr;
 	};
 
 #endif

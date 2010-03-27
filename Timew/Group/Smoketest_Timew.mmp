@@ -41,6 +41,8 @@ USERINCLUDE		..\ConsoleAlarmAlertServer\Include
 
 
 SYSTEMINCLUDE	\Epoc32\include
+SYSTEMINCLUDE	\Epoc32\include\mw
+SYSTEMINCLUDE	\Epoc32\include\platform
 SYSTEMINCLUDE	\Epoc32\include\Test
 SYSTEMINCLUDE	\Epoc32\include\ecom
 
