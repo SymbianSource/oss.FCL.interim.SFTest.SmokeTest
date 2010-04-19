@@ -22,8 +22,8 @@ if ($ARGV[0]) {
 else { die 'Missing parameter "filename"'; }
 
 my $LINE;
-print $filename;
-tie @LINE, 'Tie::File', $filename or die 'file not found';
+print "$filename \n";
+tie (@LINE, 'Tie::File', $filename, recsep => "\n") or die ("File not found\n");
 my $n = 0;
 my $proxy_begin = 0;
 my $proxy_end = 0;
@@ -38,9 +38,13 @@ for (@LINE) {
    }
   $n += 1;
  }
- 
+
 if ($proxy_end > 0) {
   splice @LINE, $proxy_begin, ($proxy_end - $proxy_begin + 1);
  }
 
 untie @LINE;
+
+print "OK \n";
+
+exit 0;
