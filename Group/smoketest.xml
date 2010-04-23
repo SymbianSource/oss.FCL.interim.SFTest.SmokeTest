@@ -16,9 +16,11 @@
 	<name>smoketest</name>
     <target>
         <device rank="master" alias="emulator_udeb_tef">
+            <property name="TYPE" value="WINSCW" />
             <property name="HARNESS" value="GENERIC" />
         </device>
         <device rank="master" alias="emulator_udeb_stif">
+            <property name="TYPE" value="WINSCW" />
             <property name="HARNESS" value="ATSINTERFACE" />
         </device>
     </target>
