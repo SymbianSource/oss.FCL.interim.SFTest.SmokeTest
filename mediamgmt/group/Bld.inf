@@ -27,6 +27,7 @@ PRJ_TESTEXPORTS
 
 	../conf/MediaMgmtSmokeTestModule.cfg	c:/smoketest/MediaMgmtSmokeTestModule.cfg
 	../conf/UI_MediaMgmtSmokeTestModule.cfg	c:/smoketest/UI_MediaMgmtSmokeTestModule.cfg
+	../group/Smoketest_Mediamgmt.iby               /epoc32/rom/include/Smoketest_Mediamgmt.iby
 
 PRJ_TESTMMPFILES
 

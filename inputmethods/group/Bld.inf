@@ -25,6 +25,7 @@ PRJ_TESTEXPORTS
 // NOTE: If using ARS requirements all export operations should be done under this.
 // 'abld test export'
 ../conf/InputMethodSmokeTestModule.cfg	c:/smoketest/InputMethodSmokeTestModule.cfg
+../group/Smoketest_InputMethods.iby              /epoc32/rom/include/Smoketest_InputMethods.iby
 
 PRJ_TESTMMPFILES
 

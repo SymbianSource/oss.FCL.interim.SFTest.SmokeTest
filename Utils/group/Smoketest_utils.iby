@@ -1,0 +1,9 @@
+#ifndef SMOKETEST_UTILS_IBY
+#define SMOKETEST_UTILS_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\SmokeTest_Utils.dll    System\libs\SmokeTest_Utils.dll
+file=ABI_DIR\DEBUG_DIR\SmokeTestSecureFSclient.dll   System\libs\SmokeTestSecureFSclient.dll
+file=ABI_DIR\DEBUG_DIR\SmokeTestSecureFSserver.exe    System\libs\SmokeTestSecureFSserver.exe
+
+#endif //SMOKETEST_UIRESOURCES_IBY

@@ -1,0 +1,9 @@
+#ifndef SMOKETEST_INPUT_METHODS_IBY
+#define SMOKETEST_INPUT_METHODS_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\InputMethodSmokeTestModule.dll    System\libs\InputMethodSmokeTestModule.dll
+
+data=EPOCROOT##epoc32\data\c\smoketest\InputMethodSmokeTestModule.cfg	      smoketest\InputMethodSmokeTestModule.cfg
+
+#endif //SMOKETEST_INPUT_METHODS_IBY

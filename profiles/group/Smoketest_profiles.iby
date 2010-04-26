@@ -1,0 +1,9 @@
+#ifndef SMOKETEST_PROFILES_IBY
+#define SMOKETEST_PROFILES_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\ProfileSmokeTestModule.dll    System\libs\ProfileSmokeTestModule.dll
+
+data=EPOCROOT##epoc32\data\c\smoketest\ProfileSmokeTestModule.cfg 	      smoketest\ProfileSmokeTestModule.cfg 
+
+#endif //SMOKETEST_PROFILES_IBY

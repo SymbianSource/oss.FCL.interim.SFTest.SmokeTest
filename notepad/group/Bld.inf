@@ -27,6 +27,8 @@ PRJ_TESTEXPORTS
 ../conf/smoketest_notepad.cfg	c:/smoketest/smoketest_notepad.cfg
 ../conf/ui_TestNpdApi.cfg		c:/smoketest/ui_TestNpdApi.cfg
 
+../group/Smoketest_notepad.iby               /epoc32/rom/include/Smoketest_notepad.iby
+
 PRJ_EXPORTS
 // Specify the source file followed by its destination here
 // copy will be used to copy the source file to its destination

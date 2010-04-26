@@ -1,0 +1,10 @@
+#ifndef SMOKETEST_BROWSER_IBY
+#define SMOKETEST_BROWSER_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\BrCtlApiTest.dll    System\libs\BrCtlApiTest.dll
+
+data=EPOCROOT##epoc32\data\c\smoketest\ui_browser_control_smoke.cfg 	      smoketest\ui_browser_control_smoke.cfg 
+data=EPOCROOT##epoc32\data\c\smoketest\web\loadtest2.html	      smoketest\web\loadtest2.html
+data=EPOCROOT##epoc32\data\c\smoketest\web\img8.jpg	      smoketest\web\img8.jpg
+#endif //SMOKETEST_BROWSER_IBY

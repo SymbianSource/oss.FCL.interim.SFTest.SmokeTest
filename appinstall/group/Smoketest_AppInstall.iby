@@ -1,0 +1,7 @@
+#ifndef SMOKETEST_APPINSTALL_IBY
+#define SMOKETEST_APPINSTALL_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\AppInstallSmokeTestModule.dll    System\libs\AppInstallSmokeTestModule.dll
+
+#endif //SMOKETEST_APPINSTALL_IBY

@@ -36,3 +36,6 @@
 #include "../http/group/bld.inf"
 #include "../mediamgmt/group/Bld.inf"
 #include "../browser/group/Bld.inf"
+
+//-- Smoke Test IBY Files
+../group/smoketest.oby		/epoc32/rom/include/smoketest.oby

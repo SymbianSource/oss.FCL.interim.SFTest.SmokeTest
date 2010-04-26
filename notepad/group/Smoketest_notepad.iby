@@ -1,0 +1,10 @@
+#ifndef SMOKETEST_NOTEPAD_IBY
+#define SMOKETEST_NOTEPAD_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\TestNpdApi.dll    System\libs\TestNpdApi.dll
+
+data=EPOCROOT##epoc32\data\c\smoketest\smoketest_notepad.cfg 	      smoketest\smoketest_notepad.cfg 
+data=EPOCROOT##epoc32\data\c\smoketest\ui_TestNpdApi.cfg 	      smoketest\ui_TestNpdApi.cfg
+
+#endif //SMOKETEST_NOTEPAD_IBY

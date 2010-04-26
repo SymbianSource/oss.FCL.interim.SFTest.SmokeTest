@@ -22,6 +22,8 @@ PRJ_PLATFORMS
 	DEFAULT
 
 PRJ_TESTEXPORTS
+../group/Smoketest_AppInstall.iby	/epoc32/rom/include/Smoketest_AppInstall.iby
+
 // NOTE: If using ARS requirements all export operations should be done under this.
 // 'abld test export'
 ../conf/AppInstallSmokeTestModule.cfg	c:/smoketest/AppInstallSmokeTestModule.cfg

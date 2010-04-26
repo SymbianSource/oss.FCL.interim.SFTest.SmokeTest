@@ -1,0 +1,11 @@
+#ifndef SMOKETEST_TIMEW_IBY
+#define SMOKETEST_TIMEW_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\Smoketest_Timew_Server.exe    System\libs\Smoketest_Timew_Server.exe
+
+data=EPOCROOT##epoc32\data\z\smoketest\setup_Smoketest_Timew.script 	      smoketest\setup_Smoketest_Timew.script 
+data=EPOCROOT##epoc32\data\z\smoketest\Smoketest_Timew.script	      smoketest\Smoketest_Timew.script
+data=EPOCROOT##epoc32\data\z\smoketest\Smoketest_Timew.ini	      smoketest\Smoketest_Timew.ini
+
+#endif //SMOKETEST_TIMEW_IBY

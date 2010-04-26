@@ -1,0 +1,17 @@
+#ifndef SMOKETEST_LBS_IBY
+#define SMOKETEST_LBS_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\lbstestclient.dll   System\libs\lbstestclient.dll
+file=ABI_DIR\DEBUG_DIR\lbstestserver.exe    System\libs\lbstestserver.exe
+file=ABI_DIR\DEBUG_DIR\lbsclienttestserver.exe	System\libs\lbsclienttestserver.exe
+file=ABI_DIR\DEBUG_DIR\ctlbsexeclient.exe	System\libs\ctlbsexeclient.exe
+file=ABI_DIR\DEBUG_DIR\lbstestchannel.dll	System\libs\lbstestchannel.dll
+file=ABI_DIR\DEBUG_DIR\lbstestutils.dll	System\libs\lbstestutils.dll
+
+
+data=EPOCROOT##epoc32\data\z\smoketest\smoketest_lbs.script 	      smoketest\smoketest_lbs.script 
+data=EPOCROOT##epoc32\data\z\smoketest\setup_smoketest_lbs.script      smoketest\setup_smoketest_lbs.script
+data=EPOCROOT##epoc32\data\z\smoketest\smoketest_lbs.ini	      smoketest\smoketest_lbs.ini
+
+#endif //SMOKETEST_LBS_IBY

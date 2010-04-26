@@ -17,3 +17,6 @@
 
 #include "../testutils/group/bld.inf"
 #include "../email/group/bld.inf"
+
+PRJ_TESTEXPORTS
+../group/Smoketest_email.iby               /epoc32/rom/include/Smoketest_email.iby

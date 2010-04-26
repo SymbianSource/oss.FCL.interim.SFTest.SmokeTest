@@ -21,6 +21,7 @@ PRJ_TESTMMPFILES
 testhttpsuite.mmp
 
 PRJ_TESTEXPORTS
+../group/Smoketest_http.iby	/epoc32/rom/include/Smoketest_http.iby
 
 ..\script\setup_smoketest_http.script	z:\smoketest\setup_smoketest_http.script
 

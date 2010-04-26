@@ -1,0 +1,9 @@
+#ifndef SMOKETEST_MEDIAMGMT_IBY
+#define SMOKETEST_MEDIAMGMT_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\MediaMgmtSmokeTestModule.dll    System\libs\MediaMgmtSmokeTestModule.dll
+
+data=EPOCROOT##epoc32\data\c\smoketest\MediaMgmtSmokeTestModule.cfg 	      smoketest\MediaMgmtSmokeTestModule.cfg
+data=EPOCROOT##epoc32\data\c\smoketest\UI_MediaMgmtSmokeTestModule.cfg	      smoketest\UI_MediaMgmtSmokeTestModule.cfg
+#endif //SMOKETEST_MEDIAMGMT_IBY

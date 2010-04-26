@@ -17,3 +17,6 @@
 
 PRJ_TESTMMPFILES
 Smoketest_System.mmp
+
+PRJ_EXPORTS
+../group/Smoketest_System.iby               /epoc32/rom/include/Smoketest_System.iby

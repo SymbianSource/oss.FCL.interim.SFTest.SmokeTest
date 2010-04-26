@@ -1,0 +1,20 @@
+#ifndef __SMOKE_TEST_OBY__
+#define __SMOKE_TEST_OBY__
+
+#include <Smoketest_Agenda.iby>
+#include <Smoketest_AppInstall.iby>
+#include <Smoketest_Apploader.iby>
+#include <Smoketest_browser.iby>
+#include <Smoketest_Contacts.iby>
+#include <Smoketest_email.iby>
+#include <Smoketest_http.iby>
+#include <Smoketest_InputMethods.iby>
+#include <Smoketest_Mediamgmt.iby>
+#include <Smoketest_Mess.iby>
+#include <Smoketest_notepad.iby>
+#include <Smoketest_profiles.iby>
+#include <Smoketest_System.iby>
+#include <Smoketest_Timew.iby>
+#include <Smoketest_UIResources.iby>
+#include <Smoketest_utils.iby>
+#endif
