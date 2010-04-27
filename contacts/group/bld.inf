@@ -16,6 +16,7 @@
 //
 
 PRJ_TESTEXPORTS
+../group/Smoketest_Contacts.iby	/epoc32/rom/include/Smoketest_Contacts.iby
 
 ../scripts/Smoketest_Contacts.script		z:/smoketest/smoketest_contacts.script
 ../scripts/setup_Smoketest_Contacts.script	z:/smoketest/setup_smoketest_contacts.script

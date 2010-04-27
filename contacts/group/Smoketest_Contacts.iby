@@ -1,0 +1,10 @@
+#ifndef SMOKETEST_CONTACTS_IBY
+#define SMOKETEST_CONTACTS_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\Smoketest_Contacts.exe    System\libs\Smoketest_Contacts.exe
+
+data=EPOCROOT##epoc32\data\z\smoketest\setup_Smoketest_Contacts.script 	      smoketest\setup_Smoketest_Contacts.script 
+data=EPOCROOT##epoc32\data\z\smoketest\Smoketest_Contacts.script 	      smoketest\Smoketest_Contacts.script
+data=EPOCROOT##epoc32\data\z\smoketest\Smoketest_Contacts.ini 	      smoketest\Smoketest_Contacts.ini
+#endif //SMOKETEST_CONTACTS_IBY

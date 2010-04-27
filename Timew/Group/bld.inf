@@ -21,5 +21,7 @@ PRJ_TESTEXPORTS
 ../Scripts/Smoketest_Timew.script		z:/smoketest/smoketest_timew.script
 ../TestData/Smoketest_Timew.ini			z:/smoketest/smoketest_timew.ini
 
+../group/Smoketest_Timew.iby               /epoc32/rom/include/Smoketest_Timew.iby
+
 PRJ_TESTMMPFILES
 Smoketest_Timew.mmp

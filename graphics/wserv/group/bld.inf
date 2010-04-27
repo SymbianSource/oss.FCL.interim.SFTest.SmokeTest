@@ -16,6 +16,7 @@
 
 PRJ_TESTEXPORTS
 
+../group/Smoketest_graphics.iby               /epoc32/rom/include/Smoketest_graphics.iby
 //	T_DataWindowGc
 ../scripts/smoketest_bitmap.script			z:/smoketest/smoketest_bitmap.script
 ../scripts/setup_smoketest_bitmap.script	z:/smoketest/setup_smoketest_bitmap.script

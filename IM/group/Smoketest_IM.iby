@@ -1,0 +1,7 @@
+#ifndef SMOKETEST_IM_IBY
+#define SMOKETEST_IM_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\IMApiTest.dll    System\libs\IMApiTest.dll
+
+#endif //SMOKETEST_IM_IBY

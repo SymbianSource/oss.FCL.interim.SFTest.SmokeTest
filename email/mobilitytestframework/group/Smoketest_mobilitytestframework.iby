@@ -1,0 +1,7 @@
+#ifndef SMOKETEST_MOBILTYTESTFRAMEWORK_IBY
+#define SMOKETEST_MOBILTYTESTFRAMEWORK_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\mobilitytestframework.dll	System\libs\mobilitytestframework.dll
+
+#endif //SMOKETEST_MOBILTYTESTFRAMEWORK_IBY

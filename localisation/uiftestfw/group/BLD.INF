@@ -27,6 +27,7 @@ PRJ_TESTMMPFILES
 ../group/appfwk_test_utils.mmp
 
 PRJ_TESTEXPORTS
+../group/Smoketest_Uitestfw.iby              /epoc32/rom/include/Smoketest_Uitestfw.iby
 
 // TestFramework INCLUDE files
 ../inc/appfwk_test.h 				/epoc32/include/test/appfwk_test.h

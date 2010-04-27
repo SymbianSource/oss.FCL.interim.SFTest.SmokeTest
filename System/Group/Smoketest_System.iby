@@ -1,0 +1,7 @@
+#ifndef SMOKETEST_SYSTEM_IBY
+#define SMOKETEST_SYSTEM_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\Smoketest_System.exe    System\libs\Smoketest_System.exe
+
+#endif //SMOKETEST_SYSTEM_IBY

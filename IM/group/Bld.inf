@@ -71,5 +71,9 @@ PRJ_MMPFILES
 #endif
 */
 
+PRJ_TESTEXPORTS
+../group/Smoketest_IM.iby              /epoc32/rom/include/Smoketest_IM.iby
+
+
 
 //  End of File

@@ -21,3 +21,6 @@ mobilitytestframework.mmp
 #endif //__MOBILITY_TEST_FRAMEWORK
 
 PRJ_EXPORTS
+PRJ_TESTEXPORTS
+../group/Smoketest_mobilitytestframework.iby              /epoc32/rom/include/Smoketest_mobilitytestframework.iby
+

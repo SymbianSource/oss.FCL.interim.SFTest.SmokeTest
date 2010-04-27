@@ -1,0 +1,10 @@
+#ifndef SMOKETEST_AGENDA_IBY
+#define SMOKETEST_AGENDA_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\Smoketest_Agenda_Server.exe    System\libs\Smoketest_Agenda_Server.exe
+
+data=EPOCROOT##epoc32\data\z\smoketest\setup_Smoketest_Agenda.script 	      smoketest\setup_Smoketest_Agenda.script 
+data=EPOCROOT##epoc32\data\z\smoketest\Smoketest_Agenda.script 	      smoketest\Smoketest_Agenda.script
+data=EPOCROOT##epoc32\data\z\smoketest\Smoketest_Agenda.ini 	      smoketest\Smoketest_Agenda.ini
+#endif //SMOKETEST_AGENDA_IBY

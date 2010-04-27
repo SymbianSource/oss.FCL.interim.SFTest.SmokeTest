@@ -1,0 +1,10 @@
+#ifndef SMOKETEST_APPLOADER_IBY
+#define SMOKETEST_APPLOADER_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\smoketest_apploader.exe    System\libs\smoketest_apploader.exe
+
+data=EPOCROOT##epoc32\data\z\smoketest\setup_smoketest_apploader.script 	      smoketest\setup_smoketest_apploader.script 
+data=EPOCROOT##epoc32\data\z\smoketest\smoketest_apploader.script 	      smoketest\smoketest_apploader.script
+data=EPOCROOT##epoc32\data\z\smoketest\smoketest_apploader.ini 	      smoketest\smoketest_apploader.ini
+#endif //SMOKETEST_APPLOADER_IBY

@@ -1,0 +1,12 @@
+#ifndef SMOKETEST_APPARCHITECTURE_IBY
+#define SMOKETEST_APPARCHITECTURE_IBY
+
+file=ABI_DIR\DEBUG_DIR\apserv.dll	System\libs\apserv.dll
+file=ABI_DIR\DEBUG_DIR\TSTAPP_embedded.dll	System\libs\TSTAPP_embedded.dll
+file=ABI_DIR\DEBUG_DIR\tstapp.exe	System\libs\tstapp.exe
+file=ABI_DIR\DEBUG_DIR\TIconLoaderAndIconArrayForLeaks.dll	System\libs\TIconLoaderAndIconArrayForLeaks.dll
+
+data=EPOCROOT##epoc32\data\z\smoketest\smoketest_language.script 	      smoketest\smoketest_language.script
+data=EPOCROOT##epoc32\data\z\smoketest\setup_smoketest_language.script 	      smoketest\setup_smoketest_language.script
+
+#endif //SMOKETEST_APPARCHITECTURE_IBY

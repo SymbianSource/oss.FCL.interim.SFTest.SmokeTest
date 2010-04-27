@@ -1,0 +1,16 @@
+#ifndef SMOKETEST_GRAPHICS_IBY
+#define SMOKETEST_GRAPHICS_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\t_graphicswservapi.exe    System\libs\t_graphicswservapi.exe
+file=ABI_DIR\DEBUG_DIR\t_animplugin.dll    System\libs\t_animplugin.dll
+file=ABI_DIR\DEBUG_DIR\twsgraphicshare.exe	System\libs\twsgraphicshare.exe
+file=ABI_DIR\DEBUG_DIR\twsgraphicunshare.exe	System\libs\twsgraphicunshare.exe
+
+
+data=EPOCROOT##epoc32\data\z\smoketest\smoketest_bitmap.script 	      smoketest\smoketest_bitmap.script 
+data=EPOCROOT##epoc32\data\z\smoketest\setup_smoketest_bitmap.script      smoketest\setup_smoketest_bitmap.script
+data=EPOCROOT##epoc32\data\z\smoketest\smoketest_bitmap.ini	      smoketest\smoketest_bitmap.ini
+data=EPOCROOT##epoc32\data\z\smoketest\bitmap\uibench_16bit.mbm	      smoketest\bitmap\uibench_16bit.mbm
+
+#endif //SMOKETEST_GRAPHICS_IBY

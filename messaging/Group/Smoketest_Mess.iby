@@ -1,0 +1,12 @@
+#ifndef SMOKETEST_MESS_IBY
+#define SMOKETEST_MESS_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\Smoketest_Mess_Server.exe    System\libs\Smoketest_Mess_Server.exe
+
+data=EPOCROOT##epoc32\data\z\smoketest\smoketest_createsmsaccount.script 	      smoketest\smoketest_createsmsaccount.script 
+data=EPOCROOT##epoc32\data\z\smoketest\setup_Smoketest_Mess.script 	      smoketest\setup_Smoketest_Mess.script
+data=EPOCROOT##epoc32\data\z\smoketest\Smoketest_Mess.script 	      smoketest\Smoketest_Mess.script
+data=EPOCROOT##epoc32\data\z\smoketest\sms\Message1.txt          smoketest\sms\message1.txt
+data=EPOCROOT##epoc32\data\z\smoketest\Smoketest_Mess.ini          smoketest\Smoketest_Mess.ini
+#endif //SMOKETEST_MESS_IBY

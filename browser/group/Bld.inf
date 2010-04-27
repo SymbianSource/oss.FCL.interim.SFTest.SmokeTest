@@ -21,6 +21,8 @@ PRJ_PLATFORMS
 DEFAULT
 
 PRJ_TESTEXPORTS
+../group/Smoketest_Browser.iby	/epoc32/rom/include/Smoketest_Browser.iby
+
 //../init/testframework.ini           /epoc32/winscw/c/TestFramework/testframework.ini
 
 ../data/ui_browser_control_smoke.cfg	c:/smoketest/ui_browser_control_smoke.cfg

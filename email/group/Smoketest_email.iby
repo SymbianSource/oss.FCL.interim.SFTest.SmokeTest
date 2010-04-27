@@ -1,0 +1,16 @@
+#ifndef SMOKETEST_EMAIL_IBY
+#define SMOKETEST_EMAIL_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\t_msgpopserver.exe    System\libs\t_msgpopserver.exe
+file=ABI_DIR\DEBUG_DIR\t_msgsmtpserver.exe    System\libs\t_msgsmtpserver.exe
+file=ABI_DIR\DEBUG_DIR\mobilitytestframework.dll	System\libs\mobilitytestframework.dll
+file=ABI_DIR\DEBUG_DIR\t_msgutilityserver.dll	System\libs\t_msgutilityserver.dll
+
+
+data=EPOCROOT##epoc32\data\z\smoketest\smoketest_email.script 	      smoketest\smoketest_email.script 
+data=EPOCROOT##epoc32\data\z\smoketest\smoketest_email.ini	      smoketest\smoketest_email.ini
+data=EPOCROOT##epoc32\data\z\smoketest\setup_smoketest_email.script	      smoketest\setup_smoketest_email.script
+data=EPOCROOT##epoc32\data\z\smoketest\MachineName.txt	      smoketest\MachineName.txt
+
+#endif //SMOKETEST_EMAIL_IBY

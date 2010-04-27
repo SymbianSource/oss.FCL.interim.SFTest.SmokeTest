@@ -33,6 +33,8 @@ PRJ_TESTEXPORTS
 // Wallpaper image file
 ../testdata/wallpaper/symbian_01_320x480.jpg	c:/smoketest/wallpaper/symbian_01_320x480.jpg
 
+../group/Smoketest_UIResources.iby               /epoc32/rom/include/Smoketest_UIResources.iby
+
 PRJ_EXPORTS
 
 

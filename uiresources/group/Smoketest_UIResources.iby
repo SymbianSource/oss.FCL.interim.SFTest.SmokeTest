@@ -1,0 +1,11 @@
+#ifndef SMOKETEST_UIRESOURCES_IBY
+#define SMOKETEST_UIRESOURCES_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\testsdkskins.dll    System\libs\testsdkskins.dll
+
+data=EPOCROOT##epoc32\data\c\smoketest\smoketest_uiresources.cfg 	      smoketest\smoketest_uiresources.cfg 
+data=EPOCROOT##epoc32\data\c\smoketest\ui_testsdkskinsu.cfg 	      smoketest\ui_testsdkskinsu.cfg
+data=EPOCROOT##epoc32\data\c\smoketest\ui_testsdkskinswu.cfg 	      smoketest\ui_testsdkskinswu.cfg
+data=EPOCROOT##epoc32\data\c\smoketest\wallpaper\symbian_01_320x480.jpg 	      smoketest\wallpaper\symbian_01_320x480.jpg 
+#endif //SMOKETEST_UIRESOURCES_IBY

@@ -25,6 +25,8 @@ PRJ_TESTEXPORTS
 ../Inc/SmokeTestSecureFSclient.h				/epoc32/include/test/smoketestsecurefsclient.h
 ../Inc/SmokeTestSecureFSserver.h				/epoc32/include/test/smoketestsecurefsserver.h
 
+../group/Smoketest_utils.iby               /epoc32/rom/include/Smoketest_utils.iby
+
 PRJ_TESTMMPFILES
 SmokeTestSecureFSclient.mmp
 SmokeTestSecureFSserver.mmp

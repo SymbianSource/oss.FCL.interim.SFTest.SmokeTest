@@ -26,6 +26,8 @@ PRJ_TESTEXPORTS
 // 'abld test export'
 ../conf/ProfileSmokeTestModule.cfg c:/smoketest/ProfileSmokeTestModule.cfg
 
+../group/Smoketest_profiles.iby               /epoc32/rom/include/Smoketest_profiles.iby
+
 PRJ_TESTMMPFILES
 
 	ProfileSmokeTestModule.mmp
