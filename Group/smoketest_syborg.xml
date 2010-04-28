@@ -25,7 +25,6 @@
         </device>
     </target>
 	<plan id="" name="Syborg SmokeTest" harness="GENERIC" enabled="true" passrate="100">
-        <flash target-alias="test-target" images="image-path" />
 		<session id="" name="smoke tests" harness="GENERIC" enabled="true" passrate="100">
 			<set id="" name="GENERIC smoke tests" harness="GENERIC" enabled="true" passrate="100">
             	<target>
