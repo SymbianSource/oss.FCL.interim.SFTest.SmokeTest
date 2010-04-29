@@ -25,11 +25,11 @@
         </device>
     </target>
 	<plan id="" name="Syborg SmokeTest" harness="GENERIC" enabled="true" passrate="100">
+        <target>
+            <device rank="master" alias="Syborg_tef" />
+        </target>
 		<session id="" name="smoke tests" harness="GENERIC" enabled="true" passrate="100">
 			<set id="" name="GENERIC smoke tests" harness="GENERIC" enabled="true" passrate="100">
-            	<target>
-                    <device rank="master" alias="Syborg_tef" />
-                </target>
 				<case id="" name="Run GENERIC smoke tests" harness="GENERIC" enabled="true" passrate="100">
 					<step id="" name="smoketest_apploader (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
