@@ -21,7 +21,7 @@ PRJ_PLATFORMS
 DEFAULT
 
 PRJ_TESTEXPORTS
-../group/Smoketest_Browser.iby	/epoc32/rom/include/Smoketest_Browser.iby
+Smoketest_Browser.iby	/epoc32/rom/include/Smoketest_Browser.iby
 
 //../init/testframework.ini           /epoc32/winscw/c/TestFramework/testframework.ini
 
@@ -31,13 +31,7 @@ PRJ_TESTEXPORTS
 
 ../data/img8.jpg						c:/smoketest/web/img8.jpg
 
-PRJ_EXPORTS
-// Nothing to do 
-
 PRJ_TESTMMPFILES
 BrCtlApiTest.mmp
-
-PRJ_MMPFILES
-// Nothing to do 
 
 //  End of File

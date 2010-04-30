@@ -16,7 +16,7 @@
 //
 
 PRJ_TESTEXPORTS
-../group/Smoketest_Agenda.iby	/epoc32/rom/include/Smoketest_Agenda.iby
+Smoketest_Agenda.iby	/epoc32/rom/include/Smoketest_Agenda.iby
 
 ../Scripts/setup_Smoketest_Agenda.script	z:/smoketest/setup_smoketest_agenda.script
 ../Scripts/Smoketest_Agenda.script			z:/smoketest/smoketest_agenda.script

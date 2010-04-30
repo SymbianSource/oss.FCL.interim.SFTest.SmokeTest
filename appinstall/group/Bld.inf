@@ -18,46 +18,18 @@
 PRJ_PLATFORMS
 // specify the platforms your component needs to be built for here
 // defaults to WINS MARM so you can ignore this if you just build these
-	
-	DEFAULT
+DEFAULT
 
 PRJ_TESTEXPORTS
-../group/Smoketest_AppInstall.iby	/epoc32/rom/include/Smoketest_AppInstall.iby
+Smoketest_AppInstall.iby	/epoc32/rom/include/Smoketest_AppInstall.iby
 
 // NOTE: If using ARS requirements all export operations should be done under this.
 // 'abld test export'
 ../conf/AppInstallSmokeTestModule.cfg	c:/smoketest/AppInstallSmokeTestModule.cfg
 ../data/sistest_winscw.sisx				c:/smoketest/appinstall/sistest_winscw.sisx
 
-PRJ_EXPORTS
-// Specify the source file followed by its destination here
-// copy will be used to copy the source file to its destination
-// If there's no destination then the source file will be copied
-// to the same name in \epoc32\include
-// Example: 
-/*
-\agnmodel\inc\AGMCOMON.H
-*/
-
 PRJ_TESTMMPFILES
 
-	AppInstallSmokeTestModule.mmp
-
-PRJ_MMPFILES
-
-
-// Specify the .mmp files required for building the important component
-// releasables.
-//
-// Specify "tidy" if the component you need to build doesn't need to be
-// released. Specify "ignore" if the MMP file exists but should be
-// ignored.
-// Example:
-/*
-\agnmodel\group\agnmodel.mmp
-#if defined(MARM)
-\agnmodel\group\agsvexe.mmp
-#endif
-*/
+AppInstallSmokeTestModule.mmp
 
 //  End of File
