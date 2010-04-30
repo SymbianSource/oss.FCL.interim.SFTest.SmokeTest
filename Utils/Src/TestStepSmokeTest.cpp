@@ -19,7 +19,6 @@
 #include "TestStepSmokeTest.h"
 
 //Epoc include
-#include <testconfigfileparser.h>
 #include <f32file.h>
 #include <e32std.h>
 
@@ -110,108 +109,6 @@ EXPORT_C TVerdict CTestStepSmokeTest::doTestStepPreambleL()
 
 EXPORT_C TVerdict CTestStepSmokeTest::doTestStepPostambleL()
 	{
-
-	//Read whether to do capability testing..
-	TPtrC captest(KNo);
-	GetStringFromConfig(KDefault, KCapTest, captest);
-	if( captest.Compare(_L("YES")) == 0)
-		{
-		INFO_PRINTF1(_L("---Capability Testing---"));
-		//Gets the capabilities config file
-		TBuf<KMaxTestExecuteCommandLength> scriptFile;
-		scriptFile.Copy(KConfigFile);
-		INFO_PRINTF2(_L("The config file %S"), &scriptFile);
-	
-		TBuf8<KMaxTestExecuteCommandLength> scriptSection;
-		scriptSection.Copy(_L("Capabilities"));
-			
-		TPtrC serverName = GetServerName();
-		INFO_PRINTF2(_L("The server name is  %S"), &serverName);
-		HBufC8 *scriptItem = HBufC8::NewLC(serverName.Length());
-		scriptItem->Des().Copy(serverName);
-		 
-		//Get the file server session object
-		RFs		rFs;
-		TInt	err=rFs.Connect();
-		if(err != KErrNone)
-			{
-			ERR_PRINTF1(_L("Failed to connect with File server"));
-			SetTestStepResult(EFail);
-			}
-		else
-			{
-			CleanupClosePushL(rFs);
-			//Get the config file
-			CTestConfig* configFile = CTestConfig::NewLC(rFs, KNullDesC, scriptFile);
-			if( configFile == NULL)
-				{
-				WARN_PRINTF1(_L("NO Config file found -- Plattest_capabilites.config"));
-				}
-			else
-				{
-				//Get the item value from config file
-				TBuf8<KMaxTestExecuteCommandLength> itemValue;
-				itemValue = configFile->Section(scriptSection)->Item(scriptItem->Des())->Value();
-				TLex8 capabilityParser(itemValue);
-				TBool capCheckResult= ETrue;
-				
-				while(!capabilityParser.Eos())
-					{
-					//Parse the capabilities
-					TPtrC8 capability(capabilityParser.NextToken());
-								
-					HBufC* capabilityRead = HBufC::NewLC(capability.Length());
-					capabilityRead->Des().Copy(capability);
-					INFO_PRINTF2(_L("Capability Read is %S"), capabilityRead);
-					
-					//Get the capability value
-					TCapability capabilityValue;
-					TPtrC ptrCapabilty(capabilityRead->Des());
-					TInt err = GetCapability(ptrCapabilty, capabilityValue);
-					if( err != KErrNone)
-						{
-						WARN_PRINTF1(_L("The capability is not found"));
-						}
-					else
-						{
-						//Check if the current process posses the required capability
-						if( !RProcess().HasCapability(capabilityValue) )
-							{
-							INFO_PRINTF2(_L("The capability %S is not possesed."), capabilityRead);
-							capCheckResult=EFalse;
-							}
-						else
-							{
-							INFO_PRINTF2(_L("The capability %S is possesed."), capabilityRead);
-							}
-						}
-					CleanupStack::PopAndDestroy(capabilityRead);
-					}
-					
-				//read the expected capability check result
-				TBool expectedCapCheckResult = ETrue;
-				GetBoolFromConfig(ConfigSection(), KExpectedCapCheckResult, expectedCapCheckResult);
-				INFO_PRINTF2(_L("The expected cap check result is %D"), expectedCapCheckResult);
-				INFO_PRINTF2(_L("The cap check result is %D"), capCheckResult);
-
-				if(expectedCapCheckResult == capCheckResult)
-					{
-					SetTestStepResult(EPass);
-					}
-				else
-					{
-					SetTestStepResult(EFail);
-					}
-				}
-			CleanupStack::PopAndDestroy(2, &rFs);
-			}
-		CleanupStack::PopAndDestroy(scriptItem);
-		if(TestStepError() == KErrPermissionDenied)
-			{
-			INFO_PRINTF1(_L(" The failure is due to Platform Security"));
-			}
-		}
-
 	TVerdict ret = CTestStep::doTestStepPostambleL();
 	return ret;
 	}

@@ -46,7 +46,6 @@ LIBRARY			euser.lib
 LIBRARY			efsrv.lib
 LIBRARY			TestExecuteUtils.lib 
 LIBRARY			TestExecuteLogClient.lib
-LIBRARY			TestConfigFileParser.lib
 
 // We're quite heavy on the stack... 4k in WinS isn't enough...
 EPOCSTACKSIZE	0x6000
