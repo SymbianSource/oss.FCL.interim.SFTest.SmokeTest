@@ -142,6 +142,7 @@ TInt CAppInstallSmokeTestModule::InstallAppL( CStifItemParser& aItem )
         options().iPackageInfo = SwiUI::EPolicyAllowed;
         options().iOverwrite = SwiUI::EPolicyAllowed;
         options().iKillApp = SwiUI::EPolicyAllowed;
+        options().iUntrusted = SwiUI::EPolicyAllowed;
 
         
         User::LeaveIfError(installer.SilentInstall(sisPath, options));

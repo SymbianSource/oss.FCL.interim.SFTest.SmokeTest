@@ -142,7 +142,7 @@ TInt CProfileSmokeTestModule::CheckActiveProfileL( CStifItemParser& aItem )
     TPtrC expectedName;
     if ( aItem.GetNextString( expectedName ) == KErrNone )
     	{
-    	TL( active->ProfileName().Name() == expectedName)
+    	TL(active->ProfileName().Name() == expectedName)
     	}
     
     TInt expectedRingVol;
@@ -177,7 +177,7 @@ TInt CProfileSmokeTestModule::CheckActiveProfileL( CStifItemParser& aItem )
     	TL(expectedVibrate == active->ToneSettings().VibratingAlert());
     	}
     
-    CleanupStack::PopAndDestroy(2);
+    CleanupStack::Pop(2);
     
     return KErrNone;
     }
@@ -222,7 +222,7 @@ TInt CProfileSmokeTestModule::SetActiveProfileL( CStifItemParser& aItem )
     		engine->SetActiveProfileL( EProfileOutdoorId );
     		}
 
-    	CleanupStack::PopAndDestroy();
+    	CleanupStack::Pop();
     	}
     
     return KErrNone;
