@@ -19,6 +19,7 @@ use File::Copy;
 use File::Path;
 
 my $target;
+my $ats_version;
 my $help;
 
 sub usage($);
@@ -26,10 +27,12 @@ sub help();
 sub usage_error();
 
 my %optmap = (  'target' => \$target,
+				'ats-version' => \$ats_version,
 				'help' => \$help);
 
 GetOptions(\%optmap,
           'target=s',
+		  'ats-version=s',
 		  'help!') 
           or usage_error();
 
@@ -49,6 +52,11 @@ elsif (lc($target) eq "syborg") {
 else {
 	# unknown target.
     usage_error();
+}
+
+# --ats-version is not mandatory.
+if (!defined($ats_version)) { # Set ats3 by default
+	$ats_version = "ats3" 
 }
 
 unlink "smoketest.zip";
@@ -71,7 +79,8 @@ if ($target eq "WINSCW") { # Build ATS test drop for Emulator.
 	mkpath "temp/smoketest/web/general";
 
 	my $epoc=$ENV{'EPOCROOT'} . "epoc32/";
-	copy("smoketest.xml",												"temp/test.xml");
+	if (lc($ats_version) eq "ats3") { copy("smoketest.xml",				"temp/test.xml"); } # Use ATS3 test plan.
+	if (lc($ats_version) eq "ats4") { copy("ats4_smoketest.xml",		"temp/test.xml"); } # Use ATS4 test plan.
 	copy($epoc . "data/z/smoketest/smoketest_agenda.ini",				"temp/smoketest/general/smoketest_agenda.ini");
 	copy($epoc . "data/z/smoketest/smoketest_agenda.script",			"temp/smoketest/general/smoketest_agenda.script");
 	copy($epoc . "data/z/smoketest/smoketest_apploader.ini",			"temp/smoketest/general/smoketest_apploader.ini");
@@ -194,7 +203,8 @@ if ($target eq "WINSCW") { # Build ATS test drop for Emulator.
 	copy($epoc . "release/winscw/udeb/BrCtlApiTest.dll",				"temp/smoketest/winscw_udeb/BrCtlApiTest.dll");
 }
 elsif ($target eq "SYBORG") { # Build ATS test drop for Syborg.
-	copy("smoketest_syborg.xml",										"temp/test.xml");
+	if (lc($ats_version) eq "ats3") { copy("smoketest_syborg.xml",		"temp/test.xml"); } # Use ATS3 test plan.
+	if (lc($ats_version) eq "ats4") { copy("ats4_smoketest_syborg.xml",	"temp/test.xml"); } # Use ATS4 test plan.
 }
 
 system("7z a -tzip smoketest.zip ./temp/*");
@@ -209,11 +219,12 @@ sub usage($)
             "Specify the target\n" .
             "synopsis:\n" .
             "  smoketest.pl --help\n" .
-            "  smoketest.pl [--target=TARGET] \n" .
+            "  smoketest.pl [--target=TARGET] [--ats-version=VERSION]\n" .
             "options:\n" .
             "  --help                        Display this help and exit.\n" .
-            "  --target=TARGET               TARGET is the target on which the smoketest will be run (WINSCW | SYBORG). If not specified WINSCW will be used.\n";
-    exit $error;            
+			"  --target=TARGET               TARGET is the target on which the smoketest will be run (WINSCW | SYBORG). If not specified WINSCW will be used.\n" .
+            "  --ats-version=VERSION         VERSION is the version of ATS which will be used to run the smoketest (ATS3 | ATS4). If not specified ATS3 will be set by default.\n";
+    exit $error;
 }
 
 sub help()

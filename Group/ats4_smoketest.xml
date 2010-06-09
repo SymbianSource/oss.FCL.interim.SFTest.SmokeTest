@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<testrun>
+	<agents>
+		<agent alias="target">
+		</agent>
+	</agents>
+	<execution>
+		<initialization>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\general\*" name="src"/>
+					<parameter value="c:\smoketest\*" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\sms\general\message1.txt" name="src"/>
+					<parameter value="c:/smoketest/sms/message1.txt" name="dst"/>
+				</parameters>
+			</task>		
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\emailmessage\general\20KBody.txt" name="src"/>
+					<parameter value="c:/smoketest/emailmessage/20KBody.txt" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\emailsettings\general\popsettings_test908.txt" name="src"/>
+					<parameter value="c:/smoketest/emailsettings/popsettings_test908.txt" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\bitmap\general\uibench_16bit.mbm" name="src"/>
+					<parameter value="c:/smoketest/bitmap/uibench_16bit.mbm" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\ethernet\general\delproxy.pl" name="src"/>
+					<parameter value="c:\delproxy.pl" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\Smoketest_Agenda_Server.exe" name="src"/>
+					<parameter value="c:\sys\bin\Smoketest_Agenda_Server.exe" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\smoketest_apploader.exe" name="src"/>
+					<parameter value="c:\sys\bin\smoketest_apploader.exe" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\Smoketest_Contacts_Server.exe" name="src"/>
+					<parameter value="c:\sys\bin\Smoketest_Contacts_Server.exe" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\Smoketest_Mess_Server.exe" name="src"/>
+					<parameter value="c:\sys\bin\Smoketest_Mess_Server.exe" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\Smoketest_System.exe" name="src"/>
+					<parameter value="c:\sys\bin\Smoketest_System.exe" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\Smoketest_Timew_Server.exe" name="src"/>
+					<parameter value="c:\sys\bin\Smoketest_Timew_Server.exe" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\SmokeTest_Utils.dll" name="src"/>
+					<parameter value="c:\sys\bin\SmokeTest_Utils.dll" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\SmokeTestSecureFSclient.dll" name="src"/>
+					<parameter value="c:\sys\bin\SmokeTestSecureFSclient.dll" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\SmokeTestSecureFSserver.exe" name="src"/>
+					<parameter value="c:\sys\bin\SmokeTestSecureFSserver.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\t_msgutilityserver.dll" name="src"/>
+					<parameter value="c:\sys\bin\t_msgutilityserver.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\t_msgpopserver.exe" name="src"/>
+					<parameter value="c:\sys\bin\t_msgpopserver.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\t_msgsmtpserver.exe" name="src"/>
+					<parameter value="c:\sys\bin\t_msgsmtpserver.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\t_animplugin.dll" name="src"/>
+					<parameter value="c:\sys\bin\t_animplugin.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\t_graphicswservapi.exe" name="src"/>
+					<parameter value="c:\sys\bin\t_graphicswservapi.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\twsgraphicshare.exe" name="src"/>
+					<parameter value="c:\sys\bin\twsgraphicshare.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\twsgraphicunshare.exe" name="src"/>
+					<parameter value="c:\sys\bin\twsgraphicunshare.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\testhttpsuite.exe" name="src"/>
+					<parameter value="c:\sys\bin\testhttpsuite.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>CreateDirTask</type>
+				<parameters>
+					<parameter name="dir" value="c:\spd_logs\xml" />
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\ProfileSmokeTestModule.dll" name="src"/>
+					<parameter value="c:\sys\bin\ProfileSmokeTestModule.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\TestNpdApi.dll" name="src"/>
+					<parameter value="c:\sys\bin\TestNpdApi.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\AppInstallSmokeTestModule.dll" name="src"/>
+					<parameter value="c:\sys\bin\AppInstallSmokeTestModule.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\appinstall\general\sistest_winscw.sisx" name="src"/>
+					<parameter value="c:\smoketest\appinstall\sistest_winscw.sisx" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\testsdkskins.dll" name="src"/>
+					<parameter value="c:\sys\bin\testsdkskins.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\wallpaper\general\symbian_01_320x480.jpg" name="src"/>
+					<parameter value="c:/smoketest/wallpaper/symbian_01_320x480.jpg" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\InputMethodSmokeTestModule.dll" name="src"/>
+					<parameter value="c:\sys\bin\InputMethodSmokeTestModule.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\MediaMgmtSmokeTestModule.dll" name="src"/>
+					<parameter value="c:\sys\bin\MediaMgmtSmokeTestModule.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\BrCtlApiTest.dll" name="src"/>
+					<parameter value="c:\sys\bin\BrCtlApiTest.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\web\general\loadtest2.html" name="src"/>
+					<parameter value="c:/smoketest/web/loadtest2.html" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\web\general\img8.jpg" name="src"/>
+					<parameter value="c:/smoketest/web/img8.jpg" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>NonTestExecuteTask</type>
+				<parameters>
+					<parameter value="perl.exe" name="file"/>
+					<parameter value="delproxy.pl ethernetced.xml" name="parameters"/>
+					<parameter value="D:\ATS\winscw_smoketest\epoc32\winscw\c" name="dir"/> <!-- This needs to point to the actual subst'd drive -->
+					<parameter value="1200" name="timeout"/>
+					<parameter value="true" name="local"/>
+				</parameters>
+			</task>
+		</initialization>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="c:\smoketest\smoketest_apploader.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_apploader.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>			
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="c:\smoketest\smoketest_agenda.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_agenda.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="c:\smoketest\smoketest_contacts.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_contacts.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="c:\smoketest\smoketest_mess.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_mess.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="c:\smoketest\smoketest_timew.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_timew.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="c:\smoketest\smoketest_email.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_email.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="c:\smoketest\smoketest_bitmap.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_bitmap.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="perl.exe"/>
+				<parameter name="parameters" value="configchange.pl --config ethernetWithCommDB --kernel EKA2 --target winscw --variant UDEB" />
+				<parameter name="dir" value="D:\ATS\winscw_smoketest\epoc32\tools" /> <!-- This needs to point to the actual subst'd drive -->
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="true" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="dbcreator.exe"/>
+				<parameter name="parameters" value="-dtextshell -Mconsole -- E" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="dbcreator.exe"/>
+				<parameter name="parameters" value="-dtextshell -- f:c:\S60_32_default_snaps.xml" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="c:\smoketest\smoketest_http.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_http.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testscripter -config c:\smoketest\ProfileSmokeTestModule.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testscripter.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testcombiner -config c:\smoketest\smoketest_notepad.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testcombiner.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testscripter -config c:\smoketest\AppInstallSmokeTestModule.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testscripter.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testcombiner -config c:\smoketest\smoketest_uiresources.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testcombiner.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testscripter -config c:\smoketest\InputMethodSmokeTestModule.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testscripter.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testscripter -config c:\smoketest\ui_browser_control_smoke.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testscripter.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<finalization>
+			<task agents="target">
+				<type>FileDownloadTask</type>
+				<parameters>
+					<parameter name="src" value="c:\logs\testexecute\*.htm"/>
+					<parameter name="delete" value="true"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileDownloadTask</type>
+				<parameters>
+					<parameter name="src" value="c:\logs\testexecute\screen.mbm"/>
+					<parameter name="delete" value="true"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileDownloadTask</type>
+				<parameters>
+					<parameter name="src" value="c:\logs\testexecute\HttpGoogle.htm"/>
+					<parameter name="delete" value="true"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>CleanupTask</type>
+				<parameters>
+					<parameter name="upload-files" value="true"/>
+				</parameters>
+			</task>
+		</finalization>
+	</execution>
+	<postActions>
+		<action>
+			<type>ReportFormatAction</type>
+			<parameters>
+				<parameter name="format" value="simplelogger" />
+			</parameters>
+		</action>
+		<action>
+			<type>FileStoreAction</type>
+			<parameters>
+			</parameters>
+		</action>
+	</postActions>
+</testrun>
