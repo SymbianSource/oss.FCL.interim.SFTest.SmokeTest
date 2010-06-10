@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <testrun>
+	<metadata>
+		<meta name="name">Smoketest</meta>
+	</metadata>
 	<agents>
 		<agent alias="target">
+			<property name="name" value="MY_AGENT_NAME"/>
 		</agent>
 	</agents>
 	<execution>
@@ -10,35 +14,35 @@
 				<type>FileUploadTask</type>
 				<parameters>
 					<parameter value="smoketest\general\*" name="src"/>
-					<parameter value="c:\smoketest\*" name="dst"/>
+					<parameter value="c:\smoketest\" name="dst"/>
 				</parameters>
 			</task>
 			<task agents="target">
 				<type>FileUploadTask</type>
 				<parameters>
 					<parameter value="smoketest\sms\general\message1.txt" name="src"/>
-					<parameter value="c:/smoketest/sms/message1.txt" name="dst"/>
+					<parameter value="c:\smoketest\sms\message1.txt" name="dst"/>
 				</parameters>
 			</task>		
 			<task agents="target">
 				<type>FileUploadTask</type>
 				<parameters>
 					<parameter value="smoketest\emailmessage\general\20KBody.txt" name="src"/>
-					<parameter value="c:/smoketest/emailmessage/20KBody.txt" name="dst"/>
+					<parameter value="c:\smoketest\emailmessage\20KBody.txt" name="dst"/>
 				</parameters>
 			</task>	
 			<task agents="target">
 				<type>FileUploadTask</type>
 				<parameters>
 					<parameter value="smoketest\emailsettings\general\popsettings_test908.txt" name="src"/>
-					<parameter value="c:/smoketest/emailsettings/popsettings_test908.txt" name="dst"/>
+					<parameter value="c:\smoketest\emailsettings\popsettings_test908.txt" name="dst"/>
 				</parameters>
 			</task>	
 			<task agents="target">
 				<type>FileUploadTask</type>
 				<parameters>
 					<parameter value="smoketest\bitmap\general\uibench_16bit.mbm" name="src"/>
-					<parameter value="c:/smoketest/bitmap/uibench_16bit.mbm" name="dst"/>
+					<parameter value="c:\smoketest\bitmap\uibench_16bit.mbm" name="dst"/>
 				</parameters>
 			</task>	
 			<task agents="target">
@@ -212,7 +216,7 @@
 				<type>FileUploadTask</type>
 				<parameters>
 					<parameter value="smoketest\wallpaper\general\symbian_01_320x480.jpg" name="src"/>
-					<parameter value="c:/smoketest/wallpaper/symbian_01_320x480.jpg" name="dst"/>
+					<parameter value="c:\smoketest\wallpaper\symbian_01_320x480.jpg" name="dst"/>
 				</parameters>
 			</task>
 			<task agents="target">
@@ -240,14 +244,14 @@
 				<type>FileUploadTask</type>
 				<parameters>
 					<parameter value="smoketest\web\general\loadtest2.html" name="src"/>
-					<parameter value="c:/smoketest/web/loadtest2.html" name="dst"/>
+					<parameter value="c:\smoketest\web\loadtest2.html" name="dst"/>
 				</parameters>
 			</task>
 			<task agents="target">
 				<type>FileUploadTask</type>
 				<parameters>
 					<parameter value="smoketest\web\general\img8.jpg" name="src"/>
-					<parameter value="c:/smoketest/web/img8.jpg" name="dst"/>
+					<parameter value="c:\smoketest\web\img8.jpg" name="dst"/>
 				</parameters>
 			</task>
 			<task agents="target">
@@ -433,21 +437,7 @@
 			<task agents="target">
 				<type>FileDownloadTask</type>
 				<parameters>
-					<parameter name="src" value="c:\logs\testexecute\*.htm"/>
-					<parameter name="delete" value="true"/>
-				</parameters>
-			</task>
-			<task agents="target">
-				<type>FileDownloadTask</type>
-				<parameters>
-					<parameter name="src" value="c:\logs\testexecute\screen.mbm"/>
-					<parameter name="delete" value="true"/>
-				</parameters>
-			</task>
-			<task agents="target">
-				<type>FileDownloadTask</type>
-				<parameters>
-					<parameter name="src" value="c:\logs\testexecute\HttpGoogle.htm"/>
+					<parameter name="src" value="c:\logs\testexecute\*"/>
 					<parameter name="delete" value="true"/>
 				</parameters>
 			</task>
@@ -467,9 +457,7 @@
 			</parameters>
 		</action>
 		<action>
-			<type>FileStoreAction</type>
-			<parameters>
-			</parameters>
+			<type>DiamondsAction</type>
 		</action>
 	</postActions>
 </testrun>
