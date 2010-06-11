@@ -433,6 +433,16 @@
 				<parameter name="timeout" value="1200" />
 			</parameters>
 		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testcombiner -config c:\smoketest\MediaMgmtSmokeTestModule.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testcombiner.xml" />
+				<parameter name="timeout" value="600" />
+			</parameters>
+		</task>
 		<finalization>
 			<task agents="target">
 				<type>FileDownloadTask</type>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<testrun>
+	<metadata>
+		<meta name="name">Smoketest</meta>
+	</metadata>
+	<agents>
+		<agent alias="target">
+			<property name="name" value="MY_AGENT_NAME"/>
+		</agent>
+	</agents>
+	<execution>
+		<initialization>
+			<task agents="target">
+				<type>CreateDirTask</type>
+				<parameters>
+					<parameter name="dir" value="c:\spd_logs\xml" />
+				</parameters>
+			</task>
+		</initialization>
+		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_agenda.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\smoketest_agenda.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_agenda.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testscripter -config z:\smoketest\InputMethodSmokeTestModule.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testscripter.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<finalization>
+			<task agents="target">
+				<type>FileDownloadTask</type>
+				<parameters>
+					<parameter name="src" value="c:\logs\testexecute\*"/>
+					<parameter name="delete" value="true"/>
+				</parameters>
+			</task>
+		</finalization>
+	</execution>
+	<postActions>
+		<action>
+			<type>ReportFormatAction</type>
+			<parameters>
+				<parameter name="format" value="simplelogger" />
+			</parameters>
+		</action>
+		<action>
+			<type>DiamondsAction</type>
+		</action>
+	</postActions>
+</testrun>
