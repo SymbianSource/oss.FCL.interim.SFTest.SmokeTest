@@ -35,9 +35,6 @@
 #include "../http/group/bld.inf"
 #include "../mediamgmt/group/Bld.inf"
 #include "../browser/group/Bld.inf"
-#include "../qt/gestures/bld.inf
-#include "../qt/qwidget/bld.inf"
-#include "../qt/qapplication/bld.inf"
 
 PRJ_TESTEXPORTS
 smoketest.oby		/epoc32/rom/include/smoketest.oby
