@@ -11,6 +11,13 @@
 	<execution>
 		<initialization>
 			<task agents="target">
+				<type>FlashTask</type>
+				<parameters>
+					<parameter name="image-1" value="\\v800008\Releases\Syborg.img" />
+					<parameter name="timeout" value="1200" />
+				</parameters>
+			</task>
+			<task agents="target">
 				<type>CreateDirTask</type>
 				<parameters>
 					<parameter name="dir" value="c:\spd_logs\xml" />
