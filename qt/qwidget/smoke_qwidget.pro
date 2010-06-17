@@ -1,5 +1,5 @@
 load(qttest_p4)
-SOURCES  += smoketest_qwidget.cpp
+SOURCES  += smoke_qwidget.cpp
 RESOURCES     = qwidget.qrc
 
 contains(QT_CONFIG, qt3support): QT += qt3support
