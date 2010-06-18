@@ -857,6 +857,72 @@
 						</params>
 					</step>
 				</case>
+				<case id="" name="Qt Application Smoke Test" harness="GENERIC" enabled="true" passrate="100">
+						<step id="" name="tst_smoke_qapplication (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+						<command>install</command>
+						<params>
+							<param type="binary"/>
+							<param src="tst_smoke_qapplication.exe"/>
+							<param dst="c:\sys\bin\tst_smoke_qapplication.exe"/>
+							<param component-path="smoketest" />
+						</params>
+					</step>
+					<step id="" name="tst_smoke_qapplication (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
+						<command>execute</command>
+						<params>
+							<param file="tst_smoke_qapplication.exe"/>
+							<param parameters="-lightxml -o c:\logs\tst_smoke_qapplication.xml"/>
+							<param result-file="c:\logs\tst_smoke_qapplication.xml"/>
+							<param timeout="1200"/>
+							<param parser="QTestResultParser"/>
+							<param leave-old-result="true"/>
+						</params>
+					</step>
+				</case>
+				<case id="" name="Qt Widget Smoke Test" harness="GENERIC" enabled="true" passrate="100">
+						<step id="" name="tst_smoke_qwidget (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+						<command>install</command>
+						<params>
+							<param type="binary"/>
+							<param src="tst_smoke_qwidget.exe"/>
+							<param dst="c:\sys\bin\tst_smoke_qwidget.exe"/>
+							<param component-path="smoketest" />
+						</params>
+					</step>
+					<step id="" name="tst_smoke_qwidget (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
+						<command>execute</command>
+						<params>
+							<param file="tst_smoke_qwidget.exe"/>
+							<param parameters="-lightxml -o c:\logs\tst_smoke_qwidget.xml"/>
+							<param result-file="c:\logs\tst_smoke_qwidget.xml"/>
+							<param timeout="1200"/>
+							<param parser="QTestResultParser"/>
+							<param leave-old-result="true"/>
+						</params>
+					</step>
+				</case>
+				<case id="" name="Qt Gestures Smoke Test" harness="GENERIC" enabled="true" passrate="100">
+						<step id="" name="tst_smoke_qtgestures (install)" harness="GENERIC" enabled="true" passrate="100" significant="false">
+						<command>install</command>
+						<params>
+							<param type="binary"/>
+							<param src="tst_smoke_qtgestures.exe"/>
+							<param dst="c:\sys\bin\tst_smoke_qtgestures.exe"/>
+							<param component-path="smoketest" />
+						</params>
+					</step>
+					<step id="" name="tst_smoke_qtgestures (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
+						<command>execute</command>
+						<params>
+							<param file="tst_smoke_qtgestures.exe"/>
+							<param parameters="-lightxml -o c:\logs\tst_smoke_qtgestures.xml"/>
+							<param result-file="c:\logs\tst_smoke_qtgestures.xml"/>
+							<param timeout="1200"/>
+							<param parser="QTestResultParser"/>
+							<param leave-old-result="true"/>
+						</params>
+					</step>
+				</case>
 			</set>
             <set id="" name="ATSINTERFACE smoke tests" harness="ATSINTERFACE" enabled="true" passrate="100">
                 <target>
@@ -1121,7 +1187,7 @@
 							<param timeout="1500"/>
 						</params>
 					</step>
-					<step id="" name="MediaMgmtSmokeTestModule (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
+					<step id="" name="MediaMgmtSmokeTestModule (execute)" harness="ATSINTERFACE" enabled="false" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="atsinterface.exe"/>
@@ -1200,5 +1266,9 @@
 		<file>smoketest/web/general/img8.jpg</file>
 		<file>smoketest/general/ui_browser_control_smoke.cfg</file>
 		<file>smoketest/winscw_udeb/BrCtlApiTest.dll</file>
+		
+		<file>smoketest/winscw_udeb/tst_smoke_qapplication.exe</file>
+		<file>smoketest/winscw_udeb/tst_smoke_qwidget.exe</file>
+		<file>smoketest/winscw_udeb/tst_smoke_qtgestures.exe</file>
 	</files>
 </test>

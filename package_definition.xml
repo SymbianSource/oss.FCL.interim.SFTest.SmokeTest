@@ -79,16 +79,16 @@
       <block name="smoketest" level="test" long-name="Platform Smoketest" levels="tests">
         <collection name="smoketest_collection" long-name="Smoketest Collection" level="test">
 		  <component name="tst_smoke_qtgestures" long-name="Qt Gestures Smoketest">
-            <unit bldFile="qt/gestures/bld.inf" proFile="qt/gestures/smoke_qtgestures.pro" />
+            <unit bldFile="qt/gestures" proFile="qt/gestures/smoke_qtgestures.pro" />
           </component>
           <component name="tst_smoke_qwidget" long-name="Qt Widgets Smoketest">
-            <unit bldFile="qt/qwidget/bld.inf" proFile="qt/qwidget/smoke_qwidget.pro" />
+            <unit bldFile="qt/qwidget" proFile="qt/qwidget/smoke_qwidget.pro" />
           </component>
           <component name="tst_smoke_qapplication" long-name="Qt Application Smoketest">
-            <unit bldFile="qt/qapplication/bld.inf" proFile="qt/qapplication/smoke_qapplication.pro" />
+            <unit bldFile="qt/qapplication" proFile="qt/qapplication/smoke_qapplication.pro" />
           </component>
           <component name="smoketests" long-name="Smoketests">
-            <unit bldFile="Group/bld.inf"/>
+            <unit bldFile="Group"/>
           </component>
         </collection>
       </block>

@@ -201,6 +201,10 @@ if ($target eq "WINSCW") { # Build ATS test drop for Emulator.
 	copy($epoc . "data/c/smoketest/web/img8.jpg",						"temp/smoketest/web/general/img8.jpg");
 	copy($epoc . "winscw/c/smoketest/ui_browser_control_smoke.cfg",   	"temp/smoketest/general/ui_browser_control_smoke.cfg");
 	copy($epoc . "release/winscw/udeb/BrCtlApiTest.dll",				"temp/smoketest/winscw_udeb/BrCtlApiTest.dll");
+	
+	copy($epoc . "release/winscw/udeb/tst_smoke_qapplication.exe",		"temp/smoketest/winscw_udeb/tst_smoke_qapplication.exe");
+	copy($epoc . "release/winscw/udeb/tst_smoke_qwidget.exe",			"temp/smoketest/winscw_udeb/tst_smoke_qwidget.exe");
+	copy($epoc . "release/winscw/udeb/tst_smoke_qtgestures.exe",		"temp/smoketest/winscw_udeb/tst_smoke_qtgestures.exe");
 }
 elsif ($target eq "SYBORG") { # Build ATS test drop for Syborg.
 	if (lc($ats_version) eq "ats3") { copy("smoketest_syborg.xml",		"temp/test.xml"); } # Use ATS3 test plan.
