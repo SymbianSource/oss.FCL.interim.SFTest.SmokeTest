@@ -255,6 +255,27 @@
 				</parameters>
 			</task>
 			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\tst_smoke_qapplication.exe" name="src"/>
+					<parameter value="c:\sys\bin\tst_smoke_qapplication.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\tst_smoke_qwidget.exe" name="src"/>
+					<parameter value="c:\sys\bin\tst_smoke_qwidget.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\tst_smoke_qtgestures.exe" name="src"/>
+					<parameter value="c:\sys\bin\tst_smoke_qtgestures.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
 				<type>NonTestExecuteTask</type>
 				<parameters>
 					<parameter value="perl.exe" name="file"/>
@@ -434,13 +455,30 @@
 			</parameters>
 		</task>
 		<task agents="target">
-			<type>ExecutableTestCaseTask</type>
+			<type>QTestTask</type>
 			<parameters>
-				<parameter name="file" value="atsinterface.exe"/>
-				<parameter name="parameters" value="-testmodule testcombiner -config c:\smoketest\MediaMgmtSmokeTestModule.cfg" />
-				<parameter name="parser" value="STIFXMLParser" />
-				<parameter name="result-file" value="c:\spd_logs\xml\testcombiner.xml" />
-				<parameter name="timeout" value="600" />
+				<parameter name="file" value="tst_smoke_qapplication.exe"/>
+				<parameter name="parameters" value="-lightxml -o c:\logs\tst_smoke_qapplication.xml" />
+				<parameter name="result-file" value="c:\logs\tst_smoke_qapplication.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>QTestTask</type>
+			<parameters>
+				<parameter name="file" value="tst_smoke_qwidget.exe"/>
+				<parameter name="parameters" value="-lightxml -o c:\logs\tst_smoke_qwidget.xml" />
+				<parameter name="result-file" value="c:\logs\tst_smoke_qwidget.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>QTestTask</type>
+			<parameters>
+				<parameter name="file" value="tst_smoke_qtgestures.exe"/>
+				<parameter name="parameters" value="-lightxml -o c:\logs\tst_smoke_qtgestures.xml" />
+				<parameter name="result-file" value="c:\logs\tst_smoke_qtgestures.xml" />
+				<parameter name="timeout" value="1200" />
 			</parameters>
 		</task>
 		<finalization>
