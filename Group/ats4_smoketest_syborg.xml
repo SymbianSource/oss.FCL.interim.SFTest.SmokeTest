@@ -28,7 +28,7 @@
 			<type>NonTestExecuteTask</type>
 			<parameters>
 				<parameter name="file" value="testexecute.exe"/>
-				<parameter name="parameters" value="z:\smoketest\setup_smoketest_agenda.script" />
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_apploader.script" />
 				<parameter name="timeout" value="1200" />
 				<parameter name="local" value="false" />
 			</parameters>
@@ -37,9 +37,128 @@
 			<type>ExecutableTestCaseTask</type>
 			<parameters>
 				<parameter name="file" value="testexecute.exe"/>
-				<parameter name="parameters" value="z:\smoketest\smoketest_agenda.script" />
+				<parameter name="parameters" value="c:\smoketest\smoketest_apploader.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_apploader.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_agenda.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
+			</parameters>
+		</task>		
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="c:\smoketest\smoketest_agenda.script" />
 				<parameter name="parser" value="TEFResultParser" />
 				<parameter name="result-file" value="c:\logs\testexecute\smoketest_agenda.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\smoketest_contacts.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_contacts.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\smoketest_mess.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_mess.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\smoketest_timew.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_timew.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\smoketest_email.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_email.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\smoketest_bitmap.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_bitmap.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\smoketest_http.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_http.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testscripter -config z:\smoketest\ProfileSmokeTestModule.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testscripter.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testcombiner -config z:\smoketest\smoketest_notepad.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testcombiner.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testscripter -config z:\smoketest\AppInstallSmokeTestModule.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testscripter.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testcombiner -config z:\smoketest\smoketest_uiresources.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testcombiner.xml" />
 				<parameter name="timeout" value="1200" />
 			</parameters>
 		</task>
@@ -50,6 +169,43 @@
 				<parameter name="parameters" value="-testmodule testscripter -config z:\smoketest\InputMethodSmokeTestModule.cfg" />
 				<parameter name="parser" value="STIFXMLParser" />
 				<parameter name="result-file" value="c:\spd_logs\xml\testscripter.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="atsinterface.exe"/>
+				<parameter name="parameters" value="-testmodule testscripter -config z:\smoketest\ui_browser_control_smoke.cfg" />
+				<parameter name="parser" value="STIFXMLParser" />
+				<parameter name="result-file" value="c:\spd_logs\xml\testscripter.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>QTestTask</type>
+			<parameters>
+				<parameter name="file" value="tst_smoke_qapplication.exe"/>
+				<parameter name="parameters" value="-lightxml -o c:\logs\tst_smoke_qapplication.xml" />
+				<parameter name="result-file" value="c:\logs\tst_smoke_qapplication.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>QTestTask</type>
+			<parameters>
+				<parameter name="file" value="tst_smoke_qwidget.exe"/>
+				<parameter name="parameters" value="-lightxml -o c:\logs\tst_smoke_qwidget.xml" />
+				<parameter name="result-file" value="c:\logs\tst_smoke_qwidget.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>QTestTask</type>
+			<parameters>
+				<parameter name="file" value="tst_smoke_qtgestures.exe"/>
+				<parameter name="parameters" value="-lightxml -o c:\logs\tst_smoke_qtgestures.xml" />
+				<parameter name="result-file" value="c:\logs\tst_smoke_qtgestures.xml" />
 				<parameter name="timeout" value="1200" />
 			</parameters>
 		</task>
