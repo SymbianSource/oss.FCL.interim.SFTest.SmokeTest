@@ -14,7 +14,7 @@
 				<type>FlashTask</type>
 				<parameters>
 					<parameter name="image-1" value="\\v800008\Releases\Syborg.img" />
-					<parameter name="timeout" value="1200" />
+					<parameter name="timeout" value="3600" />
 				</parameters>
 			</task>
 			<task agents="target">
@@ -56,7 +56,7 @@
 			<type>ExecutableTestCaseTask</type>
 			<parameters>
 				<parameter name="file" value="testexecute.exe"/>
-				<parameter name="parameters" value="c:\smoketest\smoketest_agenda.script" />
+				<parameter name="parameters" value="z:\smoketest\smoketest_agenda.script" />
 				<parameter name="parser" value="TEFResultParser" />
 				<parameter name="result-file" value="c:\logs\testexecute\smoketest_agenda.htm" />
 				<parameter name="timeout" value="1200" />

@@ -7,12 +7,14 @@
 #include <Smoketest_browser.iby>
 #include <Smoketest_Contacts.iby>
 #include <Smoketest_email.iby>
+#include <Smoketest_graphics.iby>
 #include <Smoketest_http.iby>
 #include <Smoketest_InputMethods.iby>
 #include <Smoketest_Mediamgmt.iby>
 #include <Smoketest_Mess.iby>
 #include <Smoketest_notepad.iby>
 #include <Smoketest_profiles.iby>
+#include <smoketest_qt.iby>
 #include <Smoketest_System.iby>
 #include <Smoketest_Timew.iby>
 #include <Smoketest_UIResources.iby>

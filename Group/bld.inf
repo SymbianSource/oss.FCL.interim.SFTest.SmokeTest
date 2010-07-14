@@ -37,4 +37,5 @@
 #include "../browser/group/Bld.inf"
 
 PRJ_TESTEXPORTS
-smoketest.oby		/epoc32/rom/include/smoketest.oby
+../qt/rom/smoketest_qt.iby	/epoc32/rom/include/smoketest_qt.iby
+smoketest.oby				/epoc32/rom/include/smoketest.oby
