@@ -1,0 +1,9 @@
+#ifndef SMOKETEST_QT_IBY
+#define SMOKETEST_QT_IBY
+
+
+file=ABI_DIR\DEBUG_DIR\tst_smoke_qtgestures.exe    Sys\bin\tst_smoke_qtgestures.exe
+file=ABI_DIR\DEBUG_DIR\tst_smoke_qapplication.exe  Sys\bin\tst_smoke_qapplication.exe
+file=ABI_DIR\DEBUG_DIR\tst_smoke_qwidget.exe       Sys\bin\tst_smoke_qwidget.exe
+
+#endif //SMOKETEST_QT_IBY
