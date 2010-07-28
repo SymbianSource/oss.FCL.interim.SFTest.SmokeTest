@@ -21,9 +21,12 @@
 PRINT Run LBS smoketest
 
 LOAD_SUITE te_LbsApiSuite
+DELAY 1000
 
 START_TESTCASE			SMOKE_LBS_0001
 //!	@SYMTestCaseID		SMOKE_LBS_0001
-//!	@SYMTestCaseDesc	Set and get the status of the positioning device.
-RUN_TEST_STEP 100 te_LbsApiSuite ModuleClassesStep c:\smoketest\smoketest_lbs.ini LBS-ModuleClassesSetters-0001
-END_TESTCASE SMOKE_LBS_0001
+//!	@SYMTestCaseDesc	Set and get the status of the positioning device
+
+RUN_TEST_STEP 	100 	te_LbsApiSuite ModuleClassesStep c:\smoketest\smoketest_lbs.ini LBS-ModuleClassesSetters-0001
+
+END_TESTCASE			SMOKE_LBS_0001
