@@ -37,7 +37,7 @@
 			<type>ExecutableTestCaseTask</type>
 			<parameters>
 				<parameter name="file" value="testexecute.exe"/>
-				<parameter name="parameters" value="c:\smoketest\smoketest_apploader.script" />
+				<parameter name="parameters" value="z:\smoketest\smoketest_apploader.script" />
 				<parameter name="parser" value="TEFResultParser" />
 				<parameter name="result-file" value="c:\logs\testexecute\smoketest_apploader.htm" />
 				<parameter name="timeout" value="1200" />
@@ -63,6 +63,15 @@
 			</parameters>
 		</task>
 		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_contacts.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
+			</parameters>
+		</task>	
+		<task agents="target">
 			<type>ExecutableTestCaseTask</type>
 			<parameters>
 				<parameter name="file" value="testexecute.exe"/>
@@ -70,6 +79,15 @@
 				<parameter name="parser" value="TEFResultParser" />
 				<parameter name="result-file" value="c:\logs\testexecute\smoketest_contacts.htm" />
 				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_mess.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
 			</parameters>
 		</task>
 		<task agents="target">
@@ -83,6 +101,15 @@
 			</parameters>
 		</task>
 		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_timew.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
+			</parameters>
+		</task>
+		<task agents="target">
 			<type>ExecutableTestCaseTask</type>
 			<parameters>
 				<parameter name="file" value="testexecute.exe"/>
@@ -90,6 +117,15 @@
 				<parameter name="parser" value="TEFResultParser" />
 				<parameter name="result-file" value="c:\logs\testexecute\smoketest_timew.htm" />
 				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_email.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
 			</parameters>
 		</task>
 		<task agents="target">
@@ -103,6 +139,15 @@
 			</parameters>
 		</task>
 		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_lbs.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
+			</parameters>
+		</task>
+		<task agents="target">
 			<type>ExecutableTestCaseTask</type>
 			<parameters>
 				<parameter name="file" value="testexecute.exe"/>
@@ -113,6 +158,15 @@
 			</parameters>
 		</task>
 		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_bitmap.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
+			</parameters>
+		</task>
+		<task agents="target">
 			<type>ExecutableTestCaseTask</type>
 			<parameters>
 				<parameter name="file" value="testexecute.exe"/>
@@ -120,6 +174,15 @@
 				<parameter name="parser" value="TEFResultParser" />
 				<parameter name="result-file" value="c:\logs\testexecute\smoketest_bitmap.htm" />
 				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_http.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
 			</parameters>
 		</task>
 		<task agents="target">
