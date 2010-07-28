@@ -208,6 +208,13 @@
 			<task agents="target">
 				<type>FileUploadTask</type>
 				<parameters>
+					<parameter value="smoketest\winscw_udeb\te_lbsapisuite.exe" name="src"/>
+					<parameter value="c:\sys\bin\te_lbsapisuite.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
 					<parameter value="smoketest\winscw_udeb\testsdkskins.dll" name="src"/>
 					<parameter value="c:\sys\bin\testsdkskins.dll" name="dst"/>
 				</parameters>
@@ -343,6 +350,16 @@
 				<parameter name="parameters" value="c:\smoketest\smoketest_email.script" />
 				<parameter name="parser" value="TEFResultParser" />
 				<parameter name="result-file" value="c:\logs\testexecute\smoketest_email.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="c:\smoketest\smoketest_lbs.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_lbs.htm" />
 				<parameter name="timeout" value="1200" />
 			</parameters>
 		</task>

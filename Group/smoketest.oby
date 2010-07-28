@@ -10,6 +10,7 @@
 #include <Smoketest_graphics.iby>
 #include <Smoketest_http.iby>
 #include <Smoketest_InputMethods.iby>
+#include <Smoketest_lbs.iby>
 #include <Smoketest_Mediamgmt.iby>
 #include <Smoketest_Mess.iby>
 #include <Smoketest_notepad.iby>

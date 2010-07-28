@@ -161,12 +161,7 @@ if ($target eq "WINSCW") { # Build ATS test drop for Emulator.
 	copy($epoc . "release/winscw/udeb/t_msgutilityserver.dll",			"temp/smoketest/winscw_udeb/t_msgutilityserver.dll");
 	copy($epoc . "release/winscw/udeb/t_msgpopserver.exe",				"temp/smoketest/winscw_udeb/t_msgpopserver.exe");
 	copy($epoc . "release/winscw/udeb/t_msgsmtpserver.exe",				"temp/smoketest/winscw_udeb/t_msgsmtpserver.exe");
-	copy($epoc . "release/winscw/udeb/lbstestutils.dll",				"temp/smoketest/winscw_udeb/lbstestutils.dll");
-	copy($epoc . "release/winscw/udeb/lbstestclient.dll",				"temp/smoketest/winscw_udeb/lbstestclient.dll");
-	copy($epoc . "release/winscw/udeb/lbstestchannel.dll",				"temp/smoketest/winscw_udeb/lbstestchannel.dll");
-	copy($epoc . "release/winscw/udeb/lbstestserver.exe",				"temp/smoketest/winscw_udeb/lbstestserver.exe");
-	copy($epoc . "release/winscw/udeb/ctlbsexeclient.exe",				"temp/smoketest/winscw_udeb/ctlbsexeclient.exe");
-	copy($epoc . "release/winscw/udeb/lbsclienttestserver.exe",			"temp/smoketest/winscw_udeb/lbsclienttestserver.exe");
+	copy($epoc . "release/winscw/udeb/te_lbsapisuite.exe",				"temp/smoketest/winscw_udeb/te_lbsapisuite.exe");
 	copy($epoc . "release/winscw/udeb/appfwk_test_AppUi.dll",			"temp/smoketest/winscw_udeb/appfwk_test_AppUi.dll");
 	copy($epoc . "release/winscw/udeb/appfwk_test_utils.dll",			"temp/smoketest/winscw_udeb/appfwk_test_utils.dll");
 	copy($epoc . "release/winscw/udeb/TIconLoaderAndIconArrayForLeaks.dll",	"temp/smoketest/winscw_udeb/TIconLoaderAndIconArrayForLeaks.dll");

@@ -106,6 +106,16 @@
 			<type>ExecutableTestCaseTask</type>
 			<parameters>
 				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\smoketest_lbs.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_lbs.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
 				<parameter name="parameters" value="z:\smoketest\smoketest_bitmap.script" />
 				<parameter name="parser" value="TEFResultParser" />
 				<parameter name="result-file" value="c:\logs\testexecute\smoketest_bitmap.htm" />

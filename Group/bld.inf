@@ -26,7 +26,7 @@
 #include "../profiles/group/Bld.inf"
 #include "../notepad/group/bld.inf"
 #include "../appinstall/group/Bld.inf"
-//#include "../lbs/group/bld.inf"
+#include "../LbsApi/group/bld.inf"
 #include "../uiresources/group/bld.inf"
 #include "../inputmethods/group/Bld.inf"
 //#include "../localisation/uiftestfw/group/BLD.INF"
