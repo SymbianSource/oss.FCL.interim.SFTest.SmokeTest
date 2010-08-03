@@ -164,8 +164,8 @@ if ($target eq "WINSCW") { # Build ATS test drop for Emulator.
 	copy($epoc . "release/winscw/udeb/te_lbsapisuite.exe",				"temp/smoketest/winscw_udeb/te_lbsapisuite.exe");
 	copy($epoc . "release/winscw/udeb/appfwk_test_AppUi.dll",			"temp/smoketest/winscw_udeb/appfwk_test_AppUi.dll");
 	copy($epoc . "release/winscw/udeb/appfwk_test_utils.dll",			"temp/smoketest/winscw_udeb/appfwk_test_utils.dll");
-	copy($epoc . "release/winscw/udeb/TIconLoaderAndIconArrayForLeaks.dll",	"temp/smoketest/winscw_udeb/TIconLoaderAndIconArrayForLeaks.dll");
-	copy($epoc . "release/winscw/udeb/TSTAPP_embedded.dll",				"temp/smoketest/winscw_udeb/TSTAPP_embedded.dll");
+	copy($epoc . "release/winscw/udeb/ticonloaderandiconarrayforleaks.dll",	"temp/smoketest/winscw_udeb/ticonloaderandiconarrayforleaks.dll");
+	copy($epoc . "release/winscw/udeb/tstapp_embedded.dll",				"temp/smoketest/winscw_udeb/tstapp_embedded.dll");
 	copy($epoc . "release/winscw/udeb/apparctestserver.exe",			"temp/smoketest/winscw_udeb/apparctestserver.exe");
 	copy($epoc . "release/winscw/udeb/tstapp.exe",						"temp/smoketest/winscw_udeb/tstapp.exe");
 	copy($epoc . "release/winscw/udeb/t_animplugin.dll",				"temp/smoketest/winscw_udeb/t_animplugin.dll");

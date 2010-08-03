@@ -41,6 +41,279 @@
 			<task agents="target">
 				<type>FileUploadTask</type>
 				<parameters>
+					<parameter value="smoketest\10003a3f\general\openservice1a.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\openservice1a.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\openservice1b.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\openservice1b.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\serverapp2_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\serverapp2_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\serverapp3_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\serverapp3_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\serverapp4_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\serverapp4_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\serverapp6_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\serverapp6_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\serverapp7_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\serverapp7_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\serverapp_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\serverapp_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\t_dataprioritysystem3_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\t_dataprioritysystem3_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\t_groupname_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\t_groupname_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\t_groupnamever1_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\t_groupnamever1_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\t_groupnamever2_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\t_groupnamever2_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\tctrlpnlapp_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\tctrlpnlapp_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\testtrustedpriorityapp1_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\testtrustedpriorityapp1_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\10003a3f\general\testtrustedpriorityapp2_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\apps\testtrustedpriorityapp2_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\customisedefaulticonapp_loc.rsc" name="src"/>
+					<parameter value="z:\resource\apps\customisedefaulticonapp_loc.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\default_app_icon.m02" name="src"/>
+					<parameter value="z:\resource\apps\default_app_icon.m02" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\serverapp_loc.rsc" name="src"/>
+					<parameter value="z:\resource\apps\serverapp_loc.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\t_groupname_loc.rsc" name="src"/>
+					<parameter value="z:\resource\apps\t_groupname_loc.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\t_groupnamever1_loc.rsc" name="src"/>
+					<parameter value="z:\resource\apps\t_groupnamever1_loc.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\t_groupnamever2_loc.rsc" name="src"/>
+					<parameter value="z:\resource\apps\t_groupnamever2_loc.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstapp02.m02" name="src"/>
+					<parameter value="z:\resource\apps\tstapp02.m02" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstapp.mbm" name="src"/>
+					<parameter value="z:\resource\apps\tstapp.mbm" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstapp.rsc" name="src"/>
+					<parameter value="z:\resource\apps\tstapp.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstapp_loc.r01" name="src"/>
+					<parameter value="z:\resource\apps\tstapp_loc.r01" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstapp_loc.r02" name="src"/>
+					<parameter value="z:\resource\apps\tstapp_loc.r02" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstapp_loc.r03" name="src"/>
+					<parameter value="z:\resource\apps\tstapp_loc.r03" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstapp_loc.r04" name="src"/>
+					<parameter value="z:\resource\apps\tstapp_loc.r04" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstapp_loc.r05" name="src"/>
+					<parameter value="z:\resource\apps\tstapp_loc.r05" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstapp_loc.rsc" name="src"/>
+					<parameter value="z:\resource\apps\tstapp_loc.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstappview" name="src"/>
+					<parameter value="z:\resource\apps\tstappview" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstappview01.m01" name="src"/>
+					<parameter value="z:\resource\apps\tstappview01.m01" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstappview01.m02" name="src"/>
+					<parameter value="z:\resource\apps\tstappview01.m02" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\resource\general\tstappview02.k" name="src"/>
+					<parameter value="z:\resource\apps\tstappview02.k" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\localisation\general\customisedefaulticonapp_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\import\apps\customisedefaulticonapp_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\localisation\general\testuntrustedpriorityapp1_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\import\apps\testuntrustedpriorityapp1_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\localisation\general\testuntrustedpriorityapp2_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\import\apps\testuntrustedpriorityapp2_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\localisation\general\tstapp_reg.rsc" name="src"/>
+					<parameter value="z:\private\10003a3f\import\apps\tstapp_reg.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\localisation\general\tstapp_embedded.rsc" name="src"/>
+					<parameter value="z:\resource\plugins\tstapp_embedded.rsc" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
 					<parameter value="smoketest\bitmap\general\uibench_16bit.mbm" name="src"/>
 					<parameter value="c:\smoketest\bitmap\uibench_16bit.mbm" name="dst"/>
 				</parameters>
@@ -139,6 +412,55 @@
 			<task agents="target">
 				<type>FileUploadTask</type>
 				<parameters>
+					<parameter value="smoketest\winscw_udeb\te_lbsapisuite.exe" name="src"/>
+					<parameter value="c:\sys\bin\te_lbsapisuite.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\appfwk_test_AppUi.dll" name="src"/>
+					<parameter value="c:\sys\bin\appfwk_test_AppUi.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\appfwk_test_utils.dll" name="src"/>
+					<parameter value="c:\sys\bin\appfwk_test_utils.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\ticonloaderandiconarrayforleaks.dll" name="src"/>
+					<parameter value="c:\sys\bin\ticonloaderandiconarrayforleaks.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\tstapp_embedded.dll" name="src"/>
+					<parameter value="c:\sys\bin\tstapp_embedded.dll" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\apparctestserver.exe" name="src"/>
+					<parameter value="c:\sys\bin\apparctestserver.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\winscw_udeb\tstapp.exe" name="src"/>
+					<parameter value="c:\sys\bin\tstapp.exe" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
 					<parameter value="smoketest\winscw_udeb\t_animplugin.dll" name="src"/>
 					<parameter value="c:\sys\bin\t_animplugin.dll" name="dst"/>
 				</parameters>
@@ -203,13 +525,6 @@
 				<parameters>
 					<parameter value="smoketest\appinstall\general\sistest_winscw.sisx" name="src"/>
 					<parameter value="c:\smoketest\appinstall\sistest_winscw.sisx" name="dst"/>
-				</parameters>
-			</task>
-			<task agents="target">
-				<type>FileUploadTask</type>
-				<parameters>
-					<parameter value="smoketest\winscw_udeb\te_lbsapisuite.exe" name="src"/>
-					<parameter value="c:\sys\bin\te_lbsapisuite.exe" name="dst"/>
 				</parameters>
 			</task>
 			<task agents="target">
@@ -360,6 +675,16 @@
 				<parameter name="parameters" value="c:\smoketest\smoketest_lbs.script" />
 				<parameter name="parser" value="TEFResultParser" />
 				<parameter name="result-file" value="c:\logs\testexecute\smoketest_lbs.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="c:\smoketest\smoketest_language.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_language.htm" />
 				<parameter name="timeout" value="1200" />
 			</parameters>
 		</task>
