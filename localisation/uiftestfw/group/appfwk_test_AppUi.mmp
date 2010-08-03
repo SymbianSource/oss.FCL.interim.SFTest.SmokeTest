@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,17 +13,13 @@
 // Description:
 //
 
-
-
 /**
  @file
  @test
  @internalComponent - Internal Symbian test code 
 */
 
-#include <platform_paths.hrh>
-
-TARGET          appfwk_test_AppUi.dll
+TARGET          appfwk_test_appui.dll
 TARGETTYPE      DLL
 TARGETPATH      /sys/bin  
 UID				0x1100008D 0x11003B3C
@@ -31,26 +27,27 @@ VENDORID 		0x70000001
 
 CAPABILITY		All -tcb
 
-SYSTEMINCLUDE   /epoc32/include 
-SYSTEMINCLUDE	/epoc32/include/techview
-SYSTEMINCLUDE   /epoc32/include/test
-
-MW_LAYER_SYSTEMINCLUDE
+APP_LAYER_SYSTEMINCLUDE 
 
 USERINCLUDE	../inc
 
 SOURCEPATH	../src
-SOURCE 		appfwk_test_AppUi.CPP
+SOURCE 		appfwk_test_AppUi.cpp
+SOURCE 		appfwk_tmsteststep.cpp
 
-LIBRARY		EUSER.LIB
-LIBRARY		CONE.LIB
-LIBRARY		BAFL.LIB
-LIBRARY		EFSRV.LIB
-LIBRARY		ESTOR.LIB
-LIBRARY		EGUL.LIB
-LIBRARY		EIKCORE.LIB
-LIBRARY		EIKCOCTL.LIB
-LIBRARY		HAL.LIB
-LIBRARY		WS32.LIB 
+LIBRARY		euser.lib
+LIBRARY		cone.lib
+LIBRARY		bafl.lib
+LIBRARY		efsrv.lib
+LIBRARY		estor.lib
+LIBRARY		egul.lib
+LIBRARY		eikcore.lib
+LIBRARY		eikcoctl.lib
+LIBRARY		hal.lib
+LIBRARY		ws32.lib 
+LIBRARY		testexecuteutils.lib
 
 DEFFILE 	APPFWK_TEST_APPUI.DEF
+
+
+SMPSAFE

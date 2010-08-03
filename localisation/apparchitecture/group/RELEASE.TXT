@@ -494,19 +494,19 @@ Includes UNICODE release of all components.
 1) Changed over to new build system splitting mnt.cmd into ebld.bat
 and mnt.cmd and using makmake etc...
 
-2) Bug fix SW1-516: to speed up drawing of control panel moved the DLL loading into
+2) Defect fix SW1-516: to speed up drawing of control panel moved the DLL loading into
 CApaSystemControl::CreateL() from CApaSystemControl::ConstructL()
 which was being called to build up the list of available controls. 
 Added member data iUidType and iFullPath.  This also means that OOM
 is less likely when bringing up the control panel.
 
-3) Bug fix SW1-451: in CApaScanningAppFinder::FindAllAppsL() set
+3) Defect fix SW1-451: in CApaScanningAppFinder::FindAllAppsL() set
 iDriveList=NULL after deleting it (spotted by MartinB).
 
-4) Bug fix SW1-566: in CApaScanningAppFinder destructor now delete
+4) Defect fix SW1-566: in CApaScanningAppFinder destructor now delete
 iFileList.
 
-5) Bug fix SW1-620: in CApaScanningControlFinder::NextL() iFileIndex
+5) Defect fix SW1-620: in CApaScanningControlFinder::NextL() iFileIndex
 was only being reset to 0 if there was a drive in between which
 failed GetFileListL(); if 2 consecutive drives both had controls it
 was hit and miss whether all those on the second drive would be
@@ -604,9 +604,9 @@ Binary compatible with 065 - 075
 
 ) Fixes CSW3-1386: Overriding of ROM apps doesnt work - the in ROM versions are still loaded instead of those in RAM. The fix ensures that the correct dll is loaded, but does not cache the new AIF data.
 
-) Fixes SW1-122: OPL programs don't run when copied from one disk to another. This was another manifestation of the above bug, and the fix carries the same proviso (though in this case it's meaningless as the data is the same - it was just copied between discs).
+) Fixes SW1-122: OPL programs don't run when copied from one disk to another. This was another manifestation of the above defect, and the fix carries the same proviso (though in this case it's meaningless as the data is the same - it was just copied between discs).
 
-) The above fixes left a couple of slight problems, and these have been noted in a new bug report SW1-134.
+) The above fixes left a couple of slight problems, and these have been noted in a new defect report SW1-134.
 
 
 
@@ -751,7 +751,7 @@ General:
 
 Binary compatible with 065 - 069
 
-) Fixed a bug in the recognizer list where in copying recognizers from one list to another the wrong extension was being appended to recognizer dll names and so they were failing to load.
+) Fixed a defect in the recognizer list where in copying recognizers from one list to another the wrong extension was being appended to recognizer dll names and so they were failing to load.
 Involved adding one line of code that parsed in the absent .RDL extension. (spotted by Bill)
 
 
@@ -1085,7 +1085,7 @@ General:
 
 ) KApfTempPath now hidden in a static method Apfile::TempPath(), added in a BC manner.
 
-) Bug in TApaAppCapability::InternalizeL() that was causing the iIsHidden flag to always be set to false fixed (spotted by Bill).
+) Defect in TApaAppCapability::InternalizeL() that was causing the iIsHidden flag to always be set to false fixed (spotted by Bill).
 
 ) 2nd UID of KSharedLibraryUid [0x1000008d] added to apparc.dll, apgrfx.dll, apfile.dll and apserv.dll (SW-3947)
 
@@ -1346,7 +1346,7 @@ From Ian:
 
 ) Extra "name" builds added to all .mak files to make binary compatable releases easier (suggested by Geert)
 
-) Temporarily iconic doors now persist the correct glass door size even if the embedded doc is edited (bug spotted by MartinH SW-2195)
+) Temporarily iconic doors now persist the correct glass door size even if the embedded doc is edited (defect spotted by MartinH SW-2195)
 
 ) Base address of 0x43700000 set for apserv.dll (ommission spotted by MartinB)
 
@@ -1379,7 +1379,7 @@ From Neil:
 
 ) CApaCommandLine::New(HBufC*) added.
 
-) Untrapped leave bug fix to CApaTaskList
+) Untrapped leave defect fix to CApaTaskList
 
 From Ian:
 
@@ -1472,7 +1472,7 @@ General:
 
 From Ian:
 
-2) Bug fix to CApaDoor::ExternalizeStateStream() - temporarily iconic doors now remember their glass size correctly after multiple Store()'s (spotted by DavidA)
+2) Defect fix to CApaDoor::ExternalizeStateStream() - temporarily iconic doors now remember their glass size correctly after multiple Store()'s (spotted by DavidA)
 
 
 
@@ -1499,13 +1499,13 @@ General:
 
 From Ian:
 
-2) Bug fix to dodgy ASSERT in CApaDoor::DetachFromStore() (spotted by DavidA)
+2) Defect fix to dodgy ASSERT in CApaDoor::DetachFromStore() (spotted by DavidA)
 
 ) CApaDocument::EditL() now takes an extra parameter: TBool aReadOnly.
 If aReadOnly is true, the embedded doc should be opened in read-only mode - ie navigation of the document should be allowed, but it should not be possible to change the content.
 This parameter defaults to EFalse.
 
-) Agenda bugs SW-479 and SW-520 fixed - glass doors now correctly persist their size if they are temporarily made iconic
+) Agenda defects SW-479 and SW-520 fixed - glass doors now correctly persist their size if they are temporarily made iconic
 
 ) CApaDoor::SetFormatToTemporaryIcon() now takes a TBool parameter which allows it to be toggled on and off. The default parameter is ETrue
 If a door is in iconic mode, SetFormatToTemporaryIcon(ETrue) has no effect - it stays iconic.
@@ -1519,7 +1519,7 @@ This fixes SW-1026 - doors being pasted from one app to another end up with the 
 From Neil:
 
 ) TApaWindowGroupName becomes CApaWindowGroupName, using an HBufC to provide support for long filenames.  
-This will fix showstopper bug SW-1488
+This will fix showstopper defect SW-1488
 
 Consequent changes to this class are:
 
@@ -1642,7 +1642,7 @@ General:
 
 1) Binary compatible with 045
 
-) Fixed access violation bug in CApaDoor::SetFormatToGlass() (spotted by MartinD)
+) Fixed access violation defect in CApaDoor::SetFormatToGlass() (spotted by MartinD)
 
 
 
@@ -1859,7 +1859,7 @@ General:
 
 3) Interpreted app starter re-written (by Howard)
 
-4) Bug fix to command line to remove trailing space from full command line (by Neil)
+4) Defect fix to command line to remove trailing space from full command line (by Neil)
 
 Notes for Glass-door enabled apps and SDK:
 
@@ -1897,7 +1897,7 @@ Changes will be made to the Eikon .def file to support this, but all apps should
 
 __FIRST_EXPORT
 
-) Bug fix in command line classes by Neil
+) Defect fix in command line classes by Neil
 
 
 
@@ -1949,13 +1949,13 @@ General:
 
 ) MApaDocContainer renamed MApaEmbeddedDocObserver, and an extra exit mode "EEmpty" added. If an embedded document has no content it should return EEmpty when it exits, and the container can then choose not to insert it if it doesnt want to.
 
-) Bug in CApaDoor::RestoreDoc() fixed (spotted by DavidA)
+) Defect in CApaDoor::RestoreDoc() fixed (spotted by DavidA)
 
 From Bill:
 
 ) Rewrite of the file recogniser module, and new classes CApaAppList and CApaAppData that cache a list of all apps available on the system. No testcode for this stuff yet...
 
-) The interpreted app recogniser is now completely buggered and will have to be rewritten (Howard?)
+) The interpreted app recogniser is now completely perplexed and will have to be rewritten (Howard?)
 
 From Neil:
 
@@ -2156,7 +2156,7 @@ General
 
 Note that ReadRootStreamL() now takes an RFs& and WriteRootStreamL() has been overloaded with a version that takes a correctly constructed TApaAppIdentifier instead of a CApaApplication&
 
-) Access violation bug in ~CApaProcess() fixed (spotted by MartinB)
+) Access violation defect in ~CApaProcess() fixed (spotted by MartinB)
 
 ) The plan for passworded documents:
 
@@ -2444,7 +2444,7 @@ Uses: E32[074] ; F32[040] ; Store[029] ; GDI[037] ; Fntstore[030] ; Fbserv[037] 
 
 Tools: E32Tools[046] ; E32Utils[003] ; GDITOOLS[026] ; GCCTOOLS[111]
 
-1) Binary compatible bug fix release for Agenda and Data
+1) Binary compatible defect fix release for Agenda and Data
 
 2) No new components taken
 
@@ -2530,7 +2530,7 @@ Changes:
 
 ) Some CApaDoor methods that took a TSize as a parameter now take a const TSize& instead
 
-Bug Fixes:
+Defect Fixes:
 
 ) The correct UID for the icon file is now used in CApaApplication::OpenIconFileLC()
 
@@ -2553,7 +2553,7 @@ AppArc.020
 
 Uses: E32Tools[045] ; E32[072] ; F32[038] ; Store[028] ; GDI[036] ; Fntstore[030] ; Fbserv[036] ; Bitgdi[039]
 
-1)  Fixed an infinite loop bug in CApaProcess::FindAppInListL() which
+1)  Fixed an infinite loop defect in CApaProcess::FindAppInListL() which
 meant that a second app couldn't be added to a process
 
 
@@ -2614,7 +2614,7 @@ to insert the line
 	iMainDocFileName = NULL;
 in between the delete and the AllocL()
 
-7)  Fixed a bug pointed out by MartinD and Jezar in that the
+7)  Fixed a defect pointed out by MartinD and Jezar in that the
 ReadRootStreamLC() function was always opening the file in read mode
 only, which is fine for Direct stores but not for Permanent
 ("re-writable") ones; note that some decision will need to be taken

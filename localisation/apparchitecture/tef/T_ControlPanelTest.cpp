@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,12 +13,11 @@
 // Description:
 // Tests control panel Application Apparc base classes and utility functions to get application's data.\n
 // 
+// t_controlpaneltest.cpp
 //
 
-
-
 /**
- @file
+ @file t_controlpaneltest.cpp
  @internalComponent - Internal Symbian test code 
 */
 
@@ -29,7 +28,7 @@
 #include <s32file.h> 
 
 #include <apaid.h>
-#include "..\apparc\apadll.h"
+#include "../apparc/apadll.h"
 #include <apgaplst.h>
 #include <apgicnfl.h>
 #include <apgdoor.h>
@@ -40,8 +39,7 @@
 #include <apaflrec.h>
 #include <apgcli.h>
 #include <apacmdln.h>
-#include <apsserv.h>
-#include <appfwk_test_AppUi.h>
+#include "appfwk_test_appui.h"
 
 #include "T_ControlPanelTest.h"
 #include "tstapp.h"
@@ -60,7 +58,7 @@ _LIT(KNEWCTLPATH,"C:\\sys\\bin\\app_CTRL2.exe");
 _LIT(KSRCRESOURCEPATH,"Z:\\private\\10003a3f\\import\\apps\\App_CTRL2_reg.Rsc");
 _LIT(KDESTRESOURCEPATH,"C:\\private\\10003a3f\\import\\apps\\App_CTRL2_reg.Rsc");
 
-LOCAL_D TInt SimulateKey(TAny*)
+LOCAL_D TInt SimulateKeyL(TAny*)
 	{
 	User::After(3000000);
 	RWsSession session;
@@ -86,7 +84,6 @@ LOCAL_D TInt SimulateKey(TAny*)
 	session.Flush();
 	
 	session.Close();
-	
 	return KErrNone;
 	}
 
@@ -313,7 +310,7 @@ void CT_ControlPanelTestStep::testControls3L()
 	
 	RThread thread;
 	TFullName name=_L("Control Panel Test");
-	TInt r=thread.Create(name,SimulateKey,KDefaultStackSize,KDefaultStackSize,KDefaultStackSize,NULL);
+	TInt r=thread.Create(name,SimulateKeyL,KDefaultStackSize,KDefaultStackSize,KDefaultStackSize,NULL);
 	TEST(r==KErrNone);
 	thread.Resume();
 		
@@ -324,8 +321,6 @@ void CT_ControlPanelTestStep::testControls3L()
 	thread.Close();
 	INFO_PRINTF1(_L("Out testControls3L......"));
 	}
-
-
 
 /**
    Auxiliary Fn for T-ControlPanelStep-testControls1L, T-ControlPanelStep-testControls2L, T-ControlPanelStep-testControls3L
@@ -385,8 +380,6 @@ void CT_ControlPanelTestStep::DoStepTestsInCallbackL()
 	// all outstanding requests complete - kill the scheduler
 	CleanupStack::PopAndDestroy(3); //scheduler, callBack, idle
 	}
-
-
 
 
 /**
@@ -500,3 +493,4 @@ CT_ControlPanelTestCallBack::~CT_ControlPanelTestCallBack()
 	{
 
 	}
+

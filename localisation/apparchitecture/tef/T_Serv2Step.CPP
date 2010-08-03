@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,12 +15,11 @@
 // Tests Application information, Data recognition and application
 // launching capabilities of the application architecture server.\n
 // 
+// t_serv2step.cpp
 //
 
-
-
 /**
- @file
+ @file t_serv2step.cpp
  @test 
  @internalComponent - Internal Symbian test code
 */
@@ -28,11 +27,14 @@
 #include <f32file.h>
 #include <fbs.h>
 #include <apaid.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apaidpartner.h>
+#include <apgicnflpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 #include <apgaplst.h>
 #include <apaflrec.h>
 #include "testableapalssession.h"
 #include <apacmdln.h>
-#include <apsserv.h>
 #include <apfrec.h>
 #include <datastor.h>
 #include <apgicnfl.h>
@@ -363,8 +365,22 @@ void CT_Serv2Step::StartAppTests1L(RApaLsSession& aLs)
 	_LIT(KLitWibble,"wibble");
 	cmdLn->SetExecutableNameL(filename);
 	cmdLn->SetTailEndL(KLitDogfish);
-	TInt ret = aLs.StartApp(*cmdLn); // explicit
+	
+	TThreadId Id;
+	TInt ret = aLs.StartApp(*cmdLn,Id); // explicit
 	TEST(ret==KErrNone);
+
+	//Wait till the thread exits
+	if (ret==KErrNone)	
+		{
+		RThread thread;
+		TRequestStatus status;
+		
+		User::LeaveIfError(thread.Open(Id));
+		thread.Rendezvous(status);
+		User::WaitForRequest(status);
+		thread.Close();
+		}
 
 	// start a non-existant app
 	cmdLn->SetExecutableNameL(KLitWibble);
@@ -376,51 +392,9 @@ void CT_Serv2Step::StartAppTests1L(RApaLsSession& aLs)
 
 }
 
-/**
- * @SYMTestCaseID T_Serv2Step_StartAppTests4L
- *
- * @SYMPREQ
- *
- * @SYMTestCaseDesc Test Launching of an application. 
- * 
- * @SYMTestActions Call RApaLsSession::StartDocument() to start an
- * application defined by the command line information.\n
- * Test the launching of application for following scenarios:\n
- * (1) When Application specified by command line is EmbeddableOnly.\n
- * (2) When Application specified by command line is EmbeddableUiNotStandAlone.\n
- * (3) When Application specified by command line is Embeddable or StandAlone.\n
- * API Calls:\n	
- * RApaLsSession::StartDocument(const TDesC &aFileName, TUid aAppUid, TThreadId &aId, TLaunchType aLaunchType=ELaunchNewApp)\n
- * 
- * @SYMTestExpectedResults The test observes that StartDocument() returns KErrNone and
- * starts the app in the third scenario. In the first and second case KErrNotSupported is
- * returned.
- *  
- */	
- 
-void CT_Serv2Step::StartAppTests4L(RApaLsSession& aLs)
-	{
-	TInt ret;
-	TThreadId id;
-
-	_LIT(KLitSdkDocPath,"\\system\\data\\sdk.txt");
-	TFileName filename = SearchAndReturnCompleteFileName(KLitSdkDocPath);
-	
-	// Test starting a file using an app which can be embeddable only.
-	ret=aLs.StartDocument(filename,KUidAppEmbeddableUiNotStandAlone,id);
-	TEST(ret==KErrNotSupported);
-	
-	// Test starting a file using an app which can be embeddable only.
-	ret=aLs.StartDocument(filename,KUidAppEmbeddableOnly,id);
-	TEST(ret==KErrNotSupported);
-
-	// Test starting a file using an app which can be embeddable or standalone.
-	ret=aLs.StartDocument(filename,KUidAppEmbeddable,id);
-	TEST(ret==KErrNone);
-	}
 
 /**
-* Auxiliary Fn for Test Case ID T_Serv2Step_StartAppTests1L, T_Serv2Step_StartAppTests3L,StartAppTests4L(aLs)
+* Auxiliary Fn for Test Case ID T_Serv2Step_StartAppTests1L, T_Serv2Step_StartAppTests3L
 *
 * This method tests launching of an application from command line by calling
 * CT_Serv2Step::StartAppTests1L().
@@ -432,7 +406,6 @@ void CT_Serv2Step::DoStartAppTestsL(RApaLsSession& aLs)
 
 	// start the test exe
 	StartAppTests1L(aLs);
-    StartAppTests4L(aLs);
 	}
 
 /**
@@ -1826,3 +1799,4 @@ TVerdict CT_Serv2Step::doTestStepL()
 	return TestStepResult();
 
 }
+

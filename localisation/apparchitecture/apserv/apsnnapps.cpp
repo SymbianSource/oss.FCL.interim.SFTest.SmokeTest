@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,6 +13,7 @@
 // Description:
 // Non-Native application registration functionality for the AppArc server session
 // 
+// apsnnapps.cpp
 //
 
 
@@ -23,7 +24,7 @@
 #include <s32file.h>
 
 #include "APSCLSV.H"
-#include "APSSERV.H"
+#include "apsserv.h"
 #include "APSSTD.H"
 #include "../apgrfx/apprivate.h"
 #include "apsnnappupdates.h"
@@ -132,7 +133,7 @@ void CApsNonNativeApplicationsUpdateList::InternalizeL(RReadStream& aStream, TIn
 		TRAP(err,InternalizeActionL(aStream,aPosition));
 		if(err == KErrNone || err == KErrCorrupt || err == KErrEof)
 			{
-			// We anticipate that the last update we try to read may be incomplete or corrupt.
+			// We anticipate that the last update we try to read may be not complete or corrupt.
 			// if we get either of these, jsut stop reading in the list of updates.
 			}
 		else
@@ -210,7 +211,7 @@ void CApsNonNativeApplicationsUpdateList::InternalizeNewUpdateL(RReadStream& aSt
 		update = CApsRegisterNonNativeApplication::NewL(iFs, aUid, TDriveName(), CApsNonNativeApplicationsUpdate::ENeedsInternalizing);
 		break;
 	case CApsNonNativeApplicationsUpdate::EDeregisterApplication:
-		update = CApsDeregisterNonNativeApplication::NewL(iFs, *CApaAppListServer::Self(), aUid, CApsNonNativeApplicationsUpdate::ENeedsInternalizing);
+		update = CApsDeregisterNonNativeApplication::NewL(iFs, *CApaAppArcServer::Self(), aUid, CApsNonNativeApplicationsUpdate::ENeedsInternalizing);
 		break;
 #ifdef _DEBUG
 	case CApsNonNativeApplicationsUpdate::EFail:
@@ -337,7 +338,7 @@ void CApsNonNativeApplicationsUpdateList::Rollback(CApsNonNativeApplicationsUpda
 @internalComponent
 */
 RApsUpdateLog::RApsUpdateLog(RFs& aFs) :
-		iFs(aFs)
+	iFs(aFs), iFilesRegistered(NULL), iDrivesAffected(NULL)
 	{
 	TChar drive = RFs::GetSystemDriveChar();
 	iLogFileName.Append(drive);
@@ -353,6 +354,10 @@ Opens a write stream to a log file that keeps track of what updates have been pe
 */
 void RApsUpdateLog::OpenL()
 	{
+	ASSERT(!iFilesRegistered && !iDrivesAffected);
+	const TInt KArrayGranularity = 128;
+	iFilesRegistered = new (ELeave) CDesCArraySeg(KArrayGranularity);
+	iDrivesAffected = new (ELeave) CDesCArraySeg(KArrayGranularity);
 	User::LeaveIfError(iLogWriteStream.Replace(iFs,iLogFileName,EFileShareExclusive|EFileStream|EFileWrite));
 	}
 
@@ -379,14 +384,14 @@ and deletes the log files created.
 void RApsUpdateLog::Close()
 	{
 	_LIT(KLitPathForTemporaryFiles, "\\private\\10003a3f\\temp\\");
-	const TInt count = iDrivesAffected.Count();
+	const TInt count = (iDrivesAffected ? iDrivesAffected->Count() : 0);
 	CFileMan* fileman = NULL;
 	TRAPD(err, fileman = CFileMan::NewL(iFs));
 	if (err == KErrNone) 
 		{
 		for(TInt i = 0; i < count; ++i)
 			{
-			TFileName dir(*(iDrivesAffected[i]));
+			TFileName dir((*iDrivesAffected)[i]);
 			dir.Append(KLitPathForTemporaryNonNativeResourceAndIconFiles);
 			fileman->RmDir(dir); // recursive
 			iFs.RmDir(KLitPathForTemporaryFiles); // non-recursive
@@ -394,8 +399,12 @@ void RApsUpdateLog::Close()
 		delete fileman;
 		}
 	
-	iFilesRegistered.ResetAndDestroy();
-	iDrivesAffected.ResetAndDestroy();
+	delete iFilesRegistered;
+	iFilesRegistered = NULL;
+	
+	delete iDrivesAffected;
+	iDrivesAffected = NULL;
+	
 	iLogWriteStream.Close();
 	iFs.Delete(iLogFileName);
 	}
@@ -411,9 +420,9 @@ the registration file to delete.
 
 @internalComponent
 */
-RPointerArray<HBufC>& RApsUpdateLog::NewRegistrationFiles()
+CDesCArray& RApsUpdateLog::NewRegistrationFiles()
 	{
-	return iFilesRegistered;
+	return *iFilesRegistered;
 	}
 
 
@@ -423,9 +432,9 @@ in the transaction. This is then used to clean up the temporary file directories
 
 @internalComponent
 */
-RPointerArray<HBufC>& RApsUpdateLog::DrivesAffected()
+CDesCArray& RApsUpdateLog::DrivesAffected()
 	{
-	return iDrivesAffected;
+	return *iDrivesAffected;
 	}
 
 /**
@@ -451,7 +460,7 @@ void CApsNonNativeApplicationsManager::NotifyScanComplete()
 	} //lint !e1762 Suppress member function could be made const
 
 
-CApsNonNativeApplicationsManager* CApsNonNativeApplicationsManager::NewL(CApaAppListServer& aServ, RFs& aFs)
+CApsNonNativeApplicationsManager* CApsNonNativeApplicationsManager::NewL(CApaAppArcServer& aServ, RFs& aFs)
 	{
 	CApsNonNativeApplicationsManager* self = new(ELeave)CApsNonNativeApplicationsManager(aServ, aFs);
 	return self;
@@ -462,13 +471,13 @@ CApsNonNativeApplicationsManager::~CApsNonNativeApplicationsManager()
 	delete iUpdateList;
 	}
 
-CApsNonNativeApplicationsManager::CApsNonNativeApplicationsManager(CApaAppListServer& aServ, RFs& aFs) :
+CApsNonNativeApplicationsManager::CApsNonNativeApplicationsManager(CApaAppArcServer& aServ, RFs& aFs) :
 		iServ(aServ),
 		iFs(aFs)
 	{
 	}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 
 void CApsNonNativeApplicationsManager::PrepareNonNativeApplicationsUpdatesL()
 	{
@@ -498,7 +507,7 @@ void CApsNonNativeApplicationsManager::CheckForUpdateAppsLockL()
 	}
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
  
  void CApsNonNativeApplicationsManager::RegisterNonNativeApplicationL(const RMessage2& aMessage)
 	{
@@ -599,7 +608,7 @@ void CApsNonNativeApplicationsManager::DoRegisterNonNativeApplicationL(const RMe
 	}
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
  
 void CApsNonNativeApplicationsManager::DeregisterNonNativeApplicationL(const RMessage2& aMessage)
 	{
@@ -610,7 +619,7 @@ void CApsNonNativeApplicationsManager::DeregisterNonNativeApplicationL(const RMe
 	CleanupStack::Pop(this);
 	}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 
 #ifdef _DEBUG
 void CApsNonNativeApplicationsManager::ForceFailInNonNativeApplicationsUpdatesL()
@@ -639,7 +648,7 @@ void CApsNonNativeApplicationsManager::ForcePanicInNonNativeApplicationsRollback
 
 #endif // _DEBUG
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 
 void CApsNonNativeApplicationsManager::CommitNonNativeApplicationsUpdatesL(const RMessage2& aMessage)
 	{
@@ -668,7 +677,7 @@ void CApsNonNativeApplicationsManager::CommitNonNativeApplicationsUpdatesL(const
 	else	
 		//The request is not completed till completion application list preparation.		
 		iNotifyOnScanCompleteMsg=aMessage;
-	
+
 	// Trigger a rescan
 	iServ.UpdateApps();
 	}

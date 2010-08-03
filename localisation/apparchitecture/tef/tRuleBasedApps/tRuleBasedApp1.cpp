@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -25,9 +25,6 @@
 // 
 //
 
-
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code
@@ -35,26 +32,26 @@
 
 #include <coeccntx.h>
 #include <eikenv.h>
-#include <eikAppui.h>
-#include <eikApp.h>
+#include <eikappui.h>
+#include <eikapp.h>
 #include <eikdoc.h>
-#include <eikmenup.h>
+#include <mw/eikmenup.h>
 #include <eikstart.h>
 
-#include <eikon.hrh>
+#include <mw/eikon.hrh>
 
-#include <tRuleBasedApp1.rsg>
+#include <trulebasedapp1.rsg>
 #include "tRuleBasedApp.hrh"
 
 const TInt KLeft 	= 0; // Display app window on the left
 const TInt KCentre 	= 1; // Display app window in the centre
 const TInt KRight 	= 2; // Display app window on the right
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CTRuleBasedApplication
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CTRuleBasedApplication : public CEikApplication
 	{
@@ -63,11 +60,11 @@ private:
 	TUid AppDllUid() const;
 	};
 	
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CTRuleBasedAppView
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CTRuleBasedAppView : public CCoeControl
  	{
 public:
@@ -87,11 +84,11 @@ private:
 	HBufC* iRuleBasedText;
  	};
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CTRuleBasedAppUi
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CTRuleBasedAppUi : public CEikAppUi
 	{
 public:
@@ -106,11 +103,11 @@ private:
 	CTRuleBasedAppView* iAppView;
 	};
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CTRuleBasedDocument
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CTRuleBasedDocument : public CEikDocument
 	{
 public:
@@ -122,11 +119,11 @@ private:
 	CEikAppUi* CreateAppUiL();
 	};
 
-//////////////////////////////////////////////////////////////////////
+//
 //
 // Application Document class - CTRuleBasedAppDocument
 //
-//////////////////////////////////////////////////////////////////////
+//
 
 /**
 The constructor of the document class just passes the
@@ -151,12 +148,12 @@ CEikAppUi* CTRuleBasedDocument::CreateAppUiL()
  	return new(ELeave) CTRuleBasedAppUi;
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // Source for the implementation of the 
 // Application view class - CTRuleBasedAppView
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 
 // Constructor for the view.
@@ -270,11 +267,11 @@ void CTRuleBasedAppView::Draw(const TRect& aRect) const
 	gc.DiscardFont();
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // Application UI class - CTRuleBasedAppUi
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 /**
 The second phase constructor of the Application UI class.
@@ -320,12 +317,12 @@ CTRuleBasedAppUi::~CTRuleBasedAppUi()
 	delete iAppView;
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // Implementation of the
 // Application class - CTRuleBasedApplication
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 const TUid KUidRuleBasedApp = { 0x1020D6FC};
 
@@ -390,3 +387,4 @@ EXPORT_C TInt WinsMain( TDesC* aCommandLine )
 	return EikStart::RunApplication( NewApplication, aCommandLine );
 	}
 #endif
+

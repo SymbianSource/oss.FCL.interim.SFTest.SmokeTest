@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code
@@ -23,7 +21,7 @@
 #if (!defined __T_SERV2_STEP_H__)
 #define __T_SERV2_STEP_H__
 
-#include "ApparcTestServer.h"
+#include "apparctestserver.h"
 
 //!  A CT_Serv2Step test class. 
 
@@ -42,7 +40,6 @@ public:
 	void DoEnquiryTestsL(RApaLsSession& aLs);
 	void DoStartAppTestsL(RApaLsSession& aLs);
 	void StartAppTests1L(RApaLsSession& aLs);
-    void StartAppTests4L(RApaLsSession& aLs);
 	void DoAppInfoTests(RApaLsSession& aLs);
 	void AppInfoTest1(RApaLsSession& aLs);
 	void AppInfoTest3(RApaLsSession& aLs);
@@ -77,3 +74,4 @@ public:
 
 _LIT(KT_Serv2Step,"T_Serv2");
 #endif
+

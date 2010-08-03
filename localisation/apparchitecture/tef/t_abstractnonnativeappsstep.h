@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code 
@@ -24,8 +22,8 @@
 #ifndef T_ABSTRACT_NONNATIVEAPPS_STEP_H
 #define T_ABSTRACT_NONNATIVEAPPS_STEP_H
 
-#include <testexecutestepbase.h>
-#include  <appfwk_test_utils.h>
+#include <test/testexecutestepbase.h>
+#include "appfwk_test_utils.h"
 #include "testableapalssession.h"
 
 const TInt KApplicationType = 0x102081A0;
@@ -54,7 +52,7 @@ public:
 
 protected:
 	void doAbstractNonNativeAppsTestStepPreambleL();
-	static void CleanupAndReset(RTestableApaLsSession& aSession, const TTestAppDetails& aApp);
+	static void CleanupAndResetL(RTestableApaLsSession& aSession, const TTestAppDetails& aApp);
 	static void CallRegisterL(RTestableApaLsSession& aSession, const TTestAppDetails& aApp);
 	static void CompleteRegisterL(RTestableApaLsSession& aSession, const TTestAppDetails& aApp);
 	static void CallDeregisterL(RTestableApaLsSession& aSession, const TTestAppDetails& aApp);

@@ -1,7 +1,7 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,15 +13,16 @@
 // Description:
 // Classes for synchronous and asynchronous file recognitions (of a directory)
 // 
+// apsrecutil.cpp
 //
 
 
 #include "APSRECUTIL.H"
 #include "APSRECCACHE.h"
 
-//////////////////////////////
+//
 // CRecognitionResult
-//////////////////////////////
+//
 
 CRecognitionResult* CRecognitionResult::NewL(const TDesC& aFileName, const TDataRecognitionResult& aRecognitionResult)
 	{
@@ -51,14 +52,10 @@ CRecognitionResult::~CRecognitionResult()
 void CRecognitionResult::Get(TDataRecognitionResult& aRecognitionResult)
 	{
 	if(iUid == KNullUid)
-
-		{
 		aRecognitionResult.iDataType = TDataType(*iDataType);
-		}
 	else
-		{
 		aRecognitionResult.iDataType = TDataType(iUid);
-		}
+	
 	aRecognitionResult.iConfidence = iConfidence;
 	}
 	
@@ -79,9 +76,9 @@ void CRecognitionResult::WriteToStreamL(RWriteStream& aWriteStream)
 	aWriteStream.WriteInt32L(iConfidence);
 	}
 	
-///////////////////////////////////
+//
 // CDirectoryRecognitionResult
-///////////////////////////////////
+//
 
 CDirectoryRecognitionResult::CDirectoryRecognitionResult(HBufC* aPath, HBufC8* aDataTypeFilter)
 	: iPath(aPath), iDataTypeFilter(aDataTypeFilter)
@@ -96,9 +93,8 @@ CDirectoryRecognitionResult::~CDirectoryRecognitionResult()
 	
 	const TInt count = iEntries.Count();
 	for(TInt i = 0; i < count; i++)
-		{
 		iEntries[i]->Close();
-		}
+
 	iEntries.Reset();
 	}
 
@@ -121,17 +117,16 @@ void CDirectoryRecognitionResult::WriteToStreamL(RWriteStream& aWriteStream)
 	{
 	aWriteStream.WriteUint32L(iEntries.Count());
 	for (TInt i=0; i < iEntries.Count(); i++)
-		{
 		iEntries[i]->WriteToStreamL(aWriteStream);
-		}
+		
 	aWriteStream.CommitL();
 	}
 
-//////////////////////////////////////////////////////////
+//
 // CFileRecognitionUtility
-//////////////////////////////////////////////////////////
+//
 
-CFileRecognitionUtility::CFileRecognitionUtility(CApaAppListServer& aServer, TInt aMaxBufSize, RFs& aFs)
+CFileRecognitionUtility::CFileRecognitionUtility(CApaAppArcServer& aServer, TInt aMaxBufSize, RFs& aFs)
 	: CActive(0), 
 	  iServer(aServer), 
 	  iMaxBufSize(aMaxBufSize), 
@@ -162,9 +157,7 @@ void CFileRecognitionUtility::RecognizeSynchronouslyL(CDirectoryRecognitionResul
 
 	// recognize files and calculate size of buffer
 	for(iIndex=0;iIndex<iEntryList->Count();iIndex++)
-		{
 		RecognizeFileL();
-		}
 		
 	delete iEntryList;
 	iEntryList = NULL;
@@ -193,11 +186,10 @@ void CFileRecognitionUtility::ReadDirectoryL()
 TInt CFileRecognitionUtility::BufferSizeL() const
 	{
 	const TInt preferredBufferSize = iServer.DataRecognizerPreferredBufSizeL();
-	TInt bufSize=Min(preferredBufferSize,iMaxBufSize);
-	if (bufSize<1)
-		{
-		bufSize=8; // sensible minimum.
-		}
+	TInt bufSize = Min(preferredBufferSize,iMaxBufSize);
+	if (bufSize < 1)
+		bufSize = 8; // sensible minimum.
+
 	return bufSize;
 	}
 
@@ -273,3 +265,4 @@ void CFileRecognitionUtility::DoCancel()
 	iIndex = 0;
 	iStep = 0;
 	}
+

@@ -1,7 +1,7 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -17,7 +17,7 @@
 
 
 
- TARGET        	TAppEmbeddable.exe
+ TARGET        	tappembeddable.exe
  TARGETTYPE    	exe
 
 CAPABILITY 		All -Tcb //do standalone need this too?
@@ -31,8 +31,10 @@ SOURCEPATH    	.
 SOURCE        	TAppEmbeddable_standalone.cpp
 
 USERINCLUDE   	.
-SYSTEMINCLUDE 	/epoc32/include
-SYSTEMINCLUDE 	/epoc32/include/techview 
+
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+//SYSTEMINCLUDE 	/epoc32/include/techview 
 
 //reg added for Datacaging
 START RESOURCE	TAppEmbeddable_reg.rss
@@ -40,3 +42,5 @@ TARGETPATH		/private/10003a3f/apps
 END
 
 LIBRARY 		euser.lib apparc.lib eikcore.lib cone.lib  
+
+SMPSAFE

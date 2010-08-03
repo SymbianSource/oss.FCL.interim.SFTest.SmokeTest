@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -45,9 +45,8 @@
 // Case 2: Then in B's destructor check that C is still non-null.
 // Case 3: And in C's destructor check that B is now null.
 // 
+// tapparctestapp.cpp
 //
-
-
 
 #include <coeccntx.h>
 #include <apgtask.h>
@@ -55,12 +54,12 @@
 #include <eikappui.h>
 #include <eikapp.h>
 #include <eikdoc.h>
-#include <eikmenup.h>
+#include <mw/eikmenup.h>
 #include <f32file.h>
-#include <eikon.hrh>
-#include <eikstart.h> ////TKAS added for exe-app
+#include <mw/eikon.hrh>
+#include <eikstart.h> //TKAS added for exe-app
 
-#include <TApparcTestApp.rsg>
+#include <tapparctestapp.rsg>
 
 // File which stores the test results
 _LIT(KApparcTestResultsFileName, "c:\\system\\Apparctest\\ApparcTestResultsFile.txt");
@@ -124,6 +123,8 @@ class CTApparcTestNegativePrioStaticB : public CCoeStatic
 public:
 	inline CTApparcTestNegativePrioStaticB();
 	inline static CTApparcTestNegativePrioStaticB* Self();
+	static CTApparcTestNegativePrioStaticB* NewL();
+	void ConstructL();
 	~CTApparcTestNegativePrioStaticB();
 	
 	RFile iFile;
@@ -265,11 +266,11 @@ CTApparcTestPrioTwoStaticC::~CTApparcTestPrioTwoStaticC()
 		iFile.Write(KTestFail);
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CTApparcTestAppView
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CTApparcTestAppView : public CCoeControl
     {
 public:
@@ -323,11 +324,11 @@ void CTApparcTestAppView::Draw(const TRect& /*aRect*/) const
 	gc.DiscardFont();
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CTApparcTestAppUi
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CTApparcTestAppUi : public CEikAppUi
     {
@@ -350,7 +351,7 @@ void CTApparcTestAppUi::ConstructL()
 	iAppView = CTApparcTestAppView::NewL(ClientRect());
 	
 	// Constructs the static object for tests
-	CTApparcTestNegativePrioStaticB* testCoeStaticB = new(ELeave)CTApparcTestNegativePrioStaticB();
+	CTApparcTestNegativePrioStaticB* testCoeStaticB = CTApparcTestNegativePrioStaticB::NewL();
 	
 	CTApparcTestStatic* testCoeStatic = new (ELeave)CTApparcTestStatic(testCoeStaticB->iFile);
 	CTApparcTestNegativePrioStaticA* testCoeStaticA  = new(ELeave)CTApparcTestNegativePrioStaticA(testCoeStaticB->iFile);
@@ -429,11 +430,11 @@ void CTApparcTestAppUi::PrepareToExit()
 		testCoeStatic->iFile.Write(KTestFail);
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CTApparcTestDocument
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CTApparcTestDocument : public CEikDocument
 	{
@@ -456,11 +457,11 @@ CEikAppUi* CTApparcTestDocument::CreateAppUiL()
     return new(ELeave) CTApparcTestAppUi;
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CTApparcTestApplication
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CTApparcTestApplication : public CEikApplication
 	{
@@ -492,11 +493,6 @@ GLDEF_C TInt E32Main()
 	return EikStart::RunApplication(NewApplication);
 	}
 
-		
-
-//
-// inline functions 
-//
 
 // inline function for CTApparcTestStatic
 inline CTApparcTestStatic::CTApparcTestStatic(RFile& aFile)
@@ -524,17 +520,30 @@ inline CTApparcTestNegativePrioStaticA* CTApparcTestNegativePrioStaticA::Self()
 inline CTApparcTestNegativePrioStaticB::CTApparcTestNegativePrioStaticB()
 	: CCoeStatic(KUidTestStaticNegativePrioB,ENegativePriortyStaticA - 1)
 	{
+	}
+
+inline CTApparcTestNegativePrioStaticB* CTApparcTestNegativePrioStaticB::Self()
+	{
+	return STATIC_CAST(CTApparcTestNegativePrioStaticB*,CCoeEnv::Static(KUidTestStaticNegativePrioB));
+	}
+
+CTApparcTestNegativePrioStaticB* CTApparcTestNegativePrioStaticB::NewL()
+	{
+	CTApparcTestNegativePrioStaticB* self = new(ELeave)CTApparcTestNegativePrioStaticB();
+	CleanupStack::PushL(self);
+	self->ConstructL();
+	CleanupStack::Pop();
+	return self;
+	}
+ 
+void CTApparcTestNegativePrioStaticB::ConstructL()
+    {
 	User::LeaveIfError(iFs.Connect());
 	TInt err = iFs.MkDirAll(KApparcTestDir);
 	
 	err = iFile.Create(iFs,KApparcTestResultsFileName,EFileWrite | EFileShareAny);
 	if(err == KErrAlreadyExists)
 		iFile.Open(iFs,KApparcTestResultsFileName,EFileWrite | EFileShareAny);
-	}
-
-inline CTApparcTestNegativePrioStaticB* CTApparcTestNegativePrioStaticB::Self()
-	{
-	return STATIC_CAST(CTApparcTestNegativePrioStaticB*,CCoeEnv::Static(KUidTestStaticNegativePrioB));
 	}
 
 // inline functions for CTApparcTestPosPrioStaticA	
@@ -591,3 +600,6 @@ inline CTApparcTestPrioTwoStaticC* CTApparcTestPrioTwoStaticC::Self()
 {
 	return STATIC_CAST(CTApparcTestPrioTwoStaticC*,CCoeEnv::Static(KUidTestStaticPriTwoC));
 }
+
+
+

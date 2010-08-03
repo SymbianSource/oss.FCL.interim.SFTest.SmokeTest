@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -17,30 +17,32 @@
 // It is called by void CT_RApaLsSessionTestStep::TestIconLoaderAndIconArrayMemoryLeaksL() 
 // in apparctestserver
 // 
+// ticonloaderandiconarrayforleaks.cpp
 //
 
-
-
 /**
- @file
+ @file ticonloaderandiconarrayforleaks.cpp
  @test
  @internalComponent - Internal Symbian test code
 */
 
 
-#include <APGAPLST.H>
+#include <apgaplst.h>
 #include <bautils.h>
-#include <APGICNFL.H> 
-#include <APFDEF.H>
-#include "APGAIR.H"
-#include <APGICNFL.H> 
+#include "apfdef.h"
+#include "../aplist/aplappinforeader.h"
+#include <apgicnfl.h> 
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include "apgicnflpartner.h"
+//#include "apgicnflinternal.h"
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 #include "apprivate.h"
 #include <barsc2.h>
 #include <barsread2.h>
 #include <e32uid.h>
 #include "APGSTD.H"
 #include "TIconLoaderAndIconArrayForLeaks.h"
-#include "apsiconcaptionoverride.h"
+#include "../aplist/apsiconcaptionoverride.h"
 
 
 EXPORT_C void TIconLoaderAndIconArrayForLeaks::TestIconLoaderAndIconArrayL()

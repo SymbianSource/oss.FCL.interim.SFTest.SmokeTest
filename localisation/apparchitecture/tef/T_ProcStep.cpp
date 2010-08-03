@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -14,8 +14,6 @@
 // The following tests are performed to test the Child behaviour on its Parent's termination.
 // 
 //
-
-
 
 /**
  @file
@@ -103,14 +101,14 @@ void CChildProcess::DoCancel()
 	}
 
 
-////////////////////////////////////////////////////////////////////////////
+//
 //
 // T_ProcStep.cpp 
 // ------------
 //
 // Implements the test cases to test Child behaviour on Parent termination.
 //
-////////////////////////////////////////////////////////////////////////////
+//
 
 CT_ProcStep::CT_ProcStep()
 /**
@@ -671,9 +669,11 @@ void CT_ProcStep::testAllChildsSetToTerminateL(void)
 	INFO_PRINTF1(_L("	Attach CommandLine of Child One to its Process "));
 
 	INFO_PRINTF1(_L("	Run Child One "));
+	TRequestStatus childOnestatus;
+	childProcOne.Rendezvous(childOnestatus);
 	childProcOne.Resume();
-	//Time for the child process to launch itself
-	User::After(1000000);
+	//Wait for the child process to launch itself
+	User::WaitForRequest(childOnestatus);
 
 	//child process Id is reqd to monitor if it gets killed on its parent's termination
 	TUint64 childProcOneId = childProcOne.Id();
@@ -703,9 +703,11 @@ void CT_ProcStep::testAllChildsSetToTerminateL(void)
 	INFO_PRINTF1(_L("	Attach CommandLine of Child Two to its Process "));
 
 	INFO_PRINTF1(_L("	Run Child Two "));
+	TRequestStatus childTwostatus;
+	childProcTwo.Rendezvous(childTwostatus);
 	childProcTwo.Resume();
-	//Time for the child process to launch itself
-	User::After(1000000);
+	//Wait for the child process to launch itself
+	User::WaitForRequest(childTwostatus);
 
 	//child process Id is reqd to monitor if it gets killed on its parent's termination
 	TUint64 childProcTwoId = childProcTwo.Id();
@@ -734,10 +736,12 @@ void CT_ProcStep::testAllChildsSetToTerminateL(void)
 	User::LeaveIfError(ret);
 	INFO_PRINTF1(_L("	Attach CommandLine of Child Three to its Process "));
 
+	TRequestStatus childThreestatus;
+	childProcThree.Rendezvous(childThreestatus);
 	childProcThree.Resume();
 
-	//Time for the child process to launch itself
-	User::After(1000000);
+	//Wait for the child process to launch itself
+	User::WaitForRequest(childThreestatus);
 
 	//child process Id is reqd to monitor if it gets killed on its parent's termination
 	TUint64 childProcThreeId = childProcThree.Id();
@@ -753,6 +757,7 @@ void CT_ProcStep::testAllChildsSetToTerminateL(void)
 	TEST(exitType == EExitTerminate);
 	TInt exitReason = parentProc.ExitReason();
 	TEST(exitReason == 0);
+	INFO_PRINTF3(_L("	Parent process - Exit Type = %d, Exit Reason = %d"), exitType, exitReason);
 	if(exitType == EExitTerminate && exitReason == 0)
 		{
 		INFO_PRINTF1(_L("	Parent process is Terminated "));
@@ -762,26 +767,32 @@ void CT_ProcStep::testAllChildsSetToTerminateL(void)
 	TEST(exitType == EExitTerminate);
 	exitReason = childProcOne.ExitReason();
 	TEST(exitReason == 0);
+	INFO_PRINTF3(_L("	Child I process - Exit Type = %d, Exit Reason = %d"), exitType, exitReason);
 	if(exitType == EExitTerminate && exitReason == 0)
 		{
 		INFO_PRINTF1(_L("	Child I is killed "));
 		}
-
+	
+	childProcTwo.Logon(childTwostatus);
+	User::WaitForRequest(childTwostatus);
 	exitType = childProcTwo.ExitType();
 	TEST(exitType == EExitTerminate);
 	exitReason = childProcTwo.ExitReason();
 	TEST(exitReason == 0);
+	INFO_PRINTF3(_L("	Child II process - Exit Type = %d, Exit Reason = %d"), exitType, exitReason);
 	if(exitType == EExitTerminate && exitReason == 0)
 		{
 		INFO_PRINTF1(_L("	Child II is killed "));
 		}
 
-	//Wait 1sec to close the child process
-	User::After(1000000);
+	//Wait to close the child process
+	childProcThree.Logon(childThreestatus);
+	User::WaitForRequest(childThreestatus);
 	exitType = childProcThree.ExitType();
 	TEST(exitType == EExitTerminate);
 	exitReason = childProcThree.ExitReason();
 	TEST(exitReason == 0);
+	INFO_PRINTF3(_L("	Child III process - Exit Type = %d, Exit Reason = %d"), exitType, exitReason);
 	if(exitType == EExitTerminate && exitReason == 0)
 		{
 		INFO_PRINTF1(_L("	Child III is killed "));
@@ -1092,9 +1103,11 @@ void CT_ProcStep::testIdAvailableToChildL(void)
 	INFO_PRINTF2(_L("	Set the Parent Process Id - 0x%lx to Child through SetParameter API in Slot 12 "),parentProcId);
 
 	INFO_PRINTF1(_L("	Run Child Process "));
+	TRequestStatus status;
+	childProc.Rendezvous(status);
 	childProc.Resume();
-	//Time for the child process to launch itself
-	User::After(1000000);
+	//Wait for the child process to launch itself
+	User::WaitForRequest(status);
 
 	RFs fs;
 	RFile file;
@@ -1249,9 +1262,11 @@ void CT_ProcStep::testIdNotAvailableToChildL(void)
 	INFO_PRINTF2(_L("	Set the Parent Process Id - 0x%lx to Child through SetParameter API in Slot 12 "),parentProcId);
 
 	INFO_PRINTF1(_L("	Run Child Process "));
+	TRequestStatus status;
+	childProc.Rendezvous(status);
 	childProc.Resume();
-	//Time for the child process to launch itself
-	User::After(1000000);
+	//Wait for the child process to launch itself
+	User::WaitForRequest(status);
 
 	RFs fs;
 	RFile file;

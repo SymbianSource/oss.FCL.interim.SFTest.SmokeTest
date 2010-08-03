@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code 
@@ -24,7 +22,7 @@
 #define __TRAPALSSESSIONSTARTAPPTEST_H__
 
 #if !defined(__E32STD_H__)
-#include <E32STD.H>
+#include <e32std.h>
 #endif
 
 /** KLitLongURL must be > 256 characters long, in this case it's 259 characters long
@@ -42,3 +40,4 @@ const TUid KUidMimeTRApaLsSessionStartAppTestRecognizer={0x10004c50};
 const TInt KNumDataTypes = 1;
 _LIT8(KLitMimeType_TRApaLsSessionStartAppTest, "x-epoc/start-app-test");
 #endif
+

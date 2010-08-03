@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,12 +11,11 @@
 // Contributors:
 //
 // Description:
+// t_prostep.h
 //
 
-
-
 /**
- @file
+ @file t_prostep.h
  @internalComponent - Internal Symbian test code 
 */
 
@@ -25,10 +24,15 @@
 
 _LIT(KT_ProStep,"T_Pro");
 
-#include "ApparcTestServer.h"
+#include "apparctestserver.h"
 
 #include <apaid.h>
-#include "..\apparc\apadll.h"
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apaidpartner.h>
+#include <apgicnflpartner.h>
+#include <apgctllist.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
+#include "../apparc/apadll.h"
 #include <apgaplst.h>
 #include <apgicnfl.h>
 #include <apgdoor.h>
@@ -52,7 +56,7 @@ public:
 	virtual TVerdict doTestStepPreambleL();
 	virtual TVerdict doTestStepPostambleL();
 	virtual TVerdict doTestStepL();
-	void DoStepTests();
+	void DoStepTestsL();
 //private:
 	void DoStepTestsInCallbackL();
 	void testAppIdentifierL();
@@ -99,10 +103,12 @@ class CT_ProStepCallBack : public CBase
 public:
 	CT_ProStepCallBack(CT_ProStep* aTestStep);
 	~CT_ProStepCallBack();
-	static TInt CallBack(TAny* /*aThis*/);
+	static TInt CallBackL(TAny* /*aThis*/);
 	CT_ProStep* iTestStep;
 
 private:
 	};
 
 #endif
+
+

@@ -1,7 +1,7 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -25,7 +25,13 @@
 #if !defined(__GDI_H__)
 #include <gdi.h>
 #endif
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#if !defined(__APAID_PARTNER_H__)
+#include "apaidpartner.h"
+#endif
+#else
 #include <apaid.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 // classes referenced:
 class CApaMaskedBitmap;
@@ -69,14 +75,14 @@ private:
 	TSize iDisplaySizeInTwips;
 	};
 
-class CApaAppServiceInfoArrayWrapper : public CApaAppServiceInfoArray
+NONSHARABLE_CLASS(CApaAppServiceInfoArrayImpl) : public CApaAppServiceInfoArray
 	{
 public:
-	static CApaAppServiceInfoArrayWrapper* NewL(CArrayFix<TApaAppServiceInfo>* aServiceInfoArray);
-	~CApaAppServiceInfoArrayWrapper();
+	static CApaAppServiceInfoArrayImpl* NewL(CArrayFix<TApaAppServiceInfo>* aServiceInfoArray);
+	~CApaAppServiceInfoArrayImpl();
 	TArray<TApaAppServiceInfo> Array();
 private:
-	CApaAppServiceInfoArrayWrapper(CArrayFix<TApaAppServiceInfo>* aServiceInfoArray);
+	CApaAppServiceInfoArrayImpl(CArrayFix<TApaAppServiceInfo>* aServiceInfoArray);
 private:
 	CArrayFix<TApaAppServiceInfo>* iServiceInfoArray;
 	};

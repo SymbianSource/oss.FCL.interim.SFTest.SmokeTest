@@ -1,7 +1,7 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,19 +13,18 @@
 // Description:
 //
 
-#include <platform_paths.hrh>
-
-target			apparctestserver.EXE
+target			apparctestserver.exe
 targettype		exe
 UID             0x1000007A 0x101F289C
 CAPABILITY  	AllFiles WriteDeviceData PowerMgmt Protserv SwEvent
 
 
-SYSTEMINCLUDE   /EPOC32/INCLUDE /EPOC32/INCLUDE/TECHVIEW /EPOC32/INCLUDE/TEST
-systeminclude /epoc32/include/ecom
-systeminclude  ../tef
-
-MW_LAYER_SYSTEMINCLUDE
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+//SYSTEMINCLUDE   /epoc32/include/techview
+//systeminclude /epoc32/include/ecom
+USERINCLUDE  ../tef
+USERINCLUDE  ../inc
 
 SOURCEPATH		../tef
 SOURCE			apparctestserver.cpp
@@ -33,12 +32,12 @@ SOURCE			apparctestserver.cpp
 //-------START 
 
 SOURCE		T_Foreground.cpp
-SOURCE		T_ProStep.cpp T_OOMStep.cpp T_File1Step.cpp T_File2Step.cpp T_File3Step.cpp
+SOURCE		T_ProStep.cpp T_OOMStep.cpp T_File2Step.cpp T_File3Step.cpp
 SOURCE		T_BackupStep.cpp T_MdrStep.cpp
-SOURCE		T_Serv2Step.cpp  T_Serv3Step.cpp
-SOURCE		T_MRUStep.cpp T_WgnamStep.cpp
-SOURCE		T_CmdlnStep.cpp T_RApaLsSessionStep.cpp 
-SOURCE		T_ExeStep.cpp T_NotifStep.cpp
+SOURCE		T_Serv2Step.CPP  T_Serv3Step.cpp
+SOURCE		T_MRUStep.CPP T_WgnamStep.CPP
+SOURCE		T_CmdlnStep.CPP T_RApaLsSessionStep.cpp 
+SOURCE		T_ExeStep.CPP T_NotifStep.cpp
 SOURCE		T_CaptionStep.cpp T_LocaleStep.cpp 
 SOURCE		T_AutoMMCReaderOpen.cpp
    
@@ -53,8 +52,8 @@ SOURCE		T_Capability2.cpp
 SOURCE		T_groupNametest.cpp
 SOURCE		T_groupNametest_ver1.cpp
 SOURCE		T_groupNametest_ver2.cpp
-SOURCE		T_windowchainingstep.cpp
-SOURCE		T_AppList.CPP
+SOURCE		T_WindowChainingStep.CPP
+SOURCE		T_AppList.cpp
 SOURCE		T_SysStartApparcStep.cpp
 SOURCE		T_ProcStep.cpp
 SOURCE		T_DataMappingPersistenceA.cpp
@@ -63,12 +62,10 @@ SOURCE		T_DataMappingPersistenceC.cpp
 SOURCE		T_NonNativeAppsStep.cpp
 SOURCE		T_IntegritySupportStep.cpp
 SOURCE		T_IntegritySupportRebootStep.cpp
-SOURCE		T_ApsScan.CPP
+SOURCE		T_ApsScan.cpp
 SOURCE		T_EndTaskStep.cpp
-#ifdef SYMBIAN_APPARC_APPINFO_CACHE
 SOURCE		T_AppListFileUpdateStep.cpp
 SOURCE		T_AppListFileBootStep.cpp
-#endif
 SOURCE		testableapalssession.cpp
 SOURCE		t_largestackstep.cpp
 SOURCE		T_DataTypeMappingWithSid1.cpp
@@ -77,6 +74,7 @@ SOURCE      t_drivenotification.cpp
 SOURCE		t_mimecontentpolicystep.cpp
 SOURCE		t_servicebasestep.cpp
 SOURCE		T_RecUpgrade.cpp
+
 
 resource		t_rapalssessionstep.rss
 start resource	t_rapalssessionstep.rss
@@ -91,7 +89,7 @@ targetpath	/resource/apps
 lang		sc
 end
 
-start resource	serverapp_reg.RSS
+start resource	serverapp_reg.rss
 targetpath	/private/10003a3f/apps
 lang		sc
 end
@@ -121,12 +119,12 @@ targetpath	/private/10003a3f/apps
 lang		sc
 end
 
-start resource	openservice1a.RSS
+start resource	openservice1a.rss
 targetpath	/private/10003a3f/apps
 lang		sc
 end
 
-start resource	openservice1b.RSS
+start resource	openservice1b.rss
 targetpath	/private/10003a3f/apps
 lang		sc
 end
@@ -139,7 +137,7 @@ end
 // END resource files for service registration and discovery tests
 
 
-start resource	TCtrlPnlApp_reg.RSS
+start resource	TCtrlPnlApp_reg.rss
 targetpath	/private/10003a3f/apps
 lang		sc
 end
@@ -223,13 +221,16 @@ end
 USERINCLUDE	 	../tef
 userinclude		../../uiftestfw/inc
 
-LIBRARY		CONE.LIB WS32.LIB APPFWK_TEST_APPUI.LIB EUSER.LIB ECOM.LIB
-LIBRARY		TESTEXECUTEUTILS.LIB  TestExecuteLogClient.LIB
-LIBRARY		APPARC.LIB EFSRV.LIB ESTOR.LIB GDI.LIB FBSCLI.LIB
-LIBRARY     	APFILE.LIB APGRFX.LIB  BAFL.LIB APMIME.LIB APSERV.LIB
-LIBRARY		EIKCORE.LIB APPFWK_TEST_UTILS.LIB SERVICEREGISTRY.LIB
+LIBRARY		cone.lib ws32.lib appfwk_test_appui.lib euser.lib ecom.lib
+LIBRARY		testexecuteutils.lib  testexecutelogclient.lib
+LIBRARY		apparc.lib efsrv.lib estor.lib gdi.lib fbscli.lib
+LIBRARY     	apfile.lib apgrfx.lib  bafl.lib apmime.lib apserv.lib
+LIBRARY		eikcore.lib appfwk_test_utils.lib serviceregistry.lib
+LIBRARY		aplist.lib
 LIBRARY     ticonloaderandiconarrayforleaks.lib centralrepository.lib
 // We're quite heavy on the stack... 4k in WinS isn't enough...
 EPOCSTACKSIZE	0xf000
 
 VENDORID 0x70000001
+
+SMPSAFE

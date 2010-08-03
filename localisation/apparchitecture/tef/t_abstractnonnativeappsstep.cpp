@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code  
@@ -23,6 +21,9 @@
 #include "t_abstractnonnativeappsstep.h"
 
 #include <apgicnfl.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apgicnflpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 CT_AbstractNonNativeAppsTestStep::CT_AbstractNonNativeAppsTestStep()
 	{
@@ -40,7 +41,7 @@ void CT_AbstractNonNativeAppsTestStep::doAbstractNonNativeAppsTestStepPreambleL(
 	TEST(error==KErrNone);
 	}
 
-void CT_AbstractNonNativeAppsTestStep::CleanupAndReset(RTestableApaLsSession& aSession, const TTestAppDetails& aApp)
+void CT_AbstractNonNativeAppsTestStep::CleanupAndResetL(RTestableApaLsSession& aSession, const TTestAppDetails& aApp)
 	{
 	// make sure we're starting from a clean sheet
 	CompleteDeregisterL(aSession, aApp);

@@ -1,7 +1,7 @@
-// Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
+// Copyright (c) 1999-2010 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,8 +15,6 @@
 // 
 //
 
-
-
 /**
  @file
  @test
@@ -26,11 +24,11 @@
 PRJ_PLATFORMS
 WINC DEFAULT
 
+
 PRJ_EXPORTS
 // test code only
 
 PRJ_MMPFILES
-// test code only
 
 PRJ_TESTMMPFILES
 // specify the .mmp files required for building any test programs here
@@ -44,14 +42,12 @@ PRJ_TESTMMPFILES
 // i.e. tests where no user input is required.  The default will apply if neither "manual"
 // or "support" is specified.
 ../tef/apparctestserver.MMP
-#ifdef SYMBIAN_APPARC_APPINFO_CACHE
 //../tef/TAppInstall/TestAppInstall.mmp
-#endif// SYMBIAN_APPARC_APPINFO_CACHE
-//../tef/TDoNothingFileRecognizer_v2.mmp
 ../tef/TSTAPP_embedded.MMP 	support
 ../tef/TSTAPP_standalone.MMP	support
 //../tef/m_ctrl_v2.mmp	support
 //../tef/SimpleApparcTestApp.mmp	support
+//../tef/zerosizedicontestapp.mmp	support
 //../tef/TEXE_V2.MMP 	support
 //../tef/TAppNotEmbeddable_v2.mmp support
 //../tef/TAppEmbeddable_embedded.mmp support
@@ -72,7 +68,6 @@ PRJ_TESTMMPFILES
 //../tef/tRuleBasedApps/tRuleBasedApp4.mmp support
 //../tef/TCmdLineExe.mmp 	support
 //../tef/TApparcTestApp.mmp support
-//../tef/TTestEcomFileRec.mmp support
 //../tef/TAppLaunchChecker.mmp support
 //../tef/TAppLaunchChecker2.mmp support
 //../tef/TNonNativeAppLaunchChecker.mmp support
@@ -98,13 +93,45 @@ PRJ_TESTMMPFILES
 //../tef/tlargestack/tlargestackapp.mmp
 //../tef/UnProctectedUidApp.mmp	support
 ../tef/TIconLoaderAndIconArrayForLeaks.mmp
+//  RecMime_1 binaries are used to install and uninstall the mime type recognizer during runtime in TRApaLsSessionTestStep.
+//../tef/TMimeRec1/RecMime_1.MMP
 //../tef/tupgradeiconapp/tupgradeiconapp.mmp
 //../tef/tnotifydrivesapp/tnotifydrivesapp.mmp
+//../tef/TRecUpgrade/recupgrade.mmp
+//*****************************************************************************************************************************************************************************************************
+//recupgrade_1 plug-in is used to upgrade the mime type recognizer during runtime in T_RecUpgrade test.  
+//              It is build for armv5 and rename to recupgrade_armv5_rel.dll and copied to apparc\Tdata before actual code builds.  If you are making any change in recupgrade_1.cpp then uncomment 
+//              “recupgrade_1.MMP” , build , rename (.dll) and copy as mentioned above .
+//*****************************************************************************************************************************************************************************************************
+//../tef/TRecUpgrade_1/recupgrade_1.MMP
+
+//../tef/testapp/testforceregistrationapp1/testforceregistrationapp1.mmp
+
+// ***************************************************************************************************************************************************************************************************
+// recupgrade_2 plug-in is used to upgrade the mime type recognizer during runtime in T_RecUpgrade test.  
+//              It is build for armv5 and rename to recupgrade2_armv5_rel.dll and copied to apparc\Tdata before actual code builds.  If you are making any change in recupgrade_2.cpp then uncomment 
+//              “recupgrade_2.MMP” , build , rename (.dll) and copy as mentioned above .
+// ***************************************************************************************************************************************************************************************************
+//../tef/TRecUpgrade_2/recupgrade_2.MMP
 //../tef/ticoncaptionoverride.mmp
-//../tef/trecupgrade/recupgrade.mmp
+// testupdregappuninstallation is used in t_serviceregistry test. If any changes done to
+// this application, uncomment testupdregappuninstallation.mmp file and build it.
+// Then comment it and copy the testupdregappuninstallation_reg.rsc file to ..\tdata folder.
+// Delete any testupdregappuninstallation* files from epoc32 directory.
+//../tef/testapp/testupdregappuninstallation/testupdregappuninstallation.mmp
+
+// testupgradeupdregappuninstallation is used in t_serviceregistry test. If any changes done to
+// this application, uncomment testupdregappuninstallation.mmp file and build it.
+// Then comment it and copy the testupgradeupdregappuninstallation_reg.rsc file to ..\tdata folder.
+// Delete any testupdregappuninstallation* files from epoc32 directory.
+//../tef/testapp/testupgradeupdregappuninstallation/testupgradeupdregappuninstallation.mmp
+
 
 PRJ_TESTEXPORTS
+
+//../group/apparcTest.iby /epoc32/rom/include/apparctest.iby
+
+//../tef/scripts/apparctest_T_Caption.script            		z:/apparctest/apparctest_t_caption.script
 ../tef/scripts/smoketest_language.script            		z:/smoketest/smoketest_language.script
 ../tef/scripts/setup_smoketest_language.script            	z:/smoketest/setup_smoketest_language.script
 ../group/Smoketest_AppArchitecture.iby              /epoc32/rom/include/Smoketest_AppArchitecture.iby
-

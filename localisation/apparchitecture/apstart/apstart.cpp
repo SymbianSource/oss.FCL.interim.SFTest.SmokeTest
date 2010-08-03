@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -91,6 +91,39 @@ void CApaAppStart::WaitForApparcToInitialiseL()
 	CleanupStack::PopAndDestroy(&timer);
 	}
 
+/**
+Wait for apparc server to complete initial population of its app list. (Asynchronous). 
+
+@param aStatus 
+*/
+void CApaAppStart::InitApparcServer(TRequestStatus& aStatus)
+	{
+	// Make sure we have a usable session...
+	if (iApaLsSession.Handle()==KNullHandle)
+		{
+		const TInt err = iApaLsSession.Connect(); 
+		if(err != KErrNone)
+			{
+			TRequestStatus* status = &aStatus;
+			User::RequestComplete(status, KErrCouldNotConnect);
+			return;
+			}
+		}
+	iApaLsSession.RegisterListPopulationCompleteObserver(aStatus);
+	}
+
+/**
+Cancel population of app list.
+*/
+void CApaAppStart::InitApparcServerCancel()
+	{
+	if (iApaLsSession.Handle()!=KNullHandle)
+		{
+		// cancel population of app list
+		iApaLsSession.CancelListPopulationCompleteObserver();
+		}
+	}
+
 /** 
 Set up the CApaCommandLine object which will be used to start the app.
 */
@@ -128,8 +161,9 @@ Start an application as defined by the specified command line information. Feedb
 when the application is actually up and running is given via @c aRequestStatusForRendezvous.
 
 Rule-based launching and non-native applications are supported only after 
-@c WaitForApparcToInitialiseL has been called. 
+@c WaitForApparcToInitialiseL (in case of sysstart) or InitApparcServer (in case of ssma) has been called. 
 @see struct INIT_APPARC.
+@see struct STRUCT SSM_WAIT_FOR_APPARC_INIT
 
 @param aFileName The full filename of the application.
 @param aArgs The arguments passed to the application.
@@ -156,8 +190,9 @@ Start an application as defined by the specified command line information. No fe
 about when the application is actually up and running.
 
 Rule-based launching and non-native applications are supported only after 
-@c WaitForApparcToInitialiseL has been called. 
+@c WaitForApparcToInitialiseL (in case of sysstart) or InitApparcServer (in case of ssma) has been called. 
 @see struct INIT_APPARC.
+@see struct STRUCT SSM_WAIT_FOR_APPARC_INIT
 
 @param aFileName The full filename of the application.
 @param aArgs The arguments passed to the application.

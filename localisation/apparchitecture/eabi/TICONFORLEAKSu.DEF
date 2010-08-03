@@ -1,6 +1,6 @@
 EXPORTS
 	KMinApplicationStackSize @ 1 NONAME DATA 4
-	_Z16StartupApaServerR14MApaAppStarter @ 2 NONAME
+	_Z16StartupApaServerR14MApaAppStarter @ 2 NONAME ABSENT
 	_Z23MinApplicationStackSizev @ 3 NONAME
 	_Z23StartupApaServerProcessv @ 4 NONAME
 	_ZN11CApaAppData16CanUseScreenModeEi @ 5 NONAME
@@ -10,15 +10,15 @@ EXPORTS
 	_ZN11CApaAppDataD1Ev @ 9 NONAME
 	_ZN11CApaAppDataD2Ev @ 10 NONAME
 	_ZN11CApaAppList12RestartScanLEv @ 11 NONAME
-	_ZN11CApaAppList14CompareStringsERK7HBufC16S2_ @ 12 NONAME
+	_ZN11CApaAppList14CompareStringsERK7HBufC16S2_ @ 12 NONAME ABSENT
 	_ZN11CApaAppList15UpdatedAppsListEv @ 13 NONAME ABSENT
 	_ZN11CApaAppList16StartIdleUpdateLEP19MApaAppListObserver @ 14 NONAME
 	_ZN11CApaAppList16StartIdleUpdateLEv @ 15 NONAME
 	_ZN11CApaAppList18SetUpdatedAppsListEP16CUpdatedAppsList @ 16 NONAME ABSENT
-	_ZN11CApaAppList22AddForcedRegistrationLEP7HBufC16 @ 17 NONAME
+	_ZN11CApaAppList22AddForcedRegistrationLEP7HBufC16 @ 17 NONAME ABSENT
 	_ZN11CApaAppList22FindAndAddSpecificAppLEP16CApaAppRegFinder4TUid @ 18 NONAME
 	_ZN11CApaAppList24ResetForcedRegistrationsEv @ 19 NONAME
-	_ZN11CApaAppList4NewLER3RFsP16CApaAppRegFinderii @ 20 NONAME
+	_ZN11CApaAppList4NewLER3RFsP16CApaAppRegFinderii @ 20 NONAME ABSENT
 	_ZN11CApaAppList4SelfEv @ 21 NONAME
 	_ZN11CApaAppList6PurgeLEv @ 22 NONAME
 	_ZN11CApaAppList8StopScanEi @ 23 NONAME
@@ -117,22 +117,22 @@ EXPORTS
 	_ZN19CApaWindowGroupNameD0Ev @ 116 NONAME
 	_ZN19CApaWindowGroupNameD1Ev @ 117 NONAME
 	_ZN19CApaWindowGroupNameD2Ev @ 118 NONAME
-	_ZN21CApaAppInfoFileWriter11AddCaptionLE9TLanguageRK7TDesC16 @ 119 NONAME
-	_ZN21CApaAppInfoFileWriter12AddDataTypeLERK21TDataTypeWithPriority @ 120 NONAME
-	_ZN21CApaAppInfoFileWriter13SetCapabilityERK6TDesC8 @ 121 NONAME
-	_ZN21CApaAppInfoFileWriter6StoreLEv @ 122 NONAME
-	_ZN21CApaAppInfoFileWriter8AddIconLER16CApaMaskedBitmap @ 123 NONAME
-	_ZN21CApaAppInfoFileWriterD0Ev @ 124 NONAME
-	_ZN21CApaAppInfoFileWriterD1Ev @ 125 NONAME
-	_ZN21CApaAppInfoFileWriterD2Ev @ 126 NONAME
+	_ZN21CApaAppInfoFileWriter11AddCaptionLE9TLanguageRK7TDesC16 @ 119 NONAME ABSENT
+	_ZN21CApaAppInfoFileWriter12AddDataTypeLERK21TDataTypeWithPriority @ 120 NONAME ABSENT
+	_ZN21CApaAppInfoFileWriter13SetCapabilityERK6TDesC8 @ 121 NONAME ABSENT
+	_ZN21CApaAppInfoFileWriter6StoreLEv @ 122 NONAME ABSENT
+	_ZN21CApaAppInfoFileWriter8AddIconLER16CApaMaskedBitmap @ 123 NONAME ABSENT
+	_ZN21CApaAppInfoFileWriterD0Ev @ 124 NONAME ABSENT
+	_ZN21CApaAppInfoFileWriterD1Ev @ 125 NONAME ABSENT
+	_ZN21CApaAppInfoFileWriterD2Ev @ 126 NONAME ABSENT
 	_ZN21CApaSystemControlList4NewLER3RFs @ 127 NONAME
 	_ZN21CApaSystemControlList7UpdateLEv @ 128 NONAME
 	_ZN21CApaSystemControlListD0Ev @ 129 NONAME
 	_ZN21CApaSystemControlListD1Ev @ 130 NONAME
 	_ZN21CApaSystemControlListD2Ev @ 131 NONAME
-	_ZN22ForJavaMIDletInstaller18GetJavaMIDletInfoLER3RFsRK7TDesC16RmS5_ @ 132 NONAME
-	_ZN22ForJavaMIDletInstaller28NewInterimFormatFileWriterLCER3RFsRK7TDesC164TUidmi @ 133 NONAME
-	_ZN22ForJavaMIDletInstaller33CheckInterimFormatFileNotCorruptLER5RFile @ 134 NONAME
+	_ZN22ForJavaMIDletInstaller18GetJavaMIDletInfoLER3RFsRK7TDesC16RmS5_ @ 132 NONAME ABSENT
+	_ZN22ForJavaMIDletInstaller28NewInterimFormatFileWriterLCER3RFsRK7TDesC164TUidmi @ 133 NONAME ABSENT
+	_ZN22ForJavaMIDletInstaller33CheckInterimFormatFileNotCorruptLER5RFile @ 134 NONAME ABSENT
 	_ZN23MApaAppListServObserver33MApaAppListServObserver_Reserved1Ev @ 135 NONAME
 	_ZN23MApaAppListServObserver33MApaAppListServObserver_Reserved2Ev @ 136 NONAME
 	_ZN23MApaAppListServObserverC2Ev @ 137 NONAME
@@ -159,7 +159,7 @@ EXPORTS
 	_ZN34CApaRegistrationResourceFileWriterD0Ev @ 158 NONAME
 	_ZN34CApaRegistrationResourceFileWriterD1Ev @ 159 NONAME
 	_ZN34CApaRegistrationResourceFileWriterD2Ev @ 160 NONAME
-	_ZN8ApaUtils24HandleAsRegistrationFileERK8TUidType @ 161 NONAME
+	_ZN8ApaUtils24HandleAsRegistrationFileERK8TUidType @ 161 NONAME ABSENT
 	_ZN8CApaDoor16SetFormatToIconLEv @ 162 NONAME
 	_ZN8CApaDoor17SetFormatToGlassLEv @ 163 NONAME
 	_ZN8CApaDoor25SetFormatToTemporaryIconLEi @ 164 NONAME
@@ -320,76 +320,97 @@ EXPORTS
 	_ZNK8TApaTask6ExistsEv @ 319 NONAME
 	_ZNK8TApaTask8ThreadIdEv @ 320 NONAME
 	_ZN17CApaSecurityUtils16CheckAppSecurityERK7TPtrC16RiS3_ @ 321 NONAME
-	_ZN11CApaAppData11SetCaptionLERK7TDesC16 @ 322 NONAME
-	_ZN11CApaAppData9SetIconsLERK7TDesC16i @ 323 NONAME
-	_ZTI11CApaAppData @ 324 NONAME
-	_ZTI11CApaAppList @ 325 NONAME
-	_ZTI12CApaAppEntry @ 326 NONAME
-	_ZTI13RApaLsSession @ 327 NONAME
-	_ZTI14CApaAIFCaption @ 328 NONAME
-	_ZTI15CApaAIFViewData @ 329 NONAME
-	_ZTI15CApaAppInfoFile @ 330 NONAME
-	_ZTI15CApaAppViewData @ 331 NONAME
-	_ZTI15CApaIconPicture @ 332 NONAME
-	_ZTI16CApaMaskedBitmap @ 333 NONAME
-	_ZTI16TDesCArrayFiller @ 334 NONAME
-	_ZTI16TSizeArrayFiller @ 335 NONAME
-	_ZTI17CApaAppInfoReader @ 336 NONAME
-	_ZTI17CApaSystemControl @ 337 NONAME
-	_ZTI18TApaPictureFactory @ 338 NONAME
-	_ZTI19CApaAppInfoReaderV2 @ 339 NONAME
-	_ZTI19CApaAppListNotifier @ 340 NONAME
-	_ZTI19CApaWindowGroupName @ 341 NONAME
-	_ZTI20TViewDataArrayFiller @ 342 NONAME
-	_ZTI21CApaAppInfoFileReader @ 343 NONAME
-	_ZTI21CApaAppInfoFileWriter @ 344 NONAME
-	_ZTI21CApaSystemControlList @ 345 NONAME
-	_ZTI21CAsyncFileRecognition @ 346 NONAME
-	_ZTI22CApaLsSessionExtension @ 347 NONAME
-	_ZTI23MApaAppListServObserver @ 348 NONAME
-	_ZTI27CDataRecognitionResultArray @ 349 NONAME
-	_ZTI30CApaAppServiceInfoArrayWrapper @ 350 NONAME
-	_ZTI32CDataRecognitionResultArrayEntry @ 351 NONAME
-	_ZTI33CApaLocalisableResourceFileWriter @ 352 NONAME
-	_ZTI34CApaRegistrationResourceFileWriter @ 353 NONAME
-	_ZTI7HBufBuf @ 354 NONAME
-	_ZTI8CApaDoor @ 355 NONAME
-	_ZTIN26CApaResourceFileWriterBase11RBufferSinkE @ 356 NONAME
-	_ZTV11CApaAppData @ 357 NONAME
-	_ZTV11CApaAppList @ 358 NONAME
-	_ZTV12CApaAppEntry @ 359 NONAME
-	_ZTV13RApaLsSession @ 360 NONAME
-	_ZTV14CApaAIFCaption @ 361 NONAME
-	_ZTV15CApaAIFViewData @ 362 NONAME
-	_ZTV15CApaAppInfoFile @ 363 NONAME
-	_ZTV15CApaAppViewData @ 364 NONAME
-	_ZTV15CApaIconPicture @ 365 NONAME
-	_ZTV16CApaMaskedBitmap @ 366 NONAME
-	_ZTV16TDesCArrayFiller @ 367 NONAME
-	_ZTV16TSizeArrayFiller @ 368 NONAME
-	_ZTV17CApaAppInfoReader @ 369 NONAME
-	_ZTV17CApaSystemControl @ 370 NONAME
-	_ZTV18TApaPictureFactory @ 371 NONAME
-	_ZTV19CApaAppInfoReaderV2 @ 372 NONAME
-	_ZTV19CApaAppListNotifier @ 373 NONAME
-	_ZTV19CApaWindowGroupName @ 374 NONAME
-	_ZTV20TViewDataArrayFiller @ 375 NONAME
-	_ZTV21CApaAppInfoFileReader @ 376 NONAME
-	_ZTV21CApaAppInfoFileWriter @ 377 NONAME
-	_ZTV21CApaSystemControlList @ 378 NONAME
-	_ZTV21CAsyncFileRecognition @ 379 NONAME
-	_ZTV22CApaLsSessionExtension @ 380 NONAME
-	_ZTV23MApaAppListServObserver @ 381 NONAME
-	_ZTV27CDataRecognitionResultArray @ 382 NONAME
-	_ZTV30CApaAppServiceInfoArrayWrapper @ 383 NONAME
-	_ZTV32CDataRecognitionResultArrayEntry @ 384 NONAME
-	_ZTV33CApaLocalisableResourceFileWriter @ 385 NONAME
-	_ZTV34CApaRegistrationResourceFileWriter @ 386 NONAME
-	_ZTV7HBufBuf @ 387 NONAME
-	_ZTV8CApaDoor @ 388 NONAME
-	_ZTVN26CApaResourceFileWriterBase11RBufferSinkE @ 389 NONAME
-	_ZN31TIconLoaderAndIconArrayForLeaks25TestIconCaptionOverridesLEv @ 390 NONAME
-	_ZN13RApaLsSession40ForceCommitNonNativeApplicationsUpdatesLEv @ 391 NONAME
-	_ZN11CApaAppList20AppListUpdatePendingEv @ 392 NONAME
-	_ZN11CApaAppList19UninstalledAppArrayEv @ 393 NONAME
-	
+	_ZN11CApaAppList22AddForcedRegistrationLERK7TDesC16 @ 322 NONAME
+	_ZN11CApaAppList23AddCustomAppInfoInListLE4TUid9TLanguageRK7TDesC16 @ 323 NONAME
+	_ZN11CApaAppList28UpdateAppListByShortCaptionLEv @ 324 NONAME
+	_ZN11CApaAppList4NewLER3RFsii @ 325 NONAME
+	_ZN11TApaAppInfo12InternalizeLER11RReadStream @ 326 NONAME
+	_ZN11TApaAppInfoC1E4TUidRK4TBufILi256EES4_ @ 327 NONAME
+	_ZN11TApaAppInfoC1E4TUidRK4TBufILi256EES4_S4_ @ 328 NONAME
+	_ZN11TApaAppInfoC1Ev @ 329 NONAME
+	_ZN11TApaAppInfoC2E4TUidRK4TBufILi256EES4_ @ 330 NONAME
+	_ZN11TApaAppInfoC2E4TUidRK4TBufILi256EES4_S4_ @ 331 NONAME
+	_ZN11TApaAppInfoC2Ev @ 332 NONAME
+	_ZN12TApaAppEntryC1Ev @ 333 NONAME
+	_ZN12TApaAppEntryC2Ev @ 334 NONAME
+	_ZN15TApaAppViewInfo12InternalizeLER11RReadStream @ 335 NONAME
+	_ZN15TApaAppViewInfoC1E4TUidRK4TBufILi256EEi @ 336 NONAME
+	_ZN15TApaAppViewInfoC1Ev @ 337 NONAME
+	_ZN15TApaAppViewInfoC2E4TUidRK4TBufILi256EEi @ 338 NONAME
+	_ZN15TApaAppViewInfoC2Ev @ 339 NONAME
+	_ZN17TApaAppCapability12InternalizeLER11RReadStream @ 340 NONAME
+	_ZN17TApaAppCapability14CopyCapabilityER5TDes8RK6TDesC8 @ 341 NONAME
+	_ZN17TApaAppIdentifier12InternalizeLER11RReadStream @ 342 NONAME
+	_ZN17TApaAppIdentifierC1E4TUidRK4TBufILi256EE @ 343 NONAME
+	_ZN17TApaAppIdentifierC1Ev @ 344 NONAME
+	_ZN17TApaAppIdentifierC2E4TUidRK4TBufILi256EE @ 345 NONAME
+	_ZN17TApaAppIdentifierC2Ev @ 346 NONAME
+	_ZN18TApaAppServiceInfo12InternalizeLER11RReadStream @ 347 NONAME
+	_ZN18TApaAppServiceInfo7ReleaseEv @ 348 NONAME
+	_ZN18TApaAppServiceInfo9DataTypesEv @ 349 NONAME
+	_ZN18TApaAppServiceInfoC1E4TUidP13CArrayFixFlatI21TDataTypeWithPriorityEP6HBufC8 @ 350 NONAME
+	_ZN18TApaAppServiceInfoC1Ev @ 351 NONAME
+	_ZN18TApaAppServiceInfoC2E4TUidP13CArrayFixFlatI21TDataTypeWithPriorityEP6HBufC8 @ 352 NONAME
+	_ZN18TApaAppServiceInfoC2Ev @ 353 NONAME
+	_ZN23CApaAppServiceInfoArray33CApaAppServiceInfoArray_Reserved1Ev @ 354 NONAME
+	_ZN23CApaAppServiceInfoArray33CApaAppServiceInfoArray_Reserved2Ev @ 355 NONAME
+	_ZN23CApaAppServiceInfoArrayC2Ev @ 356 NONAME
+	_ZN23TApaEmbeddabilityFilter16AddEmbeddabilityEN17TApaAppCapability14TEmbeddabilityE @ 357 NONAME
+	_ZN23TApaEmbeddabilityFilterC1Ev @ 358 NONAME
+	_ZN23TApaEmbeddabilityFilterC2Ev @ 359 NONAME
+	_ZNK11TApaAppInfo12ExternalizeLER12RWriteStream @ 360 NONAME
+	_ZNK15TApaAppViewInfo12ExternalizeLER12RWriteStream @ 361 NONAME
+	_ZNK17TApaAppCapability12ExternalizeLER12RWriteStream @ 362 NONAME
+	_ZNK17TApaAppIdentifier12ExternalizeLER12RWriteStream @ 363 NONAME
+	_ZNK18TApaAppServiceInfo12ExternalizeLER12RWriteStream @ 364 NONAME
+	_ZNK23TApaEmbeddabilityFilter20MatchesEmbeddabilityEN17TApaAppCapability14TEmbeddabilityE @ 365 NONAME
+	_ZTI11CApaAppData @ 366 NONAME
+	_ZTI11CApaAppList @ 367 NONAME
+	_ZTI12CApaAppEntry @ 368 NONAME
+	_ZTI13RApaLsSession @ 369 NONAME
+	_ZTI15CApaAppViewData @ 370 NONAME
+	_ZTI15CApaIconPicture @ 371 NONAME
+	_ZTI16CApaMaskedBitmap @ 372 NONAME
+	_ZTI17CApaAppInfoReader @ 373 NONAME
+	_ZTI17CApaSystemControl @ 374 NONAME
+	_ZTI18TApaPictureFactory @ 375 NONAME
+	_ZTI19CApaAppListNotifier @ 376 NONAME
+	_ZTI19CApaWindowGroupName @ 377 NONAME
+	_ZTI21CApaSystemControlList @ 378 NONAME
+	_ZTI23CApaAppServiceInfoArray @ 379 NONAME
+	_ZTI23MApaAppListServObserver @ 380 NONAME
+	_ZTI27CDataRecognitionResultArray @ 381 NONAME
+	_ZTI33CApaLocalisableResourceFileWriter @ 382 NONAME
+	_ZTI34CApaRegistrationResourceFileWriter @ 383 NONAME
+	_ZTI7HBufBuf @ 384 NONAME
+	_ZTI8CApaDoor @ 385 NONAME
+	_ZTIN26CApaResourceFileWriterBase11RBufferSinkE @ 386 NONAME
+	_ZTV11CApaAppData @ 387 NONAME
+	_ZTV11CApaAppList @ 388 NONAME
+	_ZTV12CApaAppEntry @ 389 NONAME
+	_ZTV13RApaLsSession @ 390 NONAME
+	_ZTV15CApaAppViewData @ 391 NONAME
+	_ZTV15CApaIconPicture @ 392 NONAME
+	_ZTV16CApaMaskedBitmap @ 393 NONAME
+	_ZTV17CApaAppInfoReader @ 394 NONAME
+	_ZTV17CApaSystemControl @ 395 NONAME
+	_ZTV18TApaPictureFactory @ 396 NONAME
+	_ZTV19CApaAppListNotifier @ 397 NONAME
+	_ZTV19CApaWindowGroupName @ 398 NONAME
+	_ZTV21CApaSystemControlList @ 399 NONAME
+	_ZTV23CApaAppServiceInfoArray @ 400 NONAME
+	_ZTV23MApaAppListServObserver @ 401 NONAME
+	_ZTV27CDataRecognitionResultArray @ 402 NONAME
+	_ZTV33CApaLocalisableResourceFileWriter @ 403 NONAME
+	_ZTV34CApaRegistrationResourceFileWriter @ 404 NONAME
+	_ZTV7HBufBuf @ 405 NONAME
+	_ZTV8CApaDoor @ 406 NONAME
+	_ZTVN26CApaResourceFileWriterBase11RBufferSinkE @ 407 NONAME
+	_ZN11CApaAppData11SetCaptionLERK7TDesC16 @ 408 NONAME
+	_ZN11CApaAppData9SetIconsLERK7TDesC16i @ 409 NONAME
+	_ZN11CApaAppList36UpdateAppListByIconCaptionOverridesLEv @ 410 NONAME
+	_ZN13RApaLsSession40ForceCommitNonNativeApplicationsUpdatesLEv @ 411 NONAME
+	_ZN31TIconLoaderAndIconArrayForLeaks25TestIconCaptionOverridesLEv @ 412 NONAME
+	_ZN11CApaAppList20AppListUpdatePendingEv @ 413 NONAME
+	_ZNK13RApaLsSession13RecognizeDataERK6TDesC8R22TDataRecognitionResult @ 414 NONAME
+	_ZN11CApaAppList19UninstalledAppArrayEv @ 415 NONAME

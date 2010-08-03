@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code
@@ -23,7 +21,7 @@
 #if (!defined __T_SERV3_STEP_H__)
 #define __T_SERV3_STEP_H__
 
-#include "ApparcTestServer.h"
+#include "apparctestserver.h"
 #include "appfwk_test_utils.h"
 
 //!  A CT_Serv3Step test class.
@@ -58,7 +56,8 @@ private:
 	void DoAsyncFolderRecognizerTest14L(RApaLsSession& aLs);
 	TInt DoServComTestL();
 	void testBooleanTruer(TBool aCondition, const TText8* aFile, TInt aLine);
-	
+
+
 private:
 	void CreateDirL(RSmlTestUtils* aPtrUtils, TPtr aDirName);
 	void DeleteDirL(RSmlTestUtils* aPtrUtils, TPtr aDirName);
@@ -67,7 +66,7 @@ private:
 	CActiveScheduler* iActiveScheduler;
 	};
 
-//////////////////////////////////////////////////////////////////////////////
+//
 //	CActiveTest2::ActiveTest class definition
 //
 class CActiveTest2 : public CActive
@@ -85,3 +84,4 @@ class CActiveTest2 : public CActive
 _LIT(KT_Serv3Step,"T_Serv3");
 
 #endif
+

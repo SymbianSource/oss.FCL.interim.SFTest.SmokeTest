@@ -1,19 +1,24 @@
 <?xml version="1.0"?>
 <relnotes schema="1.0.0" name="Application Architecture" purpose="" type="component">
-<revision major="1" functional="0" minor="5" date="20080820">
-    <ref name="125788" type="defect"/>
-    <description> RApaLsSession::CancelRecognizeFiles() complete the TRequestStatus that was passed to RApaLsSession::RecognizeFilesL(). </description>
+<revision major="2" functional="0" minor="6" date="20080829">
+  <ref name="126909" type="defect" /> 
+  <description>RApaLsSession::CancelRecognizeFiles() complete the TRequestStatus that was passed to RApaLsSession::RecognizeFilesL().</description> 
   </revision>
-  <revision major="1" functional="0" minor="4" date="20080528">
-    <ref name="122634" type="defect"/>
-    <description> If drive name is present in the filename then it scans through the \\sys\\bin of that particular drive,
-	otherwise it scans through the \\sys\\bin folders in all the avaliable drives.</description>
-  </revision>	   	
-  <revision major="1" functional="0" minor="3" date="20080305">
-    <ref name="119000" type="defect"/>
-    <description>Changed documetnation in How To Port Guide: Control Panel Plugins.doc correctly.
-Changed out of date documentation in apgctl.h and apgctl.cpp
-Removed incorrect check in CApaSystemControl::ConstructL()</description>
+  <revision major="2" functional="0" minor="5" date="20080603">
+  <ref name="122635" type="defect" /> 
+  <description>If drive name is present in the filename then it scans through the \\sys\\bin of that particular drive, otherwise it scans through the \\sys\\bin folders in all the avaliable drives.</description> 
+  </revision>	
+  <revision major="2" functional="0" minor="4" date="20080313">
+    <ref name="117753" type="defect"/>
+    <description>CApaAppUnInstallMonitor will check if installation is in progress as well. </description>
+  </revision>
+  <revision major="1" functional="0" minor="4" date="20080228">
+    <ref name="118240" type="defect"/>
+    <description>Changed documetnation in How To Port Guide: Control Panel Plugins.doc. Changed out of date documentation in apgctl.h and apgctl.cpp. Removed incorrect check in CApaSystemControl::ConstructL()</description>
+  </revision>
+  <revision major="1" functional="0" minor="3" date="20080219">
+    <ref name="117569" type="defect"/>
+    <description>Increased the delay timing in script file.</description>
   </revision>
   <revision major="1" functional="0" minor="2" date="20071226">
     <ref name="115489" type="defect"/>

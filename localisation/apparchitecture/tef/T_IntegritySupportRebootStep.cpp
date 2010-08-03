@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -113,8 +111,8 @@ void CT_IntegritySupportReboot1TestStep::TestSetupL()
 	RProcess().SetPriority(EPriorityHigh); 
 
 	// make sure we're starting from a clean sheet
-	CleanupAndReset(iSession, KApplication1);
-	CleanupAndReset(iSession, KApplication2);
+	CleanupAndResetL(iSession, KApplication1);
+	CleanupAndResetL(iSession, KApplication2);
 
 	// prepare the starting state: KApp1 uninstalled, KApp2 installed
 	CompleteRegisterL(iSession, KApplication2);

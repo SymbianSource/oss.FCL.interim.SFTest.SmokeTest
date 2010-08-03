@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,30 +13,33 @@
 // Description:
 //
 
-
-
 /**
  @file
  @test
  @internalComponent - Internal Symbian test code  
 */
 
-#include <E32STD.H>
-#include <E32BASE.H>
-#include <F32FILE.H>
-#include <APGCLI.H>
-#include <APMREC.H>
-#include <APAID.H>
+#include <e32std.h>
+#include <e32base.h>
+#include <f32file.h>
+#include <apgcli.h>
+#include <apmrec.h>
+#include <apaid.h>
 #include "testableapalssession.h"
-#include <APGICNFL.H>
-#include <APMSTD.H>
-#include <APACMDLN.H>
-#include <E32PROPERTY.H>
+#include <apgicnfl.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apaidpartner.h>
+#include <apgicnflpartner.h>
+//#include <apgicnflinternal.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apmstd.h>
+#include <apacmdln.h>
+#include <e32property.h>
 #include <apgnotif.h>
 
-#include "..\tef\TNonNative\tnnapp1.h"
+#include "../tef/TNonNative/TNNApp1.h"
 #include "T_NonNativeAppsStep.h"
-#include <appfwk_test.h>
+#include "appfwk_test.h"
 
 
 const TUint KApplicationType=0x10207f90;
@@ -60,12 +63,6 @@ _LIT(KLitDocumentName3, "nnapp2:3");
 _LIT(KLitNativeExecutable, "z:\\sys\\bin\\TNNAPP2.EXE");
 _LIT8(KLitMimeTypeA, "x-epoc/a-nnapp2");
 _LIT8(KLitMimeTypeB, "x-epoc/dummy");
-
-enum TOption 
-	{
-	EAppA,
-	EAppB
-	};
 
 
 LOCAL_C void DeregisterNonNativeL(TAny* aApparcServer)
@@ -119,7 +116,24 @@ TInt RTstAppService::DoTestL(TUid aServiceUid, TBool aPassingFileByHandle, const
 	{ // static
 	RTstAppService appService(aServiceUid);
 	CleanupClosePushL(appService);
-	appService.ConnectL();
+
+	TInt error=KErrNone;
+	
+	//Try maximum 6 times to connect to server application
+    for(TInt loopCount=0; loopCount<6; loopCount++)
+        {
+        TRAP(error, appService.ConnectL());
+        if(error==KErrNone)
+            break;
+        
+        if(error!=KErrNotFound)
+            User::Leave(error);
+        
+        User::After(1000000); //wait till one second before trying again
+        }
+
+    User::LeaveIfError(error);
+    
 	TRequestStatus requestStatus;
 	appService.ReceiveTestResult(requestStatus, aPassingFileByHandle, aFileNameWithoutDriveOrPath);
 	User::WaitForRequest(requestStatus);
@@ -502,21 +516,18 @@ void CT_NonNativeAppsStep::TestStartDocumentL(RApaLsSession& aApparcServer, RFs&
 			APPFWK_EXPECTED_PLATSEC_START;
 			User::LeaveIfError(aApparcServer.StartDocument(fullFileName, threadId));
 			APPFWK_EXPECTED_PLATSEC_FINISH;
-			User::After(1500000);
 			TEST(RTstAppService::DoTestL(serviceUid, EFalse, fileNameWithoutDriveOrPath) == KCheckPass);
 			}
 
 			{
 			TThreadId threadId;
 			User::LeaveIfError(aApparcServer.StartDocument(fullFileName, TDataType(expectedDataType), threadId));
-			User::After(1500000);
 			TEST(RTstAppService::DoTestL(serviceUid, EFalse, fileNameWithoutDriveOrPath) == KCheckPass);
 			}
 
 			{
 			TThreadId threadId;
 			User::LeaveIfError(aApparcServer.StartDocument(fullFileName, TUid::Uid(0x10207f92), threadId));
-			User::After(1500000);
 			TEST(RTstAppService::DoTestL(serviceUid, EFalse, fileNameWithoutDriveOrPath) == KCheckPass);
 			}
 			}
@@ -549,11 +560,10 @@ void CT_NonNativeAppsStep::CheckPropertyUpdateAndResetL(const TDesC& aExpectedNe
 	CleanupStack::PopAndDestroy(&property);
 	}
 
-void CT_NonNativeAppsStep::CheckApplicationLaunchesOkayL(RApaLsSession& aApparcServer, const CApaCommandLine& aCommandLine, TAny* aOption)
+void CT_NonNativeAppsStep::CheckApplicationLaunchesOkayL(RApaLsSession& aApparcServer, const CApaCommandLine& aCommandLine, TOption aOption)
 	{
 	TThreadId notUsed;
-	const TInt option = TInt(aOption);
-	switch(option)
+	switch(aOption)
 		{
 			case EAppA:
 				INFO_PRINTF1(_L("..Checking ApplicationLaunchesOkayL for app 'A'.."));
@@ -565,17 +575,17 @@ void CT_NonNativeAppsStep::CheckApplicationLaunchesOkayL(RApaLsSession& aApparcS
 			case EAppB:
 				INFO_PRINTF1(_L("..Checking ApplicationLaunchesOkayL for app 'B'.."));
 				TEST( aApparcServer.StartDocument(KLitDocumentName3, TDataType(KLitMimeTypeB), notUsed) == KErrNone);
+				CheckPropertyUpdateAndResetL(KLitDocumentName3);
 				break;
 			default:
 				break;
 		}
 	}
 
-void CT_NonNativeAppsStep::CheckApplicationFailsToLaunchL(RApaLsSession& aApparcServer, const CApaCommandLine& aCommandLine, TAny* aOption)
+void CT_NonNativeAppsStep::CheckApplicationFailsToLaunchL(RApaLsSession& aApparcServer, const CApaCommandLine& aCommandLine, TOption aOption)
 	{
 	TThreadId notUsed;
-	const TInt option = TInt(aOption);
-	switch(option)
+	switch(aOption)
 		{
 			case EAppA:
 				INFO_PRINTF1(_L("..Checking ApplicationFailsToLaunchL for app 'A'.."));
@@ -653,19 +663,19 @@ void CT_NonNativeAppsStep::TestRegisterNonNativeApplicationL(RApaLsSession& aApp
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
 	aApparcServer.RegisterNonNativeApplicationL(TUid::Uid(KApplicationType), EDriveC, *registrationResourceFileWriter, NULL, NULL);
 	aApparcServer.CommitNonNativeApplicationsUpdatesL();
-	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, (TAny*)EAppA);
+	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, EAppA);
 	//Check if there is no problem in registering same app again(basically simulating an upgrade)
 	INFO_PRINTF1(_L("..registering same app again using RegisterNonNativeApplicationL() "));
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
 	aApparcServer.RegisterNonNativeApplicationL(TUid::Uid(KApplicationType), EDriveC, *registrationResourceFileWriter, NULL, NULL);
 	aApparcServer.CommitNonNativeApplicationsUpdatesL();
-	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, (TAny*)EAppA);
+	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, EAppA);
 	
 	INFO_PRINTF1(_L("..deregistering app using DeregisterNonNativeApplicationL() "));
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
 	aApparcServer.DeregisterNonNativeApplicationL(TUid::Uid(KApplicationA));
 	aApparcServer.CommitNonNativeApplicationsUpdatesL();
-	CheckApplicationFailsToLaunchL(aApparcServer, *nextCommandLine, (TAny*)EAppA);
+	CheckApplicationFailsToLaunchL(aApparcServer, *nextCommandLine, EAppA);
 	
 	_LIT8(KLitOpData, "opaquedata");
 	registrationResourceFileWriter->SetOpaqueDataL(KLitOpData);
@@ -677,7 +687,7 @@ void CT_NonNativeAppsStep::TestRegisterNonNativeApplicationL(RApaLsSession& aApp
 	aApparcServer.RegisterNonNativeApplicationL(TUid::Uid(KApplicationType), EDriveC, *registrationResourceFileWriter, localisableResourceFileWriter_noIcons, NULL);
 	aApparcServer.CommitNonNativeApplicationsUpdatesL();
 	CleanupStack::PopAndDestroy(localisableResourceFileWriter_noIcons);
-	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, (TAny*)EAppA);
+	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, EAppA);
 
 	//Testing with OpaqueData
 	TPtrC8 opData =nextCommandLine->OpaqueData();
@@ -688,7 +698,7 @@ void CT_NonNativeAppsStep::TestRegisterNonNativeApplicationL(RApaLsSession& aApp
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
 	aApparcServer.DeregisterNonNativeApplicationL(TUid::Uid(KApplicationA));
 	aApparcServer.CommitNonNativeApplicationsUpdatesL();
-	CheckApplicationFailsToLaunchL(aApparcServer, *nextCommandLine, (TAny*)EAppA);
+	CheckApplicationFailsToLaunchL(aApparcServer, *nextCommandLine, EAppA);
 
 	//Testing with IconFile
 	CApaLocalisableResourceFileWriter* const localisableResourceFileWriter_withIcons=CApaLocalisableResourceFileWriter::NewL(KNullDesC, KLitApplicationCaptionA, 2, KNullDesC);
@@ -705,7 +715,7 @@ void CT_NonNativeAppsStep::TestRegisterNonNativeApplicationL(RApaLsSession& aApp
 	CleanupStack::PopAndDestroy(&iconFile);
 	
 	aApparcServer.CommitNonNativeApplicationsUpdatesL();
-	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, (TAny*)EAppA);
+	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, EAppA);
 
 	HBufC* iconFileName = NULL;
 	TInt err = aApparcServer.GetAppIcon(TUid::Uid(KApplicationA),iconFileName);
@@ -758,7 +768,7 @@ void CT_NonNativeAppsStep::TestRegisterNonNativeApplicationL(RApaLsSession& aApp
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
 	aApparcServer.DeregisterNonNativeApplicationL(TUid::Uid(KApplicationA));
 	aApparcServer.CommitNonNativeApplicationsUpdatesL();
-	CheckApplicationFailsToLaunchL(aApparcServer, *nextCommandLine, (TAny*)EAppA);
+	CheckApplicationFailsToLaunchL(aApparcServer, *nextCommandLine, EAppA);
 	
 	//Testing GetAppIcon API for non-native application with SVG icon.
 	TestGetAppIconForNonNativeL(aApparcServer,aFileServer, registrationResourceFileWriter, localisableResourceFileWriter_withIcons);
@@ -879,10 +889,11 @@ void CT_NonNativeAppsStep::TestGetAppIconForNonNativeL(RApaLsSession& aApparcSer
 	}
 
 
+
 /**
    @SYMTestCaseID APPFWK-APPARC-0099
   
-   @SYMDEF	PDEF129466
+   @SYMDEF	PDEF129467
   
    @SYMTestCaseDesc Tests ForceCommitNonNativeApplicationsUpdatesL() API.
   
@@ -907,10 +918,9 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	CleanupStack::PushL(commandLine);
 	const TPtrC executableName(commandLine->ExecutableName());
 
-
 	_LIT_SECURITY_POLICY_S0(readSecurityPolicy, KMySID);
 	_LIT_SECURITY_POLICY_PASS(writeSecurityPolicy);
-	
+
 	//TNNAPP2.exe sets the document name passed as part of the command line to this property.
 	const TInt error=RProperty::Define(KPropertyKey, RProperty::EText, readSecurityPolicy, writeSecurityPolicy);
 	if (error!=KErrAlreadyExists)
@@ -951,7 +961,7 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 
 	TInt64 value = timeTakenToCommitRegistration.Int64();
 	INFO_PRINTF2(_L("..Time taken for registration of application by CommitNonNativeApplicationsUpdatesL is %d micro seconds"), value);	
-	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, (TAny*)EAppA);
+	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, EAppA);
 	
 	INFO_PRINTF1(_L("..deregistering app using DeregisterNonNativeApplicationL() "));
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
@@ -965,7 +975,7 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	timeTakenToCommitDeregistration=endTime.MicroSecondsFrom(startTime);
 	value = timeTakenToCommitDeregistration.Int64();
 	INFO_PRINTF2(_L("..Time taken for deregistration of application by CommitNonNativeApplicationsUpdatesL is %d micro seconds"), value);	
-	CheckApplicationFailsToLaunchL(aApparcServer, *nextCommandLine, (TAny*)EAppA);
+	CheckApplicationFailsToLaunchL(aApparcServer, *nextCommandLine, EAppA);
 
 	
 	INFO_PRINTF1(_L("..registering app using RegisterNonNativeApplicationL() "));
@@ -983,8 +993,8 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	TRequestStatus appScanCompleted=KRequestPending; 
 	aApparcServer.SetNotify(EFalse,appScanCompleted);    
 	User::WaitForRequest(appScanCompleted); 
-	TEST(appScanCompleted.Int()==MApaAppListServObserver::EAppListChanged);
-	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, (TAny*)EAppA);
+	TEST(appScanCompleted.Int()==MApaAppListServObserver::EAppListChanged);	
+	CheckApplicationLaunchesOkayL(aApparcServer, *nextCommandLine, EAppA);
 	
 	INFO_PRINTF1(_L("..deregistering app using DeregisterNonNativeApplicationL() "));
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
@@ -1001,8 +1011,8 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	appScanCompleted=KRequestPending; 
 	aApparcServer.SetNotify(EFalse,appScanCompleted);    
 	User::WaitForRequest(appScanCompleted);
-	TEST(appScanCompleted.Int()==MApaAppListServObserver::EAppListChanged);
-	CheckApplicationFailsToLaunchL(aApparcServer, *nextCommandLine, (TAny*)EAppA);
+	TEST(appScanCompleted.Int()==MApaAppListServObserver::EAppListChanged);	
+	CheckApplicationFailsToLaunchL(aApparcServer, *nextCommandLine, EAppA);
 	TEST(timeTakenToForceCommitRegistration<timeTakenToCommitRegistration);	
 	TEST(timeTakenToForceCommitDeregistration<timeTakenToCommitDeregistration);
 	
@@ -1012,7 +1022,7 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 /**
    @SYMTestCaseID 			APPFWK-APPARC-0103
   
-   @SYMDEF					PDEF134174
+   @SYMDEF					PDEF135324
   
    @SYMTestCaseDesc 		Tests ForceCommitNonNativeApplicationsUpdatesL() API.
   
@@ -1073,7 +1083,7 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	CApaRegistrationResourceFileWriter* const registrationResourceFileWriterB=CApaRegistrationResourceFileWriter::NewL(TUid::Uid(KApplicationB), KLitLogicalExecutableA, TApaAppCapability::ENonNative);
 	CleanupStack::PushL(registrationResourceFileWriterB);
 	registrationResourceFileWriterB->AddDataTypeL(KDataTypePriorityNormal, KLitMimeTypeB);
-	
+
 	TestForceCommitL(aApparcServer, *registrationResourceFileWriter, *registrationResourceFileWriterB, *nextCommandLine);
 	TestRollbackRegistrationL(aApparcServer, *registrationResourceFileWriter, *registrationResourceFileWriterB, *nextCommandLine);
 	TestRollbackDeregistrationL(aApparcServer, *registrationResourceFileWriter, *registrationResourceFileWriterB, *nextCommandLine);
@@ -1099,7 +1109,7 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
 	aApparcServer.RegisterNonNativeApplicationL(TUid::Uid(KApplicationType), EDriveC, aRegistrationResourceFileWriter, NULL, NULL);
 	aApparcServer.ForceCommitNonNativeApplicationsUpdatesL();
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppA);//Since applist update has not yet completed
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppA);//Since applist update has not yet completed
 	
 	//Register app B and ForceCommitNNAUpdate
 	INFO_PRINTF1(_L("..registering app 'B' using RegisterNonNativeApplicationL() "));
@@ -1107,12 +1117,12 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	aApparcServer.RegisterNonNativeApplicationL(TUid::Uid(KApplicationType), EDriveC, aRegistrationResourceFileWriterB, NULL, NULL);
 	aApparcServer.ForceCommitNonNativeApplicationsUpdatesL();
 	TThreadId notUsed2;
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppB);
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppB);
 	
 	//Wait for applist to be updated
 	WaitForApplistUpdate(aApparcServer);
-	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, (TAny*)EAppA);//Check if app A launches since applist update is complete now
-	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, (TAny*)EAppB);//Similarly check if app B launches
+	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, EAppA);//Check if app A launches since applist update is complete now
+	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, EAppB);//Similarly check if app B launches
 	
 	//DeRegister app B and ForceCommitNNAUpdate
 	INFO_PRINTF1(_L("..deregistering app 'B' using DeregisterNonNativeApplicationL() "));
@@ -1120,14 +1130,14 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	aApparcServer.DeregisterNonNativeApplicationL(TUid::Uid(KApplicationB));
 	aApparcServer.ForceCommitNonNativeApplicationsUpdatesL();
 	//Since applist update has not yet completed, both apps should launch
-	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, (TAny*)EAppA); 
-	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, (TAny*)EAppB);
+	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, EAppA); 
+	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, EAppB);
 	
 	//Wait for applist to be updated
 	WaitForApplistUpdate(aApparcServer);
-	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, (TAny*)EAppA);
+	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, EAppA);
 	//Check if app B fails to launches Since applist update is complete now
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppB);
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppB);
 	
 	//Deregister app A and ForceCommitNNAUpdate
 	INFO_PRINTF1(_L("..deregistering app 'A' using RegisterNonNativeApplicationL() "));
@@ -1136,8 +1146,8 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	aApparcServer.ForceCommitNonNativeApplicationsUpdatesL();
 	WaitForApplistUpdate(aApparcServer);
 	//Both apps fail to launch since they are deregistered
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppA);
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppB);
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppA);
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppB);
 	
 	INFO_PRINTF1(_L("..End Testing TestForceCommitL API..."));
  	}
@@ -1151,7 +1161,7 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
 	aApparcServer.RegisterNonNativeApplicationL(TUid::Uid(KApplicationType), EDriveC, aRegistrationResourceFileWriter, NULL, NULL);
 	aApparcServer.ForceCommitNonNativeApplicationsUpdatesL();
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppA);//Since applist update has not yet completed
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppA);//Since applist update has not yet completed
 	
 	//Register app B and RollbackNNAUpdates
 	INFO_PRINTF1(_L("..registering app 'B' using RegisterNonNativeApplicationL() "));
@@ -1161,9 +1171,9 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	
 	//Wait for applist to be updated
 	WaitForApplistUpdate(aApparcServer);
-	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, (TAny*)EAppA);//Check if app A launches
+	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, EAppA);//Check if app A launches
 	//App B's registration was rolled back, so cannot launch it
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppB);
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppB);
 	
 	//DeRegister app A and ForceCommitNNAUpdate
 	INFO_PRINTF1(_L("..deregistering app 'A' using DeregisterNonNativeApplicationL() "));
@@ -1171,13 +1181,13 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	aApparcServer.DeregisterNonNativeApplicationL(TUid::Uid(KApplicationA));
 	aApparcServer.ForceCommitNonNativeApplicationsUpdatesL();
 	//Since applist update has not yet completed, app A should launch
-	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, (TAny*)EAppA); 
+	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, EAppA); 
 	
 	//Wait for applist to be updated
 	WaitForApplistUpdate(aApparcServer);
 	//Both apps fail to launch
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppA);
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppB);
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppA);
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppB);
 	
 	INFO_PRINTF1(_L("..End Testing TestRollbackRegistrationL API..."));
 	}
@@ -1191,20 +1201,20 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
 	aApparcServer.RegisterNonNativeApplicationL(TUid::Uid(KApplicationType), EDriveC, aRegistrationResourceFileWriter, NULL, NULL);
 	aApparcServer.ForceCommitNonNativeApplicationsUpdatesL();
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppA);//Since applist update has not yet completed
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppA);//Since applist update has not yet completed
 	
 	//Register app B and ForceCommitNNAUpdate
 	INFO_PRINTF1(_L("..registering app 'B' using RegisterNonNativeApplicationL() "));
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
 	aApparcServer.RegisterNonNativeApplicationL(TUid::Uid(KApplicationType), EDriveC, aRegistrationResourceFileWriterB, NULL, NULL);
 	aApparcServer.ForceCommitNonNativeApplicationsUpdatesL();
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppB);
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppB);
 	
 	//Wait for applist to be updated
 	WaitForApplistUpdate(aApparcServer);
 	//Check if both apps launches since applist update is complete now
-	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, (TAny*)EAppA);
-	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, (TAny*)EAppB);
+	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, EAppA);
+	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, EAppB);
 	
 	//DeRegister app B and ForceCommitNNAUpdate
 	INFO_PRINTF1(_L("..deregistering app 'B' using DeregisterNonNativeApplicationL() "));
@@ -1221,8 +1231,8 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	//Wait for applist to be updated
 	WaitForApplistUpdate(aApparcServer);
 	//Since deregistration of app A was rolled back it still launches
-	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, (TAny*)EAppA); 
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppB);
+	CheckApplicationLaunchesOkayL(aApparcServer, aNextCommandLine, EAppA); 
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppB);
 
 	INFO_PRINTF1(_L("..deregistering app 'A' using DeregisterNonNativeApplicationL() "));
 	aApparcServer.PrepareNonNativeApplicationsUpdatesL();
@@ -1232,8 +1242,8 @@ void CT_NonNativeAppsStep::TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer)
 	//Wait for applist to be updated
 	WaitForApplistUpdate(aApparcServer);
 	//Both apps fail to launch
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppA);
-	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, (TAny*)EAppB);
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppA);
+	CheckApplicationFailsToLaunchL(aApparcServer, aNextCommandLine, EAppB);
 	
 	INFO_PRINTF1(_L("..End Testing TestRollbackDeregistrationL API..."));
  	}
@@ -1303,3 +1313,5 @@ TVerdict CT_NonNativeAppsStep::doTestStepL()
 	INFO_PRINTF1(_L("....Test NonNativeApps completed!"));
 	return TestStepResult();
 	}
+
+

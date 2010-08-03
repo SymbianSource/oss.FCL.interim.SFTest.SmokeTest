@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @test
@@ -25,17 +23,17 @@
 #include <eikapp.h>
 #include <eikdoc.h>
 #include <eikenv.h>
-#include <EIKSTART.H>
+#include <eikstart.h>
 
 /** KTUnProtectedAppTestPassed is a number chosen at random to be used as an exit reason
     for UnProtectedApp.exe's application thread to signify that the test passed */
 const TInt KTUnProtectedAppTestPassed = 1234;
 
-///////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleAppUi
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CExampleAppUi : public CEikAppUi
     {
 public:
@@ -54,11 +52,11 @@ CExampleAppUi::~CExampleAppUi()
 	{
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleDocument
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CExampleDocument : public CEikDocument
 	{
 public:
@@ -80,11 +78,11 @@ CEikAppUi* CExampleDocument::CreateAppUiL()
     return new(ELeave) CExampleAppUi;
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleApplication
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CExampleApplication : public CEikApplication
 	{

@@ -2,7 +2,7 @@
 * Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Eclipse Public License v1.0"
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
 * at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
@@ -18,9 +18,7 @@
 // App_CTRL2.MMP for test component App_CTRL2 (released in APPARC)
 //
 
-#include <platform_paths.hrh>
-
-target		APP_CTRL2.EXE
+target		app_ctrl2.exe
 TARGETTYPE 	exe
 
 CAPABILITY 	All -Tcb
@@ -31,19 +29,19 @@ targetpath 	/sys/bin
 SOURCEPATH	.	
 
 // your public include directory should be here
-systeminclude   ../inc
-systeminclude   /epoc32/include
-systeminclude   /epoc32/include/techview
-systeminclude   /epoc32/include/kernel
+userinclude   ../inc
 
-MW_LAYER_SYSTEMINCLUDE
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+//systeminclude   /epoc32/include/techview
+//systeminclude   /epoc32/include/kernel
 
-source          App_CTRL2.CPP
+source          app_CTRL2.CPP
 
 // Application exe specific resource which is localised to the application
 resource	App_CTRL2.rss
 start resource	App_CTRL2.rss
-targetpath	/Resource/apps
+targetpath	/resource/apps
 lang		sc
 end
 
@@ -55,8 +53,10 @@ lang		sc
 end
 
 
-LIBRARY       	APPARC.LIB
-LIBRARY       	CONE.LIB 
-LIBRARY       	EIKCORE.LIB 
-LIBRARY       	EUSER.LIB
-LIBRARY       	GDI.LIB
+LIBRARY       	apparc.lib
+LIBRARY       	cone.lib 
+LIBRARY       	eikcore.lib 
+LIBRARY       	euser.lib
+LIBRARY       	gdi.lib
+
+SMPSAFE

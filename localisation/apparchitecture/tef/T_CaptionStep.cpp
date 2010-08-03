@@ -1,7 +1,7 @@
-// Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
+// Copyright (c) 2008-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -25,12 +25,11 @@
 // tstapp05.rls
 // tstappsc.rls
 // 
+// t_captionstep.cpp
 //
 
-
-
 /**
- @file
+ @file t_captionstep.cpp
  @test
  @internalComponent - Internal Symbian test code
 */
@@ -40,13 +39,15 @@
 #include <e32test.h>
 
 #include <apgctl.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apgctllist.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 #include <apfctlf.h>
-#include <APGCLI.H>
-#include <APSSERV.H>
-#include <APAFLREC.H>
-#include <APFREC.H>
-#include <APPARC.H>
-#include <APGDOOR.H>
+#include <apgcli.h>
+#include "../apserv/apsserv.h"
+#include <apaflrec.h>
+#include <apparc.h>
+#include <apgdoor.h>
 #include <centralrepository.h>
 
 #include <s32file.h>
@@ -58,11 +59,11 @@
 #include "TIconLoaderAndIconArrayForLeaks.h"
 
 
-/////////////////////////////////////////////////////////////////////////////////
+//
 //
 //		global consts and declarations
 //
-/////////////////////////////////////////////////////////////////////////////////
+//
 
 
 _LIT(KTestTApaAppInfoCaptionEnglish,"TstCap UK");
@@ -93,34 +94,51 @@ _LIT(KCenRepIconFilename, "Z:\\resource\\apps\\ticoncapoverride.mbm");
 const TUid KUidIconCaptionRepository = {0x1028583d}; // Central Repository UID.
 const TInt KTextSize = 100;
 
-/////////////////////////////////////////////////////////////////////////////////
+//
 //
 //		CT_CaptionStep
 //
-/////////////////////////////////////////////////////////////////////////////////
+//
 
 
 void CT_CaptionStep::ChangeLocaleL(TLanguage aLanguage)
 	{
-	//  Change locale according to information in the HAL
-	_LIT(KLitLocaleDllNameBase, "ELOCL");
-	_LIT(KLitLocaleDllNameExtension, ".LOC");
-	RLibrary localeDll;
-	TBuf<16> localeDllName(KLitLocaleDllNameBase);
-	CleanupClosePushL(localeDll);
-	const TUidType uidType(TUid::Uid(0x10000079),TUid::Uid(0x100039e6));
-	_LIT(TwoDigExt,".%02d");
-	localeDllName.AppendFormat(TwoDigExt, aLanguage);
-	TInt error=localeDll.Load(localeDllName, uidType);
-	if (error==KErrNotFound)
-		{
-		localeDllName=KLitLocaleDllNameBase;
-		localeDllName.Append(KLitLocaleDllNameExtension);
-		error=localeDll.Load(localeDllName, uidType);
-		}
-	User::LeaveIfError(error);
-	User::LeaveIfError(UserSvr::ChangeLocale(localeDllName));
-	CleanupStack::PopAndDestroy(&localeDll);
+#ifdef SYMBIAN_DISTINCT_LOCALE_MODEL 
+    _LIT(KLitLocaleDllNameBase, "elocl_lan");
+    _LIT(KLitLocaleDllNameExtension, ".loc");
+#else
+    _LIT(KLitLocaleDllNameBase, "ELOCL");
+    _LIT(KLitLocaleDllNameExtension, ".LOC");
+#endif          
+    RLibrary localeDll;
+    TBuf<16> localeDllName(KLitLocaleDllNameBase);
+    CleanupClosePushL(localeDll);
+    const TUidType uidType(TUid::Uid(0x10000079),TUid::Uid(0x100039e6));
+#ifdef SYMBIAN_DISTINCT_LOCALE_MODEL         
+    _LIT(ThreeDigExt,".%03d");
+    localeDllName.AppendFormat(ThreeDigExt, aLanguage);
+#else
+    _LIT(TwoDigExt,".%02d");
+    localeDllName.AppendFormat(TwoDigExt, aLanguage);
+#endif          
+            
+    TInt error=localeDll.Load(localeDllName, uidType);
+    if (error==KErrNotFound)
+        {
+        localeDllName=KLitLocaleDllNameBase;
+        localeDllName.Append(KLitLocaleDllNameExtension);
+        error=localeDll.Load(localeDllName, uidType);
+        }
+    User::LeaveIfError(error);
+            
+#ifdef  SYMBIAN_DISTINCT_LOCALE_MODEL
+    TExtendedLocale myExtendedLocale;
+    User::LeaveIfError(myExtendedLocale.LoadLocaleAspect(localeDllName));
+    User::LeaveIfError(myExtendedLocale.SaveSystemSettings());
+#else   
+    User::LeaveIfError(UserSvr::ChangeLocale(localeDllName));
+#endif
+    CleanupStack::PopAndDestroy(&localeDll);
 	}
 
 
@@ -177,9 +195,8 @@ void CT_CaptionStep::DoLanguageTestL()
 		TestTApaAppInfoStreamsL();
 		//Skip the memory leak test
 		//HEAP_TEST_LS_SESSION(iLs, 0, 0, TestTApaAppInfoL(), iLs.ClearAppInfoArray() );
-		//and run this instead
+		//and run this instead:
 		TestTApaAppInfoL();
-
 		INFO_PRINTF1(_L("Test for that language finished..."));
 		}
 
@@ -319,20 +336,24 @@ void CT_CaptionStep::TestCApaDoorL()
 	CActiveScheduler* scheduler = new(ELeave) CActiveScheduler;
 	CActiveScheduler::Install(scheduler);
 	CleanupStack::PushL(scheduler);
+	INFO_PRINTF1(_L("Created and installed active scheduler... "));
 
 	CApaProcess* process=NULL;
 	TRAPD(ret,process = CApaProcess::NewL(iFs));
 	TEST(ret==KErrNone);
+	INFO_PRINTF1(_L("CApaProcess is created... "));
 
 	CleanupStack::PushL(process);
 
 	CApaDocument* doc=NULL;
 	TApaApplicationFactory appFact(KUidTestApp);
 	TRAP(ret,doc=process->AddNewDocumentL(appFact));
+	INFO_PRINTF1(_L("Added a new document to the process by providing app factory which contains test app... "));
 	TEST(ret==KErrNone);
 
 	CApaDoor* door = NULL;
 	TRAP(ret,door=CApaDoor::NewL(iFs,*doc,TSize(400,400)));
+	INFO_PRINTF1(_L("Created a CApaDoor with document generated... "));
 	TEST(ret==KErrNone);
 
 	switch (User::Language())
@@ -359,7 +380,9 @@ void CT_CaptionStep::TestCApaDoorL()
 			User::Leave(KErrNotSupported);
 			break;
 		};
+	INFO_PRINTF1(_L("Tested the caption... "));
 	process->DestroyDocument(doc);
+	INFO_PRINTF1(_L("Deleted the process... "));
 	CleanupStack::PopAndDestroy(2); //process,scheduler
 	}
 
@@ -623,7 +646,7 @@ CT_CaptionStep::CT_CaptionStep()
 
 /**
 @SYMTestCaseID 				APPFWK-APPARC-0087
-@SYMPREQ 					CR1787
+@SYMPREQ 					CR1187
 @SYMREQ						REQ9167
 @SYMTestCaseDesc			Tests whether the captions, icon configuration details have been retrieved properly from
 							the central repository settings and has the precedence over its resource file information.
@@ -683,7 +706,7 @@ void CT_CaptionStep::TestIconCaptionOverridesL()
 
 /**
 @SYMTestCaseID 				APPFWK-APPARC-0088
-@SYMPREQ 					CR1787
+@SYMPREQ 					CR1187
 @SYMREQ						REQ9167
 @SYMTestCaseDesc			Tests whether the shortcaption is set through the API has got the precedence over central
 							repository and resource file customisation.
@@ -726,7 +749,7 @@ void CT_CaptionStep::TestApiPrecedenceOverCenRepConfigInfoL()
 
 /**
 @SYMTestCaseID 				APPFWK-APPARC-0089
-@SYMPREQ 					CR1787
+@SYMPREQ 					CR1187
 @SYMREQ						REQ9167
 @SYMTestCaseDesc			Tests whether the changes made in central repository is notified by the central repository
 							observer (CApaIconCaptionCenrepObserver), which watches for changes in the Central Repository
@@ -785,7 +808,7 @@ void CT_CaptionStep::TestCenRepChangeNotificationL()
 
 /**
 @SYMTestCaseID 				APPFWK-APPARC-0090
-@SYMPREQ 					CR1787
+@SYMPREQ 					CR1187
 @SYMREQ						REQ9167
 @SYMTestCaseDesc			Tests whether the caption, icon configuration details have been retrieved properly from the
 							Central Repository with respect to change in system language.
@@ -958,7 +981,7 @@ void CT_CaptionStep::TestIconCaptionOverridesWithChangeLangL()
 		
 /**
 @SYMTestCaseID 				APPFWK-APPARC-0091
-@SYMPREQ 					CR1787
+@SYMPREQ 					CR1187
 @SYMREQ						REQ9167
 @SYMDEF						DEF125262
 @SYMTestCaseDesc			Checks there is no memory leaks when CApaIconCaptionOverridesForApp & CApaIconCaptionCenrepObserver
@@ -1013,7 +1036,7 @@ TVerdict CT_CaptionStep::doTestStepL()
 	TEST(r==KErrNone);
 	INFO_PRINTF2(_L("DoShortCaptionTestL() finished with value '%d'\n"), r); */
 
-
 	INFO_PRINTF1(_L("....test T_Caption step finished!"));
 	return TestStepResult();
 	}
+

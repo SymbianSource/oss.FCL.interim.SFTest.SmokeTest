@@ -1,7 +1,7 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -21,6 +21,9 @@
 #if !defined(__F32FILE_H__)
 #include <f32file.h>
 #endif
+
+//This class is not moved as part of PREQ2478,as the derived class is a published Partner.
+//Also this class doesn't expose any specific functionality..
 
 class MApaFsChangeObserver
 /** An interface for notifying a file system observer when
@@ -75,6 +78,7 @@ private:
 	RPointerArray<CApaFsNotifier> iNotifiers;
 	};
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 #if !defined(__WINC__)
 class REComSession;
 /** 
@@ -109,6 +113,6 @@ private:
 	};
 
 #endif
-
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 #endif

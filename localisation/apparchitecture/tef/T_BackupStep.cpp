@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -14,8 +14,6 @@
 // Performs Tests on Backup server.\n
 // 
 //
-
-
 
 /**
  @file
@@ -549,7 +547,7 @@ TRequestStatus CT_BackupStep::testExtraRestartLockedOutL()
 	TRequestStatus status;
 	gWrapper->CloseAll(MBackupObserver::EReleaseLockNoAccess, status);
 	User::WaitForRequest(status);
-///vm
+//vm
 	if(status != KErrNone)
 		{
 		return status;
@@ -557,7 +555,7 @@ TRequestStatus CT_BackupStep::testExtraRestartLockedOutL()
 
 	const TBackupOperationAttributes gEventEnd(MBackupObserver::ETakeLock, MBackupOperationObserver::EEnd);
 	gWrapper->NotifyBackupOperationL(gEventEnd); 
-////
+//
 
 	gWrapper->RestartAll();
 	gWrapper->RestartAll();
@@ -666,11 +664,11 @@ void CT_BackupStep::testRestartAppsL()
 	INFO_PRINTF1(_L("\nWait."));
 	User::After(1000000);
 	
-///vm
+//vm
 	const TBackupOperationAttributes gEventEnd(MBackupObserver::ETakeLock, MBackupOperationObserver::EEnd);
 	gWrapper->NotifyBackupOperationL(gEventEnd); 
 	
-////
+//
 
 	INFO_PRINTF1(_L("\nGWrapper: Restart all......."));
 	gWrapper->RestartAll();
@@ -917,3 +915,4 @@ TVerdict CT_BackupStep::doTestStepL()
 	INFO_PRINTF1(_L("Test completed!"));
 	return TestStepResult();
 }
+

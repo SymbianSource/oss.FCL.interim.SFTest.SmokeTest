@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -21,8 +21,6 @@
 // 
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code 
@@ -31,6 +29,9 @@
 #include <e32test.h>
 #include <f32file.h>
 #include <apgicnfl.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apgicnflpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 #include <hal.h>
 #include <apgcli.h>
 #include "T_LocaleStep.h"
@@ -51,23 +52,41 @@ const TInt KViewCount = 3; // Total no of views in tstapp
 */
 void CT_LocaleStep::ChangeLocaleL(TLanguage aLanguage)
 	{
+#ifdef SYMBIAN_DISTINCT_LOCALE_MODEL 
+	_LIT(KLitLocaleDllNameBase, "elocl_lan");
+	_LIT(KLitLocaleDllNameExtension, ".loc");
+#else
 	_LIT(KLitLocaleDllNameBase, "ELOCL");
 	_LIT(KLitLocaleDllNameExtension, ".LOC");
+#endif	        
 	RLibrary localeDll;
 	TBuf<16> localeDllName(KLitLocaleDllNameBase);
 	CleanupClosePushL(localeDll);
 	const TUidType uidType(TUid::Uid(0x10000079),TUid::Uid(0x100039e6));
+#ifdef SYMBIAN_DISTINCT_LOCALE_MODEL	        
+	_LIT(ThreeDigExt,".%03d");
+	localeDllName.AppendFormat(ThreeDigExt, aLanguage);
+#else
 	_LIT(TwoDigExt,".%02d");
 	localeDllName.AppendFormat(TwoDigExt, aLanguage);
+#endif	        
+	        
 	TInt error=localeDll.Load(localeDllName, uidType);
 	if (error==KErrNotFound)
-		{
-		localeDllName=KLitLocaleDllNameBase;
-		localeDllName.Append(KLitLocaleDllNameExtension);
-		error=localeDll.Load(localeDllName, uidType);
-		}
-	User::LeaveIfError(error);
+	    {
+        localeDllName=KLitLocaleDllNameBase;
+        localeDllName.Append(KLitLocaleDllNameExtension);
+        error=localeDll.Load(localeDllName, uidType);
+        }
+    User::LeaveIfError(error);
+	        
+#ifdef 	SYMBIAN_DISTINCT_LOCALE_MODEL
+    TExtendedLocale myExtendedLocale;
+    User::LeaveIfError(myExtendedLocale.LoadLocaleAspect(localeDllName));
+    User::LeaveIfError(myExtendedLocale.SaveSystemSettings());
+#else	
 	User::LeaveIfError(UserSvr::ChangeLocale(localeDllName));
+#endif
 	CleanupStack::PopAndDestroy(); // localeDll
 	}
 

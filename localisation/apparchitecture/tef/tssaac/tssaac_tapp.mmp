@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,15 +13,11 @@
 // Description:
 //
 
-
-
 /**
  @file
  @test
  @internalComponent  Internal Symbian test code
 */
-
-#include <platform_paths.hrh>
 
 target			tssaac_tapp.exe
 TARGETTYPE 		exe
@@ -33,8 +29,14 @@ CAPABILITY 		none
 #if defined(WINS)
 // startup with tssaac application for emulator
 START RESOURCE	tssaac_tapp_emulator.rss
-TARGETPATH		/private/10205C44
+TARGETPATH		/private/10205c44
 END
+#ifdef SYMBIAN_SYSTEM_STATE_MANAGEMENT
+// startup with tssaac application for emulator for ssma.
+START RESOURCE tssaac_tapp_emulator_ssma.rss
+TARGETPATH		/private/2000d75b/startup/test
+END
+#endif //SYMBIAN_SYSTEM_STATE_MANAGEMENT
 #else
 // startup with tssaac application for hardware
 START RESOURCE	tssaac_tapp_hardware.rss
@@ -49,11 +51,14 @@ USERINCLUDE   	.
 USERINCLUDE     ../../tef
 USERINCLUDE     ../../../uiftestfw/inc
 
-SYSTEMINCLUDE 	/epoc32/include
-SYSTEMINCLUDE 	/epoc32/include/techview
-SYSTEMINCLUDE   /epoc32/include/test
 
-MW_LAYER_SYSTEMINCLUDE
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+//SYSTEMINCLUDE 	/epoc32/include/techview
+
+#ifdef SYMBIAN_SYSTEM_STATE_MANAGEMENT
+SYSTEMINCLUDE   /epoc32/include/ssm
+#endif //SYMBIAN_SYSTEM_STATE_MANAGEMENT
 
 // Application exe specific resource which is localised to the application
 RESOURCE		tssaac_tapp.rss
@@ -75,10 +80,12 @@ lang			sc
 END
 
 
-LIBRARY       	APPARC.LIB
-LIBRARY       	CONE.LIB 
-LIBRARY       	EFSRV.LIB
-LIBRARY       	EIKCORE.LIB 
-LIBRARY       	ESTOR.LIB
-LIBRARY       	EUSER.LIB
-LIBRARY       	GDI.LIB
+LIBRARY       	apparc.lib
+LIBRARY       	cone.lib 
+LIBRARY       	efsrv.lib
+LIBRARY       	eikcore.lib 
+LIBRARY       	estor.lib
+LIBRARY       	euser.lib
+LIBRARY       	gdi.lib
+
+SMPSAFE

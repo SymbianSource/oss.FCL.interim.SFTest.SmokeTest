@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,12 +11,11 @@
 // Contributors:
 //
 // Description:
+// tstapp.cpp
 //
 
-
-
 /**
- @file
+ @file tstapp.cpp
  @test
  @internalComponent - Internal Symbian test code 
 */
@@ -26,14 +25,13 @@
 #include <s32stor.h>
 #include <s32file.h>
 #include <apgicnfl.h>
-#include <apfdef.h>
+#include "apfdef.h"
 #include "tstapp.h"
-#include <apfdef.h>
 #include <apgcli.h>
 
 #include <eikstart.h>
-#include <ecom.h>
-#include <implementationproxy.h>
+#include <ecom/ecom.h>
+#include <ecom/implementationproxy.h>
 
 _LIT(KTestAppCaption, "Test App");
 _LIT(KTempFilePath, "c:\\system\\temp\\");
@@ -66,18 +64,18 @@ EXPORT_C const TImplementationProxy* ImplementationGroupProxy(TInt& aTableCount)
 	}
 
 
-/////////////////////////////////////////
+//
 // CBasicAppUi
-/////////////////////////////////////////
+//
 
 void CBasicAppUi::ConstructL()
 	{
 	BaseConstructL(ENoAppResourceFile|ENoScreenFurniture);
 	}
 	
-/////////////////////////////////////////
+//
 // CTestApp
-/////////////////////////////////////////
+//
 
 CTestApp* CTestApp::NewL()
 // The gated function
@@ -150,9 +148,9 @@ void CTestApp::Capability(TDes8& aInfo)const
 	}
 
 
-/////////////////////////////////////////
+//
 // CTestAppDoc
-/////////////////////////////////////////
+//
 
 CTestAppDoc* CTestAppDoc::NewL(CEikApplication& aApp)
 	{
@@ -306,7 +304,7 @@ void CTestAppDoc::SaveL()
 	CStreamDictionary* streamDic=CStreamDictionary::NewL();
 	CleanupStack::PushL(streamDic);
 	StoreL(*store,*streamDic);
-	iStore->CommitL();
+	iStore->CommitL();  
 
 	// write root stream
 	Process()->WriteRootStreamL(*store,*streamDic,*Application());

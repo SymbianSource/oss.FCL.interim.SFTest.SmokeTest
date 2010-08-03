@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @test
@@ -24,8 +22,9 @@
 #if (!defined __T_SERVICEREGISTRY_STEP_H__)
 #define __T_SERVICEREGISTRY_STEP_H__
 
-#include "appfwk_test_AppUi.h"
+#include "appfwk_test_appui.h"
 #include <apgnotif.h>
+#include "appfwk_test_utils.h"
 
 class RApaLsSession;
 
@@ -45,6 +44,9 @@ private:
 	void TestAssociation1L();
 	void TestAppForDataTypeAndServiceL(RApaLsSession& aLs);
     void TestUpdateOfServiceRegistryOnAppUninstallationL(RApaLsSession& aLs);   
+    void TestServiceRegistryOnAppUpgradeL(RApaLsSession& aLs);
+    TInt DeleteFileL(RSmlTestUtils &aFs, const TDesC &aFileName);
+    void WaitForAppListUpdateL();
     CActiveScheduler* iScheduler;    
     };
     
@@ -54,6 +56,6 @@ public: // from MApaAppListServObserver
     void HandleAppListEvent(TInt aEvent);
 public:
     CApaAppListNotifier* iNotifier;
-    };
-	
+    };	
 #endif
+

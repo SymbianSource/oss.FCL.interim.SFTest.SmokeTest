@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,12 +11,11 @@
 // Contributors:
 //
 // Description:
+// t_rapalssessionstep.cpp
 //
 
-
-
 /**
- @file
+ @file t_rapalssessionstep.cpp
  @test
  @internalComponent - Internal Symbian test code 
 */
@@ -31,14 +30,14 @@
 #include <coeccntx.h>
 #include <coemain.h>
 #include <coeview.h>
-#include <eikdialg.h>
+#include <mw/eikdialg.h>
 #include <eikdoc.h>
 #include <eikapp.h>
 #include <eiksrvc.h>
-#include <eikconso.h>
+#include <mw/eikconso.h>
 
 #include <apaid.h>
-#include "..\apparc\apadll.h"
+#include "../apparc/apadll.h"
 #include <apgaplst.h>
 #include <apgicnfl.h>
 #include <apgdoor.h>
@@ -49,13 +48,13 @@
 #include <apaflrec.h>
 #include <apgcli.h>
 #include <apacmdln.h>
-#include <apsserv.h>
 #include <barsread.h>
 #include "tstapp.h"
-#include <appfwk_test.h>
+#include "appfwk_test.h"
+#include <apgnotif.h>
 
 #include "T_RApaLsSessionStep.h"
-#include "appfwk_test_AppUi.h"
+#include "appfwk_test_appui.h"
 #include "TRApaLsSessionStartAppTest.h"
 #include "TIconLoaderAndIconArrayForLeaks.h"  
 
@@ -87,9 +86,9 @@ void CT_RApaLsSessionTestStep::setup()
 	}
 
 
-////////////////////////////
+//
 // Might actually be tests......
-/////////////////////////////
+//
 
 void CT_RApaLsSessionTestStep::TestAppListInfoDataInterrogationSetupL()
 	{
@@ -505,7 +504,7 @@ void CT_RApaLsSessionTestStep::TestAppListInvalidSetupL()
 	CleanupStack::PushL(iAppListInvalidTestFileMan);
 	
 	INFO_PRINTF1(_L("Copy tstapp files to C: drive......."));
-	TInt rtn=iFs.MkDir(KTempAppDir);
+	TInt rtn=iFs.MkDirAll(KTempAppDir);
 	TEST(rtn==KErrNone||rtn==KErrAlreadyExists); 
 	TEST(iAppListInvalidTestFileMan->Copy(regPath, KTempRegPath)==KErrNone);	//Just to start the idle update.
 
@@ -670,7 +669,60 @@ void CT_RApaLsSessionTestStep::TestAppListRecognizeDataBufferOnlyL()
    
   	INFO_PRINTF1(KCompleted);
 	}
-   	
+ 
+/**
+   @SYMTestCaseID APPFWK-APPARC-00105
+  
+   @SYMDEF DEF139507 :API for recognizing data from memory buffer
+  
+   @SYMTestCaseDesc Test data recognition functions of RApaLsSession passing data only by buffer.
+   
+   @SYMTestPriority High 
+  
+   @SYMTestStatus Implemented
+   
+   @SYMTestActions Test RApaLsSession::RecognizeData() to recognize the data type of the data passed only by buffer.
+   
+   @SYMTestExpectedResults Test ensures that the data recognition functions identify the data type of
+   data passed by buffer.
+ */
+void CT_RApaLsSessionTestStep::TestAppListRecognizeDataPassedByBufferL()
+	{
+	INFO_PRINTF1(_L("Testing data recognition functions of RApaLsSession passing data only by buffer"));
+
+	//tbufferonlyrec.dll recognizes KTestBuffer with confidence as ECertain 
+	TDataRecognitionResult rr;
+    _LIT8(KTestBuffer, "Text_TestRecognizer");
+    rr.Reset();
+    TInt error = iLs.RecognizeData(KTestBuffer, rr);
+    if (rr.iConfidence != CApaDataRecognizerType::ECertain)
+        {
+        INFO_PRINTF1(_L("Error: confidence should be ECertain"));
+        TEST(EFalse);
+        }
+    
+	//tbufferonlyrec.dll recognizes KAnotherBuffer with confidence as EProbable
+    _LIT8(KAnotherBuffer, "AnotherText");
+    rr.Reset();
+    error = iLs.RecognizeData(KAnotherBuffer, rr);
+    if (rr.iConfidence != CApaDataRecognizerType::EProbable)
+        {
+        INFO_PRINTF1(_L("Error: confidence should be EProbable"));        
+        TEST(EFalse);
+        }  
+
+	//tbufferonlyrec.dll recognizes KSampleBuffer with confidence as ENotRecognized 
+   _LIT8(KSampleBuffer, "Sample Application");
+    rr.Reset();
+    error = iLs.RecognizeData(KSampleBuffer, rr);
+    if (rr.iConfidence != CApaDataRecognizerType::ENotRecognized)
+        {
+        INFO_PRINTF1(_L("Error: confidence should be ENotRecognized"));        
+        TEST(EFalse);
+        }  
+  	INFO_PRINTF1(KCompleted);
+	}
+
 /**
    @SYMTestCaseID T-Serv2Step-DoEnquiryTestsL
   
@@ -1697,7 +1749,7 @@ void CT_RApaLsSessionTestStep::TestGetAppIcon1L()
 	TEST(ret == KErrNone);
 	TEST(fullIconFileName != NULL);
 	INFO_PRINTF2(_L("The View icon's UID is - %X"), viewInfo.iUid);
-	TEST(!fullIconFileName->Compare(_L("file:///c/resource/apps/tcheckiconapp.xyz")));
+	TEST(!fullIconFileName->Compare(_L("file://c/resource/apps/tcheckiconapp.xyz")));
 	INFO_PRINTF2(_L("View's icon file name is - %S"), fullIconFileName);
 	
 	delete fullIconFileName;		
@@ -1988,6 +2040,104 @@ void CT_RApaLsSessionTestStep::TestAppListInstallation1L()
  	INFO_PRINTF1(_L("Test TestAppListInstallation1L completed"));
  	} 	
 
+	/**
+   @SYMTestCaseID APPFWK-APPARC-0107
+   
+   @SYMDEF DEF141484 
+   
+   @SYMTestCaseDesc     Tests whether Phone booting is failed or not with pesense of 
+                        an .mbm file of size zero in the path resource\apps
+   
+   @SYMTestPriority 
+  
+   @SYMTestStatus       Implemented
+   
+   @SYMTestActions          Place an .mbm file of size zero in the path resource\apps
+   
+   @SYMTestExpectedResults  Phone booting should not fail with pesense of 
+                            an .mbm file of size zero in the path resource\apps
+    
+ */
+void CT_RApaLsSessionTestStep::TestZeroSizedIconFileL()
+    {
+    
+    INFO_PRINTF1(_L("Test TestZeroSizedIconFileL Started.........."));
+    
+    _LIT(KTestAppDestDir, "C:\\private\\10003a3f\\import\\apps\\" );
+    _LIT(KTestAppResourceDir, "C:\\resource\\apps\\" );
+    
+    _LIT(KTestAppSource, "Z:\\apparctest\\zerosizedicon_reg.rsc" );
+    _LIT(KTestAppDest, "C:\\private\\10003a3f\\import\\apps\\zerosizedicon_reg.rsc" );
+    
+    _LIT(KTestMbmSource, "Z:\\resource\\apps\\zerosizedicon.mbm");
+    _LIT(KTestMbmDest, "C:\\resource\\apps\\zerosizedicon.mbm");
+    
+    _LIT(KTestLocSource, "Z:\\apparctest\\zerosizedicon_loc.rsc");
+    _LIT(KTestLocDest, "C:\\resource\\apps\\zerosizedicon_loc.rsc");
+   
+    TRequestStatus appScanCompleted=KRequestPending; 
+    iLs.SetNotify(EFalse,appScanCompleted); 
+    
+    RSmlTestUtils utils;
+    CleanupClosePushL(utils);
+    TEST(KErrNone == utils.Connect());
+  
+    INFO_PRINTF1(_L("Creating directory C:\\private\\10003a3f\\import\\apps\\ folder"));
+    TInt err=utils.CreateDirectoryL(KTestAppDestDir);
+    TESTEL((err==KErrNone) ||  (err==KErrAlreadyExists),err);
+
+    INFO_PRINTF1(_L("Creating directory C:\\resource\\apps\\ folder"));
+    err=utils.CreateDirectoryL(KTestAppResourceDir);
+    TESTEL((err==KErrNone) ||  (err==KErrAlreadyExists),err);
+
+    INFO_PRINTF1(_L("Copying _reg.rsc to C:\\private\\10003a3f\\import\\apps\\ folder"));    
+    User::LeaveIfError(utils.CopyFileL(KTestAppSource,KTestAppDest));
+    INFO_PRINTF1(_L("Copying the mbm and _loc.rsc to C:\\resource\\apps\\ folder"));
+    User::LeaveIfError(utils.CopyFileL(KTestMbmSource,KTestMbmDest));
+    User::LeaveIfError(utils.CopyFileL(KTestLocSource,KTestLocDest));
+
+    User::WaitForRequest(appScanCompleted);
+    TEST(appScanCompleted.Int()==MApaAppListServObserver::EAppListChanged);
+
+	appScanCompleted=KRequestPending;
+	iLs.SetNotify(EFalse,appScanCompleted);
+    INFO_PRINTF1(_L("Removing _reg.rsc from C:\\private\\10003a3f\\import\\apps\\ folder"));
+    TEST(KErrNone == DeleteFileL(utils, KTestAppDest));
+    INFO_PRINTF1(_L("Removing the mbm and _loc.rsc from C:\\resource\\apps\\ folder"));
+    TEST(KErrNone == DeleteFileL(utils, KTestMbmDest));
+    TEST(KErrNone == DeleteFileL(utils, KTestLocDest));
+    INFO_PRINTF1(_L("Removing the C:\\private\\10003a3f\\import\\apps\\ dir "));
+    TEST(KErrNone == utils.DeleteDirectoryL(KTestAppDestDir));
+  
+	User::WaitForRequest(appScanCompleted);
+    CleanupStack::PopAndDestroy(&utils);//utils
+    INFO_PRINTF1(_L("Test TestZeroSizedIconFileL completed"));
+    } 
+
+//Deletes the file if it exists.
+TInt CT_RApaLsSessionTestStep::DeleteFileL(RSmlTestUtils &aFs, const TDesC &aFileName)
+    {
+    TInt fileExists = EFalse;
+    TInt err;
+    aFs.IsFilePresent(aFileName, fileExists);
+    if (fileExists)
+        {
+        aFs.ChangeFilePermissionL(aFileName);
+        err=aFs.DeleteFileL(aFileName);
+        if(err==KErrNone)
+            INFO_PRINTF2(_L("Removed file %S"), &aFileName);
+        else
+            INFO_PRINTF2(_L("Failed to remove file %S"), &aFileName);
+        }
+    else
+        {
+        err=KErrNotFound;
+        }
+
+    return(err);
+}
+
+	
 /**
    @SYMTestCaseID T-RApaLsSessionTestStep-TestAppFolderNonRomDrivesL
   
@@ -2359,6 +2509,7 @@ void CT_RApaLsSessionTestStep::TestDataPriorityForUnTrustedAppsRegFile()
    @SYMTestExpectedResults There should be no memory leak checked by __UHEAP_MARK 
    and __UHEAP_MARKEND.
  */
+ 
 void CT_RApaLsSessionTestStep::TestIconLoaderAndIconArrayMemoryLeaksL()
 	{
 	INFO_PRINTF1(_L("Test TestIconLoaderAndIconArrayMemoryLeaksL"));
@@ -2382,7 +2533,8 @@ void CT_RApaLsSessionTestStep::RunTestCasesL()
 	HEAP_TEST_LS_SESSION(iLs, 0, DONT_CHECK, TestAppListInstallationL(), NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iLs, 0, DONT_CHECK, TestAppListInstallation1L(), NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iLs, 0, DONT_CHECK, TestAppFolderNonRomDrivesL(), NO_CLEANUP);
-	HEAP_TEST_LS_SESSION(iLs, 0, 0, IconLoadingTestCasesL(), NO_CLEANUP);
+    HEAP_TEST_LS_SESSION(iLs, 0, DONT_CHECK, TestZeroSizedIconFileL(), NO_CLEANUP);
+    HEAP_TEST_LS_SESSION(iLs, 0, 0, IconLoadingTestCasesL(), NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iLs, 0, 0, AppInfoTestCasesL(), iLs.ClearAppInfoArray(); NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iLs, 0, 0, EmbeddedAppsTestCases(), iLs.ClearAppInfoArray() );
 	HEAP_TEST_LS_SESSION(iLs, 0, DONT_CHECK, DoNumDefIconsTestL(), NO_CLEANUP);
@@ -2390,6 +2542,7 @@ void CT_RApaLsSessionTestStep::RunTestCasesL()
 	//DONT_CHECK since there's a new typestore
 	HEAP_TEST_LS_SESSION(iLs, 0, DONT_CHECK, TestNotifyOnDataMappingChangeL(), NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iLs, 0, 0, TestAppListRecognizeDataBufferOnlyL(), iLs.FlushRecognitionCache() );
+	HEAP_TEST_LS_SESSION(iLs, 0, 0, TestAppListRecognizeDataPassedByBufferL(), iLs.FlushRecognitionCache() );
 	HEAP_TEST_LS_SESSION(iLs, 0, 0, TestAppListRecognizeDataL(), iLs.FlushRecognitionCache() );
 	HEAP_TEST_LS_SESSION(iLs, 0, 0, TestDataPriorityForUnTrustedApps(), NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iLs, 0, 0, TestDataPriorityForUnTrustedAppsRegFile(), NO_CLEANUP);
@@ -2459,3 +2612,4 @@ TVerdict CT_RApaLsSessionTestStep::doTestStepL()
 	return TestStepResult();
 	}
 	
+

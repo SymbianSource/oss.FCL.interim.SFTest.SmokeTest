@@ -1,7 +1,7 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,7 +15,7 @@
 // 
 //
 
-#include <platform_paths.hrh>
+
 
 TARGETPATH	/sys/bin
 TARGET		tapparctestapp.exe
@@ -32,26 +32,26 @@ VENDORID 	0x70000001
 SOURCEPATH	.
 SOURCE		tapparctestapp.cpp
 
-USERINCLUDE	.
+USERINCLUDE		.
+USERINCLUDE		../../uiftestfw/inc
+USERINCLUDE		../inc
 
-SYSTEMINCLUDE	/epoc32/include ../inc
-SYSTEMINCLUDE 	/epoc32/include/test
-SYSTEMINCLUDE	/epoc32/include/techview
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+//SYSTEMINCLUDE	/epoc32/include/techview
 
-MW_LAYER_SYSTEMINCLUDE
+RESOURCE	tapparctestapp.rss
 
-RESOURCE	tApparctestapp.rss
-
-START RESOURCE  tApparctestapp.rss
+START RESOURCE  tapparctestapp.rss
 HEADER
 TARGETPATH	/resource/apps
 END
 
-START RESOURCE	tApparctestapp_reg.rss
+START RESOURCE	tapparctestapp_reg.rss
 TARGETPATH	/private/10003a3f/import/apps
 END
 
-START RESOURCE	tApparctestapp_loc.rss
+START RESOURCE	tapparctestapp_loc.rss
 TARGETPATH	/resource/apps
 LANG		sc
 END
@@ -62,3 +62,5 @@ LIBRARY	efsrv.lib
 LIBRARY	eikcore.lib
 LIBRARY	euser.lib
 LIBRARY	gdi.lib
+
+SMPSAFE

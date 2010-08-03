@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,19 +13,18 @@
 // Description:
 // RTestableApaLsSession is used to make it possible to heap test a RApaLsSession
 // 
+// testableapalssession.cpp
 //
 
-
-
 /**
- @file
+ @file testableapalssession.cpp
  @internalComponent - Internal Symbian test code 
 */
 
 
 
 #include "testableapalssession.h"
-#include "../apserv/APSCLSV.H"
+#include "../apserv/apsclsv.h"
 
 
 /**

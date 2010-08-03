@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,15 +13,13 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code 
 */
 
 
-TARGET			TNonNativeRec.dll
+TARGET			tnonnativerec.dll
 CAPABILITY		All -Tcb
 TARGETTYPE		PLUGIN
 UID				0x10009d8d 0x10207f95
@@ -30,13 +28,15 @@ VENDORID 		0x70000001
 SOURCEPATH		.
 SOURCE			TNonNativeRec.cpp
 
-systeminclude   ../../INC
-systeminclude   /EPOC32/INCLUDE
-systeminclude	/EPOC32/INCLUDE/ECOM 
-systeminclude	/EPOC32/INCLUDE/TEST
+userinclude   ../../inc
 
-LIBRARY			EUSER.LIB APMIME.LIB APPARC.LIB EFSRV.LIB
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+//systeminclude	/epoc32/include/ecom 
+
+LIBRARY			euser.lib apmime.lib apparc.lib efsrv.lib
 
 start resource 10207f95.rss
-target TNonNativeRec.rsc
+target tnonnativerec.rsc
 end
+
+SMPSAFE

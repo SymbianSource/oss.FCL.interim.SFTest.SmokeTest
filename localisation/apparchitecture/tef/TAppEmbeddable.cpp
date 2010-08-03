@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -17,8 +17,6 @@
 // 
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code
@@ -31,21 +29,21 @@
 #include <eikappui.h>
 #include <eikapp.h>
 #include <eikdoc.h>
-#include <eikmenup.h>
+#include <mw/eikmenup.h>
 
-#include <ecom.h>
-#include <implementationproxy.h>
+#include <ecom/ecom.h>
+#include <ecom/implementationproxy.h>
 
 #include "TAppEmbedUids.h"
 
 _LIT(KExampleText, "This test application defines KAppEmbeddable in it's AIF file");
 
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleAppView
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CExampleAppView : public CCoeControl
     {
 public:
@@ -103,11 +101,11 @@ void CExampleAppView::Draw(const TRect& /*aRect*/) const
 	}
 
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleAppUi
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CExampleAppUi : public CEikAppUi
     {
 public:
@@ -145,11 +143,11 @@ void CExampleAppUi::HandleCommandL(TInt aCommand)
 	}
 
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleDocument
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CExampleDocument : public CEikDocument
 	{
 public:
@@ -173,11 +171,11 @@ CEikAppUi* CExampleDocument::CreateAppUiL()
 
 
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleApplication
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CExampleApplication : public CEikApplication
 	{
@@ -229,3 +227,4 @@ EXPORT_C const TImplementationProxy* ImplementationGroupProxy(TInt& aTableCount)
 	aTableCount=sizeof(ImplementationTable)/sizeof(ImplementationTable[0]);
 	return ImplementationTable;
 	}
+

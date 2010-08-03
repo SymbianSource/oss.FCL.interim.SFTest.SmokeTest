@@ -1,7 +1,7 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -32,8 +32,7 @@ EXPORT_C CApaAppListNotifier* CApaAppListNotifier::NewL(MApaAppListServObserver*
 It creates a session with the application architecture server (RApaLsSession), 
 issues the notification request to the server and adds itself to the active scheduler.
 
-@param aObserver Observer whose HandleAppListEvent() function is called when an 
-application is added or deleted.
+@param aObserver Observer whose HandleAppListEvent() function is called when application list is changed.
 @param aPriority The active object priority.
 @return The application list change notifier. */
 	{
@@ -67,11 +66,18 @@ void CApaAppListNotifier::DoCancel()
 void CApaAppListNotifier::RunL()
 	{
 	TInt status=iStatus.Int();
-	User::LeaveIfError(status);
 	iLsSession.SetNotify(EFalse, iStatus); // requeue before handling in case the handling changes things
 	SetActive();
-	iObserver.HandleAppListEvent(status);
+    User::LeaveIfError(status);
+    // On Leave, its not necessary to inform observers as nothing is updated
+    iObserver.HandleAppListEvent(status);	
 	}
+
+//This function is implemented to avoid panic the clients (with E32USER-CBase 47) when RunL leaves
+TInt CApaAppListNotifier::RunError(TInt  /*aError*/)
+    {
+    return KErrNone;
+    }
 
 //
 // MApaAppListServObserver

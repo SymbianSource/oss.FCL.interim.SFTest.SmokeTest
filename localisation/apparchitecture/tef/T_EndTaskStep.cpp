@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,8 +15,6 @@
 // 
 //
 
-
-
 /**
  @file
  @test
@@ -26,9 +24,9 @@
 #include <apacmdln.h>
 #include <apgwgnam.h>
 
-#include <appfwk_test.h>
+#include "appfwk_test.h"
 #include "T_EndTaskStep.h"
-#include "TEndTaskTestApp\EndTaskTestAppExternalInterface.h"
+#include "TEndTaskTestApp/EndTaskTestAppExternalInterface.h"
 
 CTEndTaskStep::CTEndTaskStep()
 	{
@@ -264,9 +262,11 @@ TInt CTEndTaskStep::LaunchAppL(RApaLsSession& aLs, const TUid& aAppUid)
 	CApaCommandLine* cmdLn = CApaCommandLine::NewLC();     
 	cmdLn->SetDocumentNameL(KNullDesC);					//need to start without resource file
 	cmdLn->SetExecutableNameL(fileName);
-	TInt result = aLs.StartApp(*cmdLn);
-	//Wait 1 sec for App to start
-	User::After(1000000);
+	
+	TThreadId threadId;
+	TRequestStatus status = KRequestPending;
+	TInt result = aLs.StartApp(*cmdLn, threadId, &status);
+	User::WaitForRequest(status);
 	CleanupStack::PopAndDestroy(cmdLn);
 	return result;
 	}

@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -18,21 +18,19 @@
 // 
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code
 */
 
-#include <E32STD.H>
-#include <E32BASE.H>
-#include <APMSTD.H>
-#include <APMREC.H>
-#include <F32FILE.H>
+#include <e32std.h>
+#include <e32base.h>
+#include <apmstd.h>
+#include <apmrec.h>
+#include <f32file.h>
 
 #include <apfrec.h>
-#include <ImplementationProxy.h> 
+#include <ecom/implementationproxy.h> 
 
 _LIT8(KLit8_DataType_Gif, "x-epoc/nna-gif");
 _LIT8(KLit8_DataType_Html, "x-epoc/nna-html");
@@ -159,3 +157,4 @@ EXPORT_C const TImplementationProxy* ImplementationGroupProxy(TInt& aTableCount)
     aTableCount = sizeof(ImplementationTable) / sizeof(TImplementationProxy);
     return ImplementationTable;
     }
+

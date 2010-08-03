@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,6 +11,7 @@
 // Contributors:
 //
 // Description:
+// apsnnappupdates.h
 //
 
 #ifndef APSNNAPPUPDATES_H
@@ -23,7 +24,7 @@
 
 // classes referenced
 class CApaAppData;
-class CApaAppListServer;
+class CApaAppArcServer;
 class RApsUpdateLog;
 class RWriteStream;
 
@@ -251,11 +252,11 @@ non-native application.
 NONSHARABLE_CLASS(CApsDeregisterNonNativeApplication) : public CApsNonNativeApplicationsUpdate
 	{
 public:
-	static CApsDeregisterNonNativeApplication* NewL(RFs& aFs, CApaAppListServer& aServ, TUid aUid, TState aState = ENew);
+	static CApsDeregisterNonNativeApplication* NewL(RFs& aFs, CApaAppArcServer& aServ, TUid aUid, TState aState = ENew);
 	~CApsDeregisterNonNativeApplication();
 
 private:
-	CApsDeregisterNonNativeApplication(RFs& aFs, CApaAppListServer& aServ, TUid aUid, TState aState);
+	CApsDeregisterNonNativeApplication(RFs& aFs, CApaAppArcServer& aServ, TUid aUid, TState aState);
 
 private:
 	void RenameToTemporaryL(TFileDetails& aFile, RApsUpdateLog& aUpdateLog);
@@ -277,7 +278,7 @@ private:
 		ELocalisableResourceFileUpdate,
 		EIconFileUpdate
 		};
-	CApaAppListServer& iServ;
+	CApaAppArcServer& iServ;
 	TFileDetails iResourceFile;
 	TFileDetails iLocalisableResourceFile;
 	TFileDetails iIconFile;
@@ -344,3 +345,4 @@ private:
 
 
 #endif // APSNNAPPUPDATES_H
+

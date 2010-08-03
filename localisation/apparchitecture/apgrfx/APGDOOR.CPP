@@ -1,7 +1,7 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,10 +11,18 @@
 // Contributors:
 //
 // Description:
+// apgdoor.cpp
 //
 
 #include <s32stor.h>
 #include <fbs.h>
+#include <e32def_private.h> // MattR addition for __PROFILE_END error
+
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#if !defined(__APA_INTERNAL_H__)
+#include "apainternal.h"
+#endif
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 #include "APGDOOR.H"
 #include "APGICNFL.H"
@@ -31,9 +39,9 @@ const TInt KHugeGranularity=4096; // 4k granularity for the door's host buffer
 // default icon size only used if door was created by a model door, set to glass, but does not support glass
 #define KDefaultIconSizeInTwips TSize(500,500)
 
-///////////////////////////////////////////
+//
 // CApaDoor
-///////////////////////////////////////////
+//
 
 EXPORT_C CApaDoor* CApaDoor::NewLC(RFs& aFs, CApaDocument& aDoc,const TSize& aDefaultIconSizeInTwips)
 /** Creates a new wrapper for the specified embedded document and places a
@@ -95,13 +103,13 @@ CApaDoor::CApaDoor(RFs& aFs, CApaDocument& aDoc,const TSize& aDefaultIconSizeInT
 	iApaProcess(aDoc.Process()),
 	iApaDoc(&aDoc),
 	iIconSizeInTwips(aDefaultIconSizeInTwips)
-	{__DECLARE_NAME(_S("CApaDoor"));}
+	{}
 
 
 CApaDoor::CApaDoor(RFs& aFs, CApaProcess& aProcess)
 	:iFs(aFs),
 	iApaProcess(&aProcess)
-	{__DECLARE_NAME(_S("CApaDoor"));}
+	{}
 
 
 EXPORT_C CApaDoor::~CApaDoor()
@@ -781,9 +789,9 @@ void CApaDoor::SetIconSizeInTwips(TSize aSize)
 	}
 
 
-///////////////////////////////////
+//
 // TApaPictureFactory
-///////////////////////////////////
+//
 
 #define KDoNotApplyIconSize TSize(-1,-1)
 
@@ -847,9 +855,9 @@ the door picture is represented by a pointer to an internalized CApaDoor object.
 	}
 
 
-////////////////////////////////////
+//
 // HBufBuf
-////////////////////////////////////
+//
 
 HBufBuf* HBufBuf::NewL(CBufBase& aBuf,TInt aPos,TInt aMode)
 //
@@ -868,3 +876,4 @@ void HBufBuf::DoRelease()
 	{
 	delete this;
 	}
+

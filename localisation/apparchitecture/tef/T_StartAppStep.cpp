@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -141,6 +139,7 @@ TVerdict CT_StartAppTestStep::doTestStepL()
 
 void CT_StartAppTestStep::RunTestCasesL()
 	{
+	HEAP_TEST_LS_SESSION(iApaLsSession, 0, 0, TestStartApp8L(), NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iApaLsSession, 0, 0, TestStartApp1L(), NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iApaLsSession, 0, 0, TestStartApp2L(), iApaLsSession.FlushRecognitionCache() );
 	HEAP_TEST_LS_SESSION(iApaLsSession, 0, 0, TestStartApp3L(), iApaLsSession.FlushRecognitionCache() );
@@ -148,7 +147,6 @@ void CT_StartAppTestStep::RunTestCasesL()
 	HEAP_TEST_LS_SESSION(iApaLsSession, 0, 0, TestStartApp5L(), NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iApaLsSession, 0, 0, TestStartApp6L(), NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iApaLsSession, 0, 0, TestStartApp7L(), NO_CLEANUP);
-	HEAP_TEST_LS_SESSION(iApaLsSession, 0, 0, TestStartApp8L(), NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iApaLsSession, 0, 0, TestStartApp9L(), NO_CLEANUP);
 	// The following two APIs InsertDataMappingL() & DeleteDataMappingL(), update the type store on the server side.
 	// This update takes place on the server side while the test case is still running, which causes the heap check to fail.
@@ -197,9 +195,27 @@ void CT_StartAppTestStep::TestStartApp1L()
 	_LIT(KLitWibble,"wibble");
 	cmdLn->SetExecutableNameL(filename);
 	cmdLn->SetTailEndL(KLitDogfish);
-	TInt ret = iApaLsSession.StartApp(*cmdLn); // explicit
+	TThreadId startAppThreadID;
+	TInt ret = iApaLsSession.StartApp(*cmdLn,startAppThreadID); // explicit
 	TEST(ret==KErrNone);
 
+	//we need to close the started thread, if appropiate
+	if (ret==KErrNone)	
+		{
+		RThread thread;
+		User::LeaveIfError(thread.Open(startAppThreadID));
+		CleanupClosePushL(thread);
+
+		RProcess process;
+		User::LeaveIfError(thread.Process(process));
+		CleanupClosePushL(process);
+
+		process.Kill(0);
+		
+		CleanupStack::PopAndDestroy(&process);
+		CleanupStack::PopAndDestroy(&thread);
+		}
+	
 	// start a non-existant app
 	cmdLn->SetExecutableNameL(KLitWibble);
 
@@ -591,14 +607,26 @@ void CT_StartAppTestStep::TestInsertDataTypeL()
 	info.Set(RProcess());
 	
 	info.iCaps.HasCapability(ECapabilityWriteDeviceData) ? TEST(err==KErrNone) :  TEST(err==KErrPermissionDenied);
+
+ 	TRequestStatus status;
 	
+ 	//Register for notification when data type mappings are restored from the data store ini file
+ 	iApaLsSession.NotifyOnDataMappingChange(status);
+  	
 	err=iApaLsSession.InsertDataMappingIfHigher(TDataType(KLitPlainText), KPriHigh, KUidTestApp, added);
 	INFO_PRINTF2(_L("returned, %d"), err);
 	info.iCaps.HasCapability(ECapabilityWriteDeviceData) ? TEST(err==KErrNone && added)  :  TEST(err==KErrPermissionDenied);
+	
 	if (err==KErrNone)
 		{
 		// Waits till the data type mappings are restored from the data store ini file
-		iApaLsSession.WaitForTypeStoreUpdate();
+		User::WaitForRequest(status);	
+		TEST(status.Int()==KErrNone);		
+		}
+	else
+		{		
+		iApaLsSession.CancelNotifyOnDataMappingChange();
+		TEST(status.Int()==KErrCancel);
 		}
 	INFO_PRINTF1(_L("Test RApaLsSession::InsertDataMapping....Check data type mapping addition....Done"));
 	}
@@ -654,17 +682,29 @@ void CT_StartAppTestStep::TestDeleteDataTypeL()
 	{
 	INFO_PRINTF1(_L("Test RApaLsSession::DeleteDataMapping....Check data type mapping deletion"));
 
+	TRequestStatus status;
+	
+ 	//Register for notification when data type mappings are restored from the data store ini file
+ 	iApaLsSession.NotifyOnDataMappingChange(status);
+ 	
 	TInt err=iApaLsSession.DeleteDataMapping(TDataType(KLitPlainText));
 	INFO_PRINTF2(_L("returned, %d"), err);
 	TSecurityInfo info;
 	info.Set(RProcess());
 	
 	info.iCaps.HasCapability(ECapabilityWriteDeviceData) ? TEST(err==KErrNone) :  TEST(err==KErrPermissionDenied);
-	if(err==KErrNone)
-	{
-	// Waits till the data type mappings are restored from the data store ini file
-	iApaLsSession.WaitForTypeStoreUpdate();	
-	}
+
+	if (err==KErrNone)
+		{
+		// Waits till the data type mappings are restored from the data store ini file
+		User::WaitForRequest(status);	
+		TEST(status.Int()==KErrNone);		
+		}
+	else
+		{		
+		iApaLsSession.CancelNotifyOnDataMappingChange();
+		TEST(status.Int()==KErrCancel);
+		}
 	INFO_PRINTF1(_L("Test RApaLsSession::DeleteDataMapping....Check data type mapping deletion....Done"));
 	}
 	
@@ -696,3 +736,4 @@ void CT_StartAppTestStep::TestIpcFuzzL()
 	CleanupStack::PopAndDestroy(&testIpc);
 	INFO_PRINTF1(_L("Test IpcFuzz DEF116002 Completed"));
 	}
+

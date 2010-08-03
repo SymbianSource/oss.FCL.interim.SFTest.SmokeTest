@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -22,12 +22,11 @@
 // As nearly all these test cases panic at the first client-server call and so execution of these test cases
 // will never reach the end of the function.
 // 
+// sysstartapparctestcases.cpp
 //
 
-
-
 /**
- @file
+ @file sysstartapparctestcases.cpp
  @test
  @internalComponent - Internal Symbian test code
 */
@@ -35,7 +34,7 @@
 #include <apacmdln.h>
 #include <s32file.h>
 
-#include "appfwk_test_AppUi.h"
+#include "appfwk_test_appui.h"
 #include "T_SysStartApparcStep.h"
 #include "SysStartApparcTestCases.h"
 #include "TRApaLsSessionStartAppTest.h"

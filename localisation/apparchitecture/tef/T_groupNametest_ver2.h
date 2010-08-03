@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code 
@@ -23,7 +21,7 @@
 #if (!defined __T_groupNametest_ver2_H__)
 #define __T_groupNametest_ver2_H__
 
-#include "ApparcTestServer.h"
+#include "apparctestserver.h"
 
 //  A CT_GroupNameStep_ver2 test class. 
 
@@ -42,3 +40,4 @@ _LIT(KT_GroupNameStep_ver2, "T_GroupName_ver2");
 
 
 #endif
+

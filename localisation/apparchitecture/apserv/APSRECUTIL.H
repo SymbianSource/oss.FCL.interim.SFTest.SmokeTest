@@ -1,7 +1,7 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,18 +11,16 @@
 // Contributors:
 //
 // Description:
+// apsrecutil.h
 //
 
 
-#if !defined(__APSRECUTIL_H__)
+#ifndef __APSRECUTIL_H__
 #define __APSRECUTIL_H__
 
-#if !defined(__E32BASE_H__)
 #include <e32base.h>
-#endif
-
 #include <apmrec.h>
-#include <apsserv.h>
+#include "apsserv.h"
 
 /**
 Reference-counted object which stores a recognition result in a more compact format
@@ -33,7 +31,7 @@ be "owned" by the cache and CDirectoryRecognitionResult at the same time. If bot
 of them had their own copies unnecessarily much memory would be wasted.
 @internalComponent
 */
-class CRecognitionResult : public CObject
+NONSHARABLE_CLASS(CRecognitionResult) : public CObject
 	{
 public:
 	static CRecognitionResult* NewL(const TDesC& aFileName, const TDataRecognitionResult& aRecognitionResult);
@@ -43,13 +41,12 @@ public:
 	void Get(TDataRecognitionResult& aRecognitionResult);
 	inline const TDesC8& DataType() const { return *iDataType; }
 	inline const TDesC& FileName() const { return *iFileName; }
-	
 private:
 	CRecognitionResult(HBufC* aFileName, HBufC8* aDataType, TUid aUid, TInt aConfidence);
 	~CRecognitionResult();
 private:
-	HBufC* iFileName;
-	HBufC8* iDataType;
+	const HBufC* const iFileName;
+	const HBufC8* const iDataType;
 	TUid iUid;
 	TInt iConfidence;
 	};
@@ -58,11 +55,11 @@ private:
 Holds the recognition results of all files of a directory.
 @internalComponent
 */
-class CDirectoryRecognitionResult : public CBase
+NONSHARABLE_CLASS(CDirectoryRecognitionResult) : public CBase
 	{
 public:
 	CDirectoryRecognitionResult(HBufC* aPath, HBufC8* aDataTypeFilter);
-	virtual ~CDirectoryRecognitionResult();
+	~CDirectoryRecognitionResult();
 	void AppendL(CRecognitionResult* aEntry);
 	void WriteToStreamL(RWriteStream& aWriteStream);
 	inline TInt RequiredBufferSize() const {return iRequiredBufferSize;}
@@ -78,10 +75,10 @@ private:
 Utility class which does synchronous and asynchronous file recognitions of a directory
 @internalComponent
 */
-class CFileRecognitionUtility : public CActive
+NONSHARABLE_CLASS(CFileRecognitionUtility) : public CActive
 	{
 public:
-	CFileRecognitionUtility(CApaAppListServer& aServer, TInt aMaxBufSize, RFs& aFs);
+	CFileRecognitionUtility(CApaAppArcServer& aServer, TInt aMaxBufSize, RFs& aFs);
 	~CFileRecognitionUtility();
 	void RecognizeSynchronouslyL(CDirectoryRecognitionResult& aResult);
 	void RecognizeAsynchronously(CDirectoryRecognitionResult& aResult, const RMessage2& aMessage);
@@ -94,11 +91,10 @@ private:
 	void RunL();
 	void DoCancel();
 	TInt BufferSizeL() const;
-	
 private:
 	HBufC* iPath;
 	CDirectoryRecognitionResult* iResult;
-	CApaAppListServer& iServer;
+	CApaAppArcServer& iServer;
 	TInt iMaxBufSize;
 	RFs& iFs;
 	CDir* iEntryList;
@@ -108,3 +104,4 @@ private:
 	};
 
 #endif	// __APSRECUTIL_H__
+

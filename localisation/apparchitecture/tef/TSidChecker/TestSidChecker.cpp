@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -16,7 +16,7 @@
 #include "TestSidChecker.h"
 
 #include <e32std.h>
-#include <ImplementationProxy.h>
+#include <ecom/implementationproxy.h>
 #include <e32property.h>
 #include <e32test.h>
 #include <e32debug.h>
@@ -39,9 +39,9 @@ EXPORT_C const TImplementationProxy* ImplementationGroupProxy(TInt& aTableCount)
 	return ImplementationTable;
 	}
 
-//////////////////////////////
+//
 // private class declarations
-//////////////////////////////
+//
 
 NONSHARABLE_CLASS(CApFileTestPropertyMonitor) : public CActive
 	{
@@ -77,9 +77,9 @@ private:
 	RTimer iTimer;
 	};
 
-//////////////////////////////
+//
 // CApFileTestPropertyMonitor
-//////////////////////////////
+//
 
 CApFileTestPropertyMonitor* CApFileTestPropertyMonitor::NewL(TCallBack aCallBack)
 	{	
@@ -126,9 +126,9 @@ void CApFileTestPropertyMonitor::DoCancel()
 	iProperty.Cancel();
 	}
 
-//////////////////////////////
+//
 // CApFileTestOneShotTimer
-//////////////////////////////
+//
 
 CApFileTestOneShotTimer* CApFileTestOneShotTimer::NewL(TCallBack aCallBack)
 	{
@@ -175,9 +175,9 @@ void CApFileTestOneShotTimer::DoCancel()
 	iTimer.Cancel();
 	}
 
-//////////////////////////////
+//
 // CTestSidChecker
-//////////////////////////////
+//
 
 CTestSidChecker* CTestSidChecker::NewL()
 	{
@@ -207,8 +207,9 @@ TBool CTestSidChecker::AppRegisteredAt(const TUid& aSid, TDriveUnit aDrive)
 		#else
 		TDriveUnit drive(EDriveX);
 		RFs	fs;
-		User::LeaveIfError(fs.Connect());
-		CleanupClosePushL(fs);
+		TInt err = fs.Connect();
+		if (err != KErrNone)
+			return ret;
 		//The removable media is expected at D: on NAND ROM and at E: on normal ROMs.
 		//The following code works on techview but not guaranteed to work on all platforms. 
 		TDriveInfo driveInfo;
@@ -228,7 +229,6 @@ TBool CTestSidChecker::AppRegisteredAt(const TUid& aSid, TDriveUnit aDrive)
 			 	}
 			}
 		fs.Close();
-		CleanupStack::PopAndDestroy(&fs);
 		#endif
 		ret = (aDrive == drive);
 		}

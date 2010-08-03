@@ -1,7 +1,7 @@
-// Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
+// Copyright (c) 2005-2010 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -32,6 +30,7 @@
 
 #include <test/testexecutestepbase.h>
 
+#include <test/appfwk_tmsteststep.h>
 
 // user panic descriptors
 _LIT(KPanicNullPointer,"Null pointer");
@@ -118,13 +117,31 @@ inline CAutoTestManager::TTestResult	CAutoTestManager::GetTestResult() const
 class CTestCoeAppUi : public CCoeAppUi, public MAutoTestApp
 	{
 public:
-	IMPORT_C CTestCoeAppUi(CTestStep*		aStep);
+	IMPORT_C CTestCoeAppUi(CTmsTestStep* aStep);
 	IMPORT_C ~CTestCoeAppUi();
 	IMPORT_C void ConstructL(); // should be called from ConstructL of the child class
 	CTestExecuteLogger&	Logger() {return iStep->Logger();}
 	inline void testBooleanTrue(TBool aCondition, const TText8* aFile, TInt aLine) 
 		{
 		iStep -> testBooleanTrue(aCondition, aFile, aLine);
+		}
+
+	// provide access to TMS methods
+	inline void SetTestStepID(const TDesC& aStepName)
+		{
+		iStep->SetTestStepID( aStepName );
+		}
+	inline void RecordTestResultL()
+		{
+		iStep->RecordTestResultL();
+		}
+	inline void MultipleResultsForSameID( TBool aShowMultipleResults )
+		{
+		iStep->MultipleResultsForSameID( aShowMultipleResults );
+		}
+	inline void CloseTMSGraphicsStep()
+		{
+		iStep->CloseTMSGraphicsStep();
 		}
 	void testBooleanTrueL(TBool aCondition, const TText8* aFile, TInt aLine);
 	void testBooleanTrueWithErrorCode(TBool aCondition, TInt aErrorCode, const TText8* aFile, TInt aLine );
@@ -134,9 +151,10 @@ public:
 protected:
 	inline CAutoTestManager& AutoTestManager() const;
 	
+	CTmsTestStep*		iStep;
+
 private:
 	CAutoTestManager* iAutoTestManager;
-	CTestStep		*iStep;
 	};
 
 CAutoTestManager& CTestCoeAppUi::AutoTestManager() const
@@ -165,7 +183,7 @@ class CEikMenuBar;
 class CTestAppUi : public CEikAppUi, public MAutoTestApp
 	{
 public:
-	IMPORT_C CTestAppUi(CTestStep*	aStep, const TDesC& aRes, TInt aResourceHotKeysId = 0, TInt aResourceMenuBarId = 0, TInt aResourceToolBarId = 0);
+	IMPORT_C CTestAppUi(CTmsTestStep*	aStep, const TDesC& aRes, TInt aResourceHotKeysId = 0, TInt aResourceMenuBarId = 0, TInt aResourceToolBarId = 0);
 	IMPORT_C ~CTestAppUi();
 	IMPORT_C void ConstructL(); // should be called from ConstructL of the child class
 	CTestExecuteLogger&	Logger() {return iStep->Logger();}
@@ -174,9 +192,26 @@ public:
 		iStep -> testBooleanTrue(aCondition, aFile, aLine, ETrue);
 		}
 
+	// provide access to TMS methods
+	inline void SetTestStepID(const TDesC& aStepName)
+		{
+		iStep->SetTestStepID( aStepName );
+		}
+	inline void RecordTestResultL()
+		{
+		iStep->RecordTestResultL();
+		}
+	inline void MultipleResultsForSameID( TBool aShowMultipleResults )
+		{
+		iStep->MultipleResultsForSameID( aShowMultipleResults );
+		}
+	inline void CloseTMSGraphicsStep()
+		{
+		iStep->CloseTMSGraphicsStep();
+		}
+
 protected:
 	inline CAutoTestManager& AutoTestManager() const;
-	inline CTestStep& TestStep() const;
 	IMPORT_C void ReduceRect(TRect& aRect) const;	//reduce client rectangle if toolbar or/and menu exist hide menu from screen
 	IMPORT_C void ProcessCommandL(TInt aCommand);
 
@@ -191,17 +226,14 @@ private:
 	TInt iResourceMenuBarId;
 	TInt iResourceToolBarId;
 	TFileName iRes;
-	CTestStep *iStep;
+
+protected:
+	CTmsTestStep *iStep;
 	};
 
 CAutoTestManager& CTestAppUi::AutoTestManager() const
 	{
 	return *iAutoTestManager;
-	}
-
-CTestStep& CTestAppUi::TestStep() const
-	{
-	return *iStep;
 	}
 
 //to prevent from alloc memory error in the User::__DbgMarkEnd 

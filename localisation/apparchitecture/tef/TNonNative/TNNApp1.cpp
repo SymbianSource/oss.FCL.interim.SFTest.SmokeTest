@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,35 +13,33 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code  
 */
 
 
-#include <E32STD.H>
-#include <E32BASE.H>
-#include <E32KEYS.H>
-#include <GDI.H>
-#include <W32STD.H>
-#include <COEDEF.H>
-#include <COEMAIN.H>
-#include <COEAUI.H>
-#include <COECNTRL.H>
-#include <APPARC.H>
-#include <APGWGNAM.H>
-#include <APASERVERAPP.H>
-#include <EIKENV.H>
-#include <EIKAPP.H>
-#include <EIKDOC.H>
-#include <EIKAPPUI.H>
-#include <EIKSTART.H>
-#include <EIKSERVERAPP.H>
-#include <UIKON.HRH>
-#include "TNNAPP1.H"
-#include <appfwk_test.h>
+#include <e32std.h>
+#include <e32base.h>
+#include <e32keys.h>
+#include <gdi.h>
+#include <w32std.h>
+#include <coedef.h>
+#include <coemain.h>
+#include <coeaui.h>
+#include <coecntrl.h>
+#include <apparc.h>
+#include <apgwgnam.h>
+#include <apaserverapp.h>
+#include <eikenv.h>
+#include <eikapp.h>
+#include <eikdoc.h>
+#include <eikappui.h>
+#include <eikstart.h>
+#include <eikserverapp.h>
+#include <uikon.hrh>
+#include "TNNApp1.h"
+#include "appfwk_test.h"
 
 TTstTransactionType gTransactionType=ETransactionType_null;
 TBool gCallMadeToNewOverload_ProcessCommandParametersL=EFalse;
@@ -580,3 +578,4 @@ GLDEF_C TInt E32Main()
 	{
 	return EikStart::RunApplication(NewApplication);
 	}
+

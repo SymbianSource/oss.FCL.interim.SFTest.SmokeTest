@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -18,23 +18,23 @@
 // 
 //
 
-
-
-
 /**
  @file 
  @internalComponent - Internal Symbian test code
 */
 
-#include <ImplementationProxy.h>
+#include <ecom/implementationproxy.h>
 #include "tAppLaunchChecker.h"
 #include <apacmdln.h>
-#include <W32STD.H>
+#include <w32std.h>
 #include <apgtask.h>
 #include <coemain.h>
 #include <apaid.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apaidpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 #include <apgcli.h>
-#include "..\tef\tRuleBasedApps\RuleBasedUID.H"
+#include "../tef/tRuleBasedApps/RuleBasedUID.H"
 
 
 // Define the interface UIDs

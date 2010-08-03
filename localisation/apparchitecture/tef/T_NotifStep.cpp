@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,12 +13,11 @@
 // Description:
 // Checks for notifications when application list changes.\n
 // 
+// t_notifstep.cpp
 //
 
-
-
 /**
- @file
+ @file t_notifstep.cpp
  @test
  @internalComponent - Internal Symbian test code
 */
@@ -26,11 +25,14 @@
 #include <f32file.h>
 #include <fbs.h>
 #include <apaid.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apaidpartner.h>
+#include <apgicnflpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 #include <apgaplst.h>
 #include <apaflrec.h>
 #include <apgcli.h>
 #include <apacmdln.h>
-#include <apsserv.h>
 #include <apfrec.h>
 #include <datastor.h>
 #include <apgicnfl.h>
@@ -41,6 +43,17 @@
 #include "appfwk_test_utils.h"
 #include "T_NotifStep.h"
 
+_LIT(KImportAppsDir,"c:\\private\\10003a3f\\import\\apps\\");
+_LIT(KResourceAppsDir,"c:\\resource\\apps\\");
+
+_LIT(KForceRegAppSourcePath_Reg,"Z:\\ApparcTest\\testforceregistrationapp1_reg.rsc");
+_LIT(KForceRegAppSourcePath_Loc,"Z:\\ApparcTest\\testforceregistrationapp1_loc.rsc");
+
+_LIT(KForceRegAppTargetPath_Reg,"c:\\private\\10003a3f\\import\\apps\\testforceregistrationapp1_reg.rsc");
+_LIT(KForceRegAppTargetPath_Loc,"c:\\resource\\apps\\testforceregistrationapp1_loc.rsc");
+
+_LIT(KForceRegAppCaption,"TestForceRegistration");
+_LIT(KForceRegAppDefaultCaption,"testforceregistrationapp1");
 
 /**
  
@@ -173,7 +186,7 @@ void CT_NotifStep::TestAppNotificationL()
 	CleanupStack::PopAndDestroy(obs);
 	}
 
-void CT_NotifStep::ModifyIconFileTimeStamp()
+void CT_NotifStep::ModifyIconFileTimeStampL()
 	{
 	_LIT(KMbmIconFile, "c:\\resource\\apps\\tupgradeiconapp.mbm");
 	_LIT(KTestIconFile, "c:\\TestUpgradeIcon\\tupgradeiconapp.mbm");
@@ -230,7 +243,7 @@ void CT_NotifStep::TestIconFileNotificationL()
 
 	// Change the timestamp of the icon file
 	INFO_PRINTF1(_L("Modifying the icon file...attempt to check it's notified"));
-	ModifyIconFileTimeStamp();
+	ModifyIconFileTimeStampL();
 	
 	CActiveScheduler::Start();
 	
@@ -244,6 +257,187 @@ void CT_NotifStep::TestIconFileNotificationL()
 	
 	CleanupStack::PopAndDestroy(obs); //obs
 	}
+
+/*
+ * TestForceRegistrationL copies a registration file and requests for force registration.
+ * It checks whether default caption is assigned, as the localisable file
+ * does not exist. Then it copies the localisable file and exits.  
+ */
+void TestForceRegistrationL(CT_NotifStep *aNotifStep)
+	{
+    	RApaLsSession ls;
+    	User::LeaveIfError(ls.Connect());
+    	CleanupClosePushL(ls);
+    
+    	//Copy the registration file to c:\private\10003a3f\import\apps
+	User::LeaveIfError((aNotifStep->iUtils).CopyFileL(KForceRegAppSourcePath_Reg, KForceRegAppTargetPath_Reg));
+	aNotifStep->INFO_PRINTF1(_L("Successfully copied testforceregistrationapp1_reg.rsc from Z:\\ApparcTest\\testforceregistrationapp1_reg.rsc"));
+
+	RPointerArray<TDesC> dummy;
+	User::LeaveIfError(ls.ForceRegistration(dummy));
+    
+    	TApaAppInfo info;
+    	TUid appUid={0x102826E0};
+    	aNotifStep->TEST(ls.GetAppInfo(info,appUid)==KErrNone);
+    	aNotifStep->INFO_PRINTF2(_L("Caption of the application before copying localisable file: %S"), &info.iCaption);
+    	//Test whether default captions are assigned as localisable file not exists.   
+    	aNotifStep->TEST(info.iCaption.Compare(KForceRegAppDefaultCaption)==0);    
+
+    	//Waits for some time as test thread gets chance to execute. As apparc does not notifiy
+    	//applist change due to force registration to all the clients, the test thread still waits
+    	//for applist change notification.
+    	User::After(5000000); 
+
+    	//Copy localisable file to c:\resource\apps
+	User::LeaveIfError((aNotifStep->iUtils).CopyFileL(KForceRegAppSourcePath_Loc, KForceRegAppTargetPath_Loc));
+	aNotifStep->INFO_PRINTF1(_L("Successfully copied testforceregistrationapp1_loc.rsc from Z:\\ApparcTest\\testforceregistrationapp1_loc.rsc"));
+
+	CleanupStack::PopAndDestroy();
+	}
+
+TInt ForceRegistrationThread(TAny* aPtr)
+    	{
+    	__UHEAP_MARK;
+    	CTrapCleanup* trapCleanup = NULL;
+	trapCleanup = CTrapCleanup::New();
+	
+    	CT_NotifStep *notifStep=(CT_NotifStep *) aPtr;
+    	
+    	TRAPD(errorCode, TestForceRegistrationL(notifStep));
+    
+    	delete trapCleanup;
+    	__UHEAP_MARKEND;    
+    	return(errorCode);
+    	}
+
+//Deletes the file if it exists.
+TInt CT_NotifStep::DeleteFileL(RSmlTestUtils &aFs, const TDesC &aFileName)
+    	{
+    	TInt fileExists = EFalse;
+    	TInt err;
+    	aFs.IsFilePresent(aFileName, fileExists);
+    	if (fileExists)
+        	{
+        	aFs.ChangeFilePermissionL(aFileName);
+        	err=aFs.DeleteFileL(aFileName);
+        	if(err==KErrNone)
+            		INFO_PRINTF2(_L("Removed file %S"), &aFileName);
+        	else
+            		INFO_PRINTF2(_L("Failed to remove file %S"), &aFileName);
+        	}
+    	else
+        	{
+        		err=KErrNotFound;
+        	}
+
+    	return(err);
+	}
+
+/**
+   @SYMTestCaseID           APPFWK-APPARC-0106
+  
+
+   @SYMDEF                  DEF141223
+  
+    @SYMTestCaseDesc         Tests apparc does not notifiy applist change, which occurred
+                            due to force registration, to all the other clients who have not requested
+                            force registration, before the installation is completed.
+  
+   @SYMTestPriority         High
+  
+   @SYMTestStatus           Implemented
+   
+   @SYMTestActions          1. The test registers with apparc for applist change notification.
+                            2. Starts another thread, which copies a registration file and requests
+                               force registration. Later copies the localisable file of the same
+                               application.
+                            3. Waits till the applist change event occurs or till 15 seconds
+                            4. Tests the caption of the application is same as the caption specified in
+                               localisable file. 
+                             
+   
+   @SYMTestExpectedResults The retrieved application caption should be same as the caption specified in 
+                           localisable file. 
+ */
+void CT_NotifStep::TestForceRegistrationNotificationL()
+    	{
+    	//Share the handle with other threads in the process    
+    	User::LeaveIfError(iUtils.ShareAuto()); 
+    	User::LeaveIfError(Logger().ShareAuto());
+    
+    	INFO_PRINTF1(_L("Creating c:\\private\\10003a3f\\import\\apps\\ directory......."));    
+	TInt err = iUtils.CreateDirectoryL(KImportAppsDir);
+	TESTEL((err == KErrNone || err == KErrAlreadyExists), err);
+	INFO_PRINTF1(_L("c:\\private\\10003a3f\\import\\apps\\ is created successfully or already exists"));
+
+    	INFO_PRINTF1(_L("Creating c:\\resource\\apps\\ directory......."));    
+    	err = iUtils.CreateDirectoryL(KResourceAppsDir);
+    	TESTEL((err == KErrNone || err == KErrAlreadyExists), err);
+    	INFO_PRINTF1(_L("c:\\resource\\apps\\ is created successfully or already exists"));
+    
+    	INFO_PRINTF1(_L("Make sure that registraiton and localisable files does not exist before the test starts..."));    
+    	DeleteFileL(iUtils, KForceRegAppTargetPath_Reg);
+    	DeleteFileL(iUtils, KForceRegAppTargetPath_Loc);
+        
+    	INFO_PRINTF1(_L("Connecting to apparc server..."));    
+    	RApaLsSession ls;
+    	User::LeaveIfError(ls.Connect());
+    	CleanupClosePushL(ls);
+    
+    	TRequestStatus status;
+    	INFO_PRINTF1(_L("Registering with apparc server for applist change notification."));       
+    	ls.SetNotify(EFalse, status); 
+  
+    	INFO_PRINTF1(_L("Creating ForceRegistrationThread............"));
+    	_LIT(KForceRegThreadName,"ForceRegThread");
+    	TBuf<0x100> threadName(KForceRegThreadName);
+    	RThread thread;
+    
+    	User::LeaveIfError(thread.Create(threadName, ForceRegistrationThread, 0x1000, NULL, (TAny*) this));
+    	CleanupClosePushL(thread);
+	TRequestStatus threadStatus;
+	thread.Logon(threadStatus);
+	
+	//Starts a thread which actually requests for force registration.
+    	thread.Resume(); 
+    
+	RTimer timer;
+	CleanupClosePushL(timer);
+	User::LeaveIfError(timer.CreateLocal());
+	TRequestStatus timerStatus;
+	timer.After(timerStatus,15 * 1000000);
+
+    	//Wait till the applist change event is receivied or till 15 Seconds
+    	User::WaitForRequest(status, timerStatus); 
+
+    	//Test whether the applist change event is received
+	TEST(status != KRequestPending); 
+    
+	TApaAppInfo info;
+	TUid appUid={0x102826E0};
+	TEST(ls.GetAppInfo(info,appUid)==KErrNone);
+	
+	//Checks the caption of the application is "TestForceRegistration". The caption will not be 
+	//"TestForceRegistration" if apparc server notifies all the clients about the applist change
+	//due to force registration, before installation is completed.
+	INFO_PRINTF2(_L("Caption of the application after the applist change notification is received: %S"), &info.iCaption);
+    	TEST(info.iCaption.Compare(KForceRegAppCaption)==0);
+
+
+    	//Wait till the the ForceRegistrationThread exits	
+	User::WaitForRequest(threadStatus);
+	
+	TInt theadExitCode=thread.ExitReason();
+	INFO_PRINTF2(_L("ForceRegistrationThread thread is exited with %d"), theadExitCode);
+    	//Checks ForceRegistrationThread completed successfully.	
+	TEST(theadExitCode==KErrNone); 
+
+    	//Delete the registration and localisation files
+	TEST(DeleteFileL(iUtils, KForceRegAppTargetPath_Reg)==KErrNone);
+    	TEST(DeleteFileL(iUtils, KForceRegAppTargetPath_Loc)==KErrNone);
+
+    	CleanupStack::PopAndDestroy(3,&ls);
+    	}
 
 CT_NotifStep::~CT_NotifStep()
 /**
@@ -284,6 +478,7 @@ TVerdict CT_NotifStep::doTestStepL()
 
 	// run the testcode (inside an alloc heaven harness)	
 	__UHEAP_MARK;
+	iUtils.Connect();
 #if defined (__WINSCW__)
 	INFO_PRINTF1(_L("T-NotifStep-TTestIconFileNotificationL Test Started..."));
 	TRAP(ret,TestIconFileNotificationL());
@@ -294,6 +489,12 @@ TVerdict CT_NotifStep::doTestStepL()
 	TRAP(ret,TestAppNotificationL());
 	TEST(ret==KErrNone);
 	INFO_PRINTF2(_L("TestAppNotificationL() finished with return code '%d'\n"), ret);
+
+	INFO_PRINTF1(_L("TestForceRegistrationNotificationL Test Started..."));
+	TRAP(ret, TestForceRegistrationNotificationL());
+	TEST(ret==KErrNone);	
+	INFO_PRINTF2(_L("TestForceRegistrationNotificationL() finished with return code '%d'\n"), ret);
+	iUtils.Close();	
 	__UHEAP_MARKEND;
 	
 	iUtils.Close();

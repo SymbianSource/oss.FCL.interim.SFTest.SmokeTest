@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,8 +15,6 @@
 // test apparc StartApp and StartDocument functionality \n
 // 
 //
-
-
 
 /**
  @file
@@ -157,8 +155,13 @@ LOCAL_C void StartSystemL()
 
 	CActiveScheduler* theScheduler = new (ELeave) CActiveScheduler();
 	CleanupStack::PushL(theScheduler);
-	CActiveScheduler::Install(theScheduler);
+	CActiveScheduler::Install(theScheduler);	
+
+#ifdef SYMBIAN_SYSTEM_STATE_MANAGEMENT
+	CApparcFuncInSystart *starter = CApparcFuncInSystart::NewLC(KDmHierarchyIdStartup, KSM2AppServicesDomain3);
+#else
 	CApparcFuncInSystart *starter = CApparcFuncInSystart::NewLC(KDmHierarchyIdStartup, KAppServicesDomain3);
+#endif
 
 	starter->Start();
 

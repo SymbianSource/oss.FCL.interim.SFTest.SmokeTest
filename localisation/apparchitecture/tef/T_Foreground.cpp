@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -33,16 +33,15 @@
 // This test calls TApaTask::BringToForeground on SimpleApparcTestApp to send
 // a window server message to SimpleApparcTestApp
 // 
+// t_foreground.cpp
 //
-
-
 
 #include <coeaui.h>
 #include <coemain.h>
 #include <coedef.h>
 #include <coecntrl.h>
 #include <basched.h>
-#include <ecom.h>
+#include <ecom/ecom.h>
 #include <apparc.h>
 #include <e32cmn.h>
 
@@ -61,11 +60,11 @@ _LIT(KAppFileName, "z:\\sys\\bin\\SimpleApparcTestApp.exe");
 _LIT(KAppFile, "c:\\logs\\testApp.txt");
 const TInt KNonExistantWgId = KErrNotFound;
 
-////////////////////////////////////////////////////////////////////////////////////
+//
 //
 // The CTestDriver class runs a series of tests on timer callback
 //
-////////////////////////////////////////////////////////////////////////////////////
+//
 
 CTestDriver::CTestDriver(CCoeAppUi& aAppUi) : iAppUi(aAppUi)
 	{
@@ -211,13 +210,13 @@ void CTestDriver::CloseNonExistantWindowGroupTask()
 class CTestDriver;
 
 
-////////////////////////////////////////////////////////////////////////////////////
+//
 //
 // class CTestForegroundAppUi 
 //
-////////////////////////////////////////////////////////////////////////////////////
+//
 
-CTestForegroundAppUi::CTestForegroundAppUi(CTestStep* aStep) : CTestCoeAppUi(aStep)
+CTestForegroundAppUi::CTestForegroundAppUi(CTmsTestStep* aStep) : CTestCoeAppUi(aStep)
 	{	
 	}
 
@@ -280,11 +279,11 @@ void CTestForegroundAppUi::RunTestStepL(TInt aNumStep)
 	}
 
 
-////////////////////////////////////////////////////////////////////////////////////
+//
 //
 // class CTestForegroundStep
 //
-////////////////////////////////////////////////////////////////////////////////////
+//
 
 CTestForegroundStep::CTestForegroundStep()
 	{
@@ -331,3 +330,5 @@ TVerdict CTestForegroundStep::doTestStepL() // main function called by E32
 	INFO_PRINTF1(_L("Test Finished"));
 	return TestStepResult();
 	}
+
+

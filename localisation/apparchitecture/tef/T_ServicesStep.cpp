@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code 
@@ -23,6 +21,9 @@
 
 #include <barsread.h>
 #include "T_ServicesStep.h"
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apaidpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 _LIT(KCompleted, "Completed.");
 _LIT8(KLitPlainText,"text/plain");
@@ -1358,3 +1359,4 @@ void CT_ServicesTestStep::TestPrioritySystemL()
 	// Waits till the data type mappings are restored from the data store ini file
 	iApaLsSession.WaitForTypeStoreUpdate();
 	}
+

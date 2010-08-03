@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -16,8 +16,6 @@
 // 
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code
@@ -27,14 +25,14 @@
 
 #include "T_ApsScan.h"
 #include "appfwk_test_utils.h"
-#include "tmimerec\constants.hrh"
-#include "tmimerec\constants.h"
+#include "TMimeRec/constants.hrh"
+#include "TMimeRec/constants.h"
 
-/////////////////////////////////////////////////
+//
 
 const TInt KDelay = 4000000; // Should be enough for CApaEComMonitor to detect new plugin
 
-/////////////////////////////////////////////////
+//
 
 CT_ApsScanStep::CT_ApsScanStep()
 	{

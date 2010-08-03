@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,12 +13,11 @@
 // Description:
 // Tests Application Apparc base classes and utility functions to get application's data.\n
 // 
+// t_prostep.cpp
 //
 
-
-
 /**
- @file
+ @file t_prostep.cpp
  @test
  @internalComponent - Internal Symbian test code
 */
@@ -28,11 +27,11 @@
 #include <s32std.h> 
 #include <s32stor.h> 
 #include <s32file.h> 
-#include <ecom.h>
+#include <ecom/ecom.h>
 
 #include <apaid.h>
-#include "..\apparc\apadll.h"
-#include "..\apgrfx\apgstd.h"
+#include "../apparc/apadll.h"
+#include "../apgrfx/APGSTD.H"
 #include <apgaplst.h>
 #include <apgicnfl.h>
 #include <apgdoor.h>
@@ -46,7 +45,7 @@
 
 #include "T_ProStep.h"
 #include "tstapp.h"
-#include <appfwk_test_utils.h>
+#include "appfwk_test_utils.h"
 
 #if !defined(__E32TEST_H__)
 #include <e32test.h>
@@ -269,7 +268,6 @@ void CT_ProStep::doTestGenerateFileName()
 	TEST(ret==KErrNoMemory);
 	__UHEAP_MARKEND;
 	__UHEAP_RESET;
-
 	// tidy up
 	file.Close();
 	iFs.Delete(_L("c:\\path\\name"));
@@ -1310,7 +1308,7 @@ void CT_ProStep::DoAppListInvalidTestL(RApaLsSession& aLs)
 	CleanupStack::PushL(fileMan);
 	
 	INFO_PRINTF1(_L("Copy tstapp files to C: drive......."));
-	TInt ret = iFs.MkDir(KTempAppDir);
+	TInt ret = iFs.MkDirAll(KTempAppDir);
 	TEST(ret==KErrNone || ret==KErrAlreadyExists);
 	TEST(fileMan->Copy(regPath, KTempRegPath)==KErrNone);	//Just to start the idle update.
 
@@ -1350,7 +1348,7 @@ void CT_ProStep::DoAppListInvalidTestL(RApaLsSession& aLs)
  
   This method creates and installs an active scheduler and puts the
   test code on the scheduler as a CIdle object. The method initiates
-  all tests by calling the static method CT_ProStepCallBack::CallBack().
+  all tests by calling the static method CT_ProStepCallBack::CallBackL().
  
 */
 void CT_ProStep::DoStepTestsInCallbackL()
@@ -1367,7 +1365,7 @@ void CT_ProStep::DoStepTestsInCallbackL()
 	CT_ProStepCallBack* callBack = new(ELeave) CT_ProStepCallBack(this);
 	CleanupStack::PushL(callBack);
 
-	idle->Start(TCallBack(CT_ProStepCallBack::CallBack,callBack));
+	idle->Start(TCallBack(CT_ProStepCallBack::CallBackL,callBack));
 	// start the test code
 	CActiveScheduler::Start();
 
@@ -1377,12 +1375,12 @@ void CT_ProStep::DoStepTestsInCallbackL()
 
 /**
   This static method is the callback function of CIdle object. The method
-  calls the non-static method DoStepTests() which initiates all the tests. 
+  calls the non-static method DoStepTestsL() which initiates all the tests. 
 */
-TInt CT_ProStepCallBack::CallBack(TAny* callBack /*aThis*/)
+TInt CT_ProStepCallBack::CallBackL(TAny* callBack /*aThis*/)
 {
 	//Call Test Step func
-	((CT_ProStepCallBack *)callBack)->iTestStep->DoStepTests();
+	((CT_ProStepCallBack *)callBack)->iTestStep->DoStepTestsL();
 	
 	CActiveScheduler::Stop();
 	return EFalse; // don't call back again
@@ -1408,7 +1406,7 @@ CT_ProStepCallBack::~CT_ProStepCallBack()
   Auxiliary Fn for all Test Cases. 
   The method initiates all tests to be performed.
 */
-void CT_ProStep::DoStepTests()
+void CT_ProStep::DoStepTestsL()
 	{
 	INFO_PRINTF1(_L("Test AppListInvalidTest......"));
 	RTestableApaLsSession ls;

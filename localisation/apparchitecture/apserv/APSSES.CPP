@@ -1,7 +1,7 @@
-// Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+// Copyright (c) 1997-2010 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,12 +13,14 @@
 // Description:
 // AppArc server session
 // 
+// apsses.cpp
 //
 
 #include <e32svr.h>
 #include <apacmdln.h>
+
 #include <apaflrec.h>
-#include <apsserv.h>
+#include "apsserv.h"
 #include "APSSES.H"
 #ifdef _DEBUG
 #include "APSSTD.H"
@@ -36,16 +38,17 @@
 #include <s32file.h>
 #include "../apgrfx/apprivate.h"
 #include "apgnotif.h"
-#include "../apfile/aprfndr.h"
+#include "../aplist/aplappregfinder.h"
 #include "ApLaunchChecker.h"
 #include "apsnnapps.h"
+#include "../aplist/aplapplistitem.h"
 
 #include "apsecutils.h"
 
 const TInt KApaAppListServMaxBuffer=256;
 #include "APSRECCACHE.h"
-const TInt KApaAppInfoArrayGranularity=4;
-const TInt KApaAppInfoDesMaxLength=sizeof(TApaAppInfo);
+const TInt KApaAppInfoArrayGranularity = 4;
+const TInt KApaAppInfoDesMaxLength = sizeof(TApaAppInfo);
 
 #if defined(__PROFILE)
 _LIT(KProfileAppForDocumentL, "AppForDocumentL - %d.%06d seconds");
@@ -63,12 +66,11 @@ public:
 	virtual void WriteArrayItemL(RWriteStream& aWriteStream,TInt aIndex) const=0;
 	};
 
-class TSizeArrayItemWriter : public MArrayItemWriter
+NONSHARABLE_CLASS(TSizeArrayItemWriter) : public MArrayItemWriter
 	{
 public:
 	inline TSizeArrayItemWriter(const CArrayFix<TSize>& aArray) : iArray(aArray) {}
-	
-	// from MArrayItemWriter
+public: // from MArrayItemWriter
 	TInt ArrayItemCount() const;
 	TInt ArrayItemSize() const;
 	void WriteArrayItemL(RWriteStream& aWriteStream,TInt aIndex) const;
@@ -76,12 +78,11 @@ private:
 	const CArrayFix<TSize>& iArray;
 	};
 
-class TViewDataArrayItemWriter : public MArrayItemWriter
+NONSHARABLE_CLASS(TViewDataArrayItemWriter) : public MArrayItemWriter
 	{
 public:
 	inline TViewDataArrayItemWriter(const CArrayPtr<CApaAppViewData>& aArray) : iArray(aArray) {}
-	
-	// from MArrayItemWriter
+public:	// from MArrayItemWriter
 	TInt ArrayItemCount() const;
 	TInt ArrayItemSize() const;
 	void WriteArrayItemL(RWriteStream& aWriteStream,TInt aIndex) const;
@@ -89,12 +90,11 @@ private:
 	const CArrayPtr<CApaAppViewData>& iArray;
 	};
 
-class TDesCArrayItemWriter : public MArrayItemWriter
+NONSHARABLE_CLASS(TDesCArrayItemWriter) : public MArrayItemWriter
 	{
 public:
 	inline TDesCArrayItemWriter(const CDesCArray& aArray) : iArray(aArray) {}
-	
-	// from MArrayItemWriter
+public:	// from MArrayItemWriter
 	TInt ArrayItemCount() const;
 	TInt ArrayItemSize() const;
 	void WriteArrayItemL(RWriteStream& aWriteStream,TInt aIndex) const;
@@ -102,8 +102,7 @@ private:
 	const CDesCArray& iArray;
 	};
 
-
-class CApaAppListServSession::CApaAppInfo
+NONSHARABLE_CLASS(CApaAppListServSession::CApaAppInfo) : public CBase
 	{
 public:
 	CApaAppInfo();
@@ -135,47 +134,49 @@ inline TPtrC CApaAppListServSession::CApaAppInfo::FullName() const
 inline TUid CApaAppListServSession::CApaAppInfo::Uid() const
 	{ return iUid; }
 
+//
 // CApaAppListServSession
+//
 
-CApaAppListServSession* CApaAppListServSession::NewL(CApaAppListServer& aServer, RFs& aFs)
+CApaAppListServSession* CApaAppListServSession::NewL(RFs& aFs, CApaAppArcServer& aAppArcSrv, CApaAppList& aAppList)
 	{
-	CApaAppListServSession* self=new(ELeave) CApaAppListServSession(aServer, aFs);
+	CApaAppListServSession* self = new (ELeave) CApaAppListServSession(aFs, aAppArcSrv, aAppList);
 	CleanupStack::PushL(self);
 	self->ConstructL();
-	CleanupStack::Pop(); // self
+	CleanupStack::Pop(self);
 	return self;
 	}
 
-CApaAppListServSession::CApaAppListServSession(CApaAppListServer& aServer, RFs& aFs)
-	: CSession2(),
-	iServ(aServer),
-	iFs(aFs),
-	iMaxBufSize(KApaAppListServMaxBuffer),
-	iApaAppInfoArray(KApaAppInfoArrayGranularity),
-	iOpaqueData_pendingDispatchToClient(NULL)
-	{}
+CApaAppListServSession::CApaAppListServSession(RFs& aFs, CApaAppArcServer& aAppArcSrv, CApaAppList& aAppList)
+ : iFs(aFs), iAppArcSrv(aAppArcSrv), iAppList(aAppList), iApaAppInfoArray(KApaAppInfoArrayGranularity)
+	{
+
+	}
 
 void CApaAppListServSession::ConstructL()
 	{
-	iFileRecognitionUtility = new (ELeave) CFileRecognitionUtility(iServ, iMaxBufSize, iFs);
-	iNonNativeApplicationsManager = CApsNonNativeApplicationsManager::NewL(iServ,iFs);
+	iNonNativeApplicationsManager = CApsNonNativeApplicationsManager::NewL(iAppArcSrv,iFs);
 	}
+	
 
 CApaAppListServSession::~CApaAppListServSession()
 	{
 	delete iNonNativeApplicationsManager;
-	delete iBuffer;
 	iApaAppInfoArray.ResetAndDestroy();
 	iApaAppInfoArray.Close();
-	delete iFileRecognitionUtility;
-	delete iRecognitionResult;
-	delete iOpaqueData_pendingDispatchToClient;
 	}
 
-void CApaAppListServSession::ServiceL(const RMessage2& aMessage)
+CApaAppList& CApaAppListServSession::AppList()
 	{
-	TBool completeMessage=ETrue;
-	switch (aMessage.Function())
+	return iAppList;
+	}
+
+	
+void CApaAppListServSession::DoServiceL(const RMessage2& aMessage)
+	{
+	TBool completeMessage = ETrue;
+	const TInt opcode = aMessage.Function();
+	switch (opcode)
 		{
 	case ESetNotify:
 		SetNotify(aMessage);
@@ -219,83 +220,8 @@ void CApaAppListServSession::ServiceL(const RMessage2& aMessage)
 	case EAppListServGetDefaultScreenNumber:
 		GetDefaultScreenNumberL(aMessage);
 		break;
-	case EAppListServStartAppWithoutReturningThreadId:
-		StartAppL(aMessage,EFalse);
-		break;
-	case EAppListServStartAppReturningThreadId:
-		StartAppL(aMessage,ETrue);
-		break;
-	case EAppListServRecognizeData:
-		RecognizeDataL(aMessage);
-		break;
-	case EAppListServRecognizeDataPassedByFileHandle:
-		RecognizeDataPassedByFileHandleL(aMessage);
-		break;
-	case EAppListServRecognizeSpecificData:
-		RecognizeSpecificDataL(aMessage);
-		break;
-	case EAppListServRecognizeSpecificDataPassedByFileHandle:
-		RecognizeSpecificDataPassedByFileHandleL(aMessage);
-		break;
-	case EAppListServAppForDataType:
-		AppForDataTypeL(aMessage);
-		break;
-	case EAppListServStartDocument:
-		StartDocumentL(aMessage,EStart);
-		break;
-	case EAppListServStartDocumentByDataType:
-		StartDocumentL(aMessage,EStartByDataType);
-		break;
-	case EAppListServStartDocumentByUid:
-		StartDocumentL(aMessage,EStartByUid);
-		break;
-	case EAppListServCreateDocumentByUid:
-		StartDocumentL(aMessage,ECreateByUid);
-		break;
-	case EAppListServGetExecutableNameGivenDocument:
-		GetExecutableNameGivenDocumentL(aMessage);
-		break;
-	case EAppListServGetExecutableNameGivenDocumentPassedByFileHandle:
-		GetExecutableNameGivenDocumentPassedByFileHandleL(aMessage);
-		break;
-	case EAppListServGetExecutableNameGivenDataType:
-		GetExecutableNameGivenDataTypeL(aMessage);
-		break;
-	case EAppListServGetExecutableNameGivenAppUid:
-		GetExecutableNameGivenAppUidL(aMessage);
-		break;
-	case EAppListServGetOpaqueData:
-		GetOpaqueDataL(aMessage);
-		break;
-	case EAppListServGetNativeExecutableNameIfNonNative:
-		GetNativeExecutableNameIfNonNativeL(aMessage);
-		break;
 	case EAppListServAppIconByUid:
 		IconForAppL(aMessage);
-		break;
-	case EAppListServAppForDocument:
-		AppForDocumentL(aMessage, NULL);
-		break;
-	case EAppListServAppForDocumentPassedByFileHandle:
-		AppForDocumentPassedByFileHandleL(aMessage, NULL);
-		break;
-	case EAppListServGetConfidence:
-		GetConfidenceL(aMessage);
-		break;
-	case EAppListServSetConfidence:
-		SetConfidence(aMessage);
-		break;
-	case EAppListServGetBufSize:
-		GetBufSize(aMessage);
-		break;
-	case EAppListServSetBufSize:
-		SetBufSize(aMessage);
-		break;
-	case EAppListServGetDataTypesPhase1:
-		GetDataTypesCountL(aMessage);
-		break;
-	case EAppListServGetDataTypesPhase2:
-		GetDataTypesL(aMessage);
 		break;
 	case ECancelNotify:
 		CancelNotify();
@@ -332,6 +258,186 @@ void CApaAppListServSession::ServiceL(const RMessage2& aMessage)
 		break;
 	case EAppListServAppViewIconFileName:
 		ViewIconFileNameL(aMessage);
+		break;	
+	case EAppListServPrepareNonNativeApplicationsUpdates:
+		iNonNativeApplicationsManager->PrepareNonNativeApplicationsUpdatesL();
+		break;
+	case EAppListServRegisterNonNativeApplication:
+		iNonNativeApplicationsManager->RegisterNonNativeApplicationL(aMessage);
+		break;
+	case EAppListServDeregisterNonNativeApplication:
+		iNonNativeApplicationsManager->DeregisterNonNativeApplicationL(aMessage);
+		break;
+	case EAppListServCommitNonNativeApplications:
+		iNonNativeApplicationsManager->CommitNonNativeApplicationsUpdatesL(aMessage);
+		completeMessage=EFalse;
+		break;
+	case EAppListServRollbackNonNativeApplications:
+		iNonNativeApplicationsManager->RollbackNonNativeApplicationsUpdates();
+		break;
+	case EAppListServGetAppType:
+		GetAppTypeL(aMessage);
+		break;
+	case EAppListServForceRegistration:
+		ForceRegistrationL(aMessage);
+		completeMessage=EFalse;
+		break;
+	case EMatchesSecurityPolicy:
+		MatchesSecurityPolicyL(aMessage);
+		break;
+	case EAppListServSetAppShortCaption:
+		SetAppShortCaptionL(aMessage);
+		break;
+	case EDebugClearAppInfoArray:
+	#ifdef _DEBUG
+		iApaAppInfoArray.ResetAndDestroy();
+		iApaAppInfoArray.Compress();
+	#endif
+		break;
+	case EDebugAddFailingNonNativeApplicationsUpdate:
+	#ifdef _DEBUG
+		iNonNativeApplicationsManager->ForceFailInNonNativeApplicationsUpdatesL();
+	#endif
+		break;
+	case EDebugAddPanicingNonNativeApplicationsUpdate:
+	#ifdef _DEBUG
+		iNonNativeApplicationsManager->ForcePanicInNonNativeApplicationsUpdatesL();
+	#endif
+		break;
+	case EDebugAddRollbackPanicingNonNativeApplicationsUpdate:
+	#ifdef _DEBUG
+		iNonNativeApplicationsManager->ForcePanicInNonNativeApplicationsRollbackL();
+	#endif
+		break;
+	default:
+		aMessage.Panic(KApaPanicCli,EClientBadRequest);
+		break;
+		}
+		
+	if (completeMessage && !aMessage.IsNull())
+		aMessage.Complete(KErrNone);
+	}
+
+
+// CApaAppArcServSession
+
+CApaAppArcServSession* CApaAppArcServSession::NewL(CApaAppArcServer& aServer, RFs& aFs)
+	{
+	CApaAppArcServSession* self=new(ELeave) CApaAppArcServSession(aServer, aFs);
+	CleanupStack::PushL(self);
+	self->ConstructL();
+	CleanupStack::Pop(); // self
+	return self;
+	}
+
+CApaAppArcServSession::CApaAppArcServSession(CApaAppArcServer& aServer, RFs& aFs)
+	: CSession2(),
+	iServ(aServer),
+	iFs(aFs),
+	iMaxBufSize(KApaAppListServMaxBuffer),
+	iOpaqueData_pendingDispatchToClient(NULL)
+	{}
+
+void CApaAppArcServSession::ConstructL()
+	{
+	iAppListSession = CApaAppListServSession::NewL(iFs, iServ, iServ.AppList());
+	iFileRecognitionUtility = new (ELeave) CFileRecognitionUtility(iServ, iMaxBufSize, iFs);
+	}
+
+CApaAppArcServSession::~CApaAppArcServSession()
+	{
+	delete iAppListSession;
+	delete iBuffer;
+	delete iFileRecognitionUtility;
+	delete iRecognitionResult;
+	delete iOpaqueData_pendingDispatchToClient;
+	}
+
+void CApaAppArcServSession::ServiceL(const RMessage2& aMessage)
+	{
+	TBool completeMessage = ETrue;
+	switch (aMessage.Function())
+		{
+	case EAppListServStartAppWithoutReturningThreadId:
+		ASSERT(0);	// panic debug only
+		User::Leave(KErrNotSupported);
+		break;
+	case EAppListServStartAppReturningThreadId:
+		ASSERT(0);	// panic debug only
+		User::Leave(KErrNotSupported);
+		break;
+	case EAppListServRecognizeData:
+		RecognizeDataL(aMessage);
+		break;
+	case EAppListServRecognizeDataPassedByFileHandle:
+		RecognizeDataPassedByFileHandleL(aMessage);
+		break;
+	case EAppListServRecognizeSpecificData:
+		RecognizeSpecificDataL(aMessage);
+		break;
+	case EAppListServRecognizeSpecificDataPassedByFileHandle:
+		RecognizeSpecificDataPassedByFileHandleL(aMessage);
+		break;
+	case EAppListServAppForDataType:
+		AppForDataTypeL(aMessage);
+		break;
+	case EAppListServStartDocument:
+		ASSERT(0);	// panic debug only
+		User::Leave(KErrNotSupported);
+		break;
+	case EAppListServStartDocumentByDataType:
+		ASSERT(0);	// panic debug only
+		User::Leave(KErrNotSupported);
+		break;
+	case EAppListServStartDocumentByUid:
+		ASSERT(0);	// panic debug only
+		User::Leave(KErrNotSupported);
+		break;
+	case EAppListServCreateDocumentByUid:
+		ASSERT(0);	// panic debug only
+		User::Leave(KErrNotSupported);
+		break;
+	case EAppListServGetExecutableNameGivenDocument:
+		GetExecutableNameGivenDocumentL(aMessage);
+		break;
+	case EAppListServGetExecutableNameGivenDocumentPassedByFileHandle:
+		GetExecutableNameGivenDocumentPassedByFileHandleL(aMessage);
+		break;
+	case EAppListServGetExecutableNameGivenDataType:
+		GetExecutableNameGivenDataTypeL(aMessage);
+		break;
+	case EAppListServGetExecutableNameGivenAppUid:
+		GetExecutableNameGivenAppUidL(aMessage);
+		break;
+	case EAppListServGetOpaqueData:
+		GetOpaqueDataL(aMessage);
+		break;
+	case EAppListServGetNativeExecutableNameIfNonNative:
+		GetNativeExecutableNameIfNonNativeL(aMessage);
+		break;
+	case EAppListServAppForDocument:
+		AppForDocumentL(aMessage, NULL);
+		break;
+	case EAppListServAppForDocumentPassedByFileHandle:
+		AppForDocumentPassedByFileHandleL(aMessage, NULL);
+		break;
+	case EAppListServGetConfidence:
+		GetConfidenceL(aMessage);
+		break;
+	case EAppListServSetConfidence:
+		SetConfidence(aMessage);
+		break;
+	case EAppListServGetBufSize:
+		GetBufSize(aMessage);
+		break;
+	case EAppListServSetBufSize:
+		SetBufSize(aMessage);
+		break;
+	case EAppListServGetDataTypesPhase1:
+		GetDataTypesCountL(aMessage);
+		break;
+	case EAppListServGetDataTypesPhase2:
+		GetDataTypesL(aMessage);
 		break;
 	case EAppListInsertDataMapping:
 	case EAppListInsertDataMappingIfHigher:
@@ -371,29 +477,6 @@ void CApaAppListServSession::ServiceL(const RMessage2& aMessage)
 	case EAppListServDeregisterNonNativeApplicationType:
 		DeregisterNonNativeApplicationTypeL(aMessage);
 		break;
-	case EAppListServPrepareNonNativeApplicationsUpdates:
-		iNonNativeApplicationsManager->PrepareNonNativeApplicationsUpdatesL();
-		break;
-	case EAppListServRegisterNonNativeApplication:
-		iNonNativeApplicationsManager->RegisterNonNativeApplicationL(aMessage);
-		break;
-	case EAppListServDeregisterNonNativeApplication:
-		iNonNativeApplicationsManager->DeregisterNonNativeApplicationL(aMessage);
-		break;
-	case EAppListServCommitNonNativeApplications:
-		iNonNativeApplicationsManager->CommitNonNativeApplicationsUpdatesL(aMessage);
-		completeMessage=EFalse;
-		break;
-	case EAppListServRollbackNonNativeApplications:
-		iNonNativeApplicationsManager->RollbackNonNativeApplicationsUpdates();
-		break;
-	case EAppListServGetAppType:
-		GetAppTypeL(aMessage);
-		break;
-	case EAppListServForceRegistration:
-		ForceRegistrationL(aMessage);
-		completeMessage=EFalse;
-		break;
 	case EAppListServPreferredBufSize:
 		aMessage.Complete(PreferredBufSize());
 		break;
@@ -411,13 +494,7 @@ void CApaAppListServSession::ServiceL(const RMessage2& aMessage)
 		CancelRecognizeFiles();
 		break;
 	case EAppListServRuleBasedLaunching:
-		RuleBasedLaunchingL(aMessage);
-		break;
-	case EMatchesSecurityPolicy:
-		MatchesSecurityPolicyL(aMessage);
-		break;
-	case EAppListServSetAppShortCaption:
-		SetAppShortCaptionL(aMessage);
+		AquirePermissionToLaunchAppL(aMessage);
 		break;
 	case ENotifyOnDataMappingChange:
 		NotifyOnDataMappingChange(aMessage);
@@ -441,12 +518,6 @@ void CApaAppListServSession::ServiceL(const RMessage2& aMessage)
 		__UHEAP_FAILNEXT(aMessage.Int0());
 	#endif
 		break;
-	case EDebugClearAppInfoArray:
-	#ifdef _DEBUG
-		iApaAppInfoArray.ResetAndDestroy();
-		iApaAppInfoArray.Compress();
-	#endif
-		break;
 	case EDebugFlushRecognitionCache:
 	#ifdef _DEBUG
 		iServ.FlushRecognitionCache();
@@ -463,59 +534,39 @@ void CApaAppListServSession::ServiceL(const RMessage2& aMessage)
 		REComSession::FinalClose();
 	#endif
 		break;
-	case EDebugAddFailingNonNativeApplicationsUpdate:
-	#ifdef _DEBUG
-		iNonNativeApplicationsManager->ForceFailInNonNativeApplicationsUpdatesL();
-	#endif
-		break;
-	case EDebugAddPanicingNonNativeApplicationsUpdate:
-	#ifdef _DEBUG
-		iNonNativeApplicationsManager->ForcePanicInNonNativeApplicationsUpdatesL();
-	#endif
-		break;
-	case EDebugAddRollbackPanicingNonNativeApplicationsUpdate:
-	#ifdef _DEBUG
-		iNonNativeApplicationsManager->ForcePanicInNonNativeApplicationsRollbackL();
-	#endif
-		break;
 	default:
-		aMessage.Panic(KApaPanicCli,EClientBadRequest);
-		break;
+		iAppListSession->DoServiceL(aMessage);
+		return;
 		}
 		
 	if (completeMessage && !aMessage.IsNull())
-		{
 		aMessage.Complete(KErrNone);
-		}
 	}
-void CApaAppListServSession::NotifyOnDataMappingChange(const RMessage2& aMessage)
+
+
+void CApaAppArcServSession::NotifyOnDataMappingChange(const RMessage2& aMessage)
 	{ 
 	if (!iMessage_NotifyOnDataMappingChange.IsNull())
-			{
-			aMessage.Panic(KApaPanicCli,ENotifyOnDataMappingChangeRequestOutstanding);
-			}
+		aMessage.Panic(KApaPanicCli,ENotifyOnDataMappingChangeRequestOutstanding);
 	else
-			{
-			iMessage_NotifyOnDataMappingChange=aMessage;
-			}
+		iMessage_NotifyOnDataMappingChange=aMessage;
 	}
-void CApaAppListServSession::CancelNotifyOnDataMappingChange()
+
+void CApaAppArcServSession::CancelNotifyOnDataMappingChange()
 	{
 	if (!iMessage_NotifyOnDataMappingChange.IsNull())
-			{
-			iMessage_NotifyOnDataMappingChange.Complete(KErrCancel);
-			}
+		iMessage_NotifyOnDataMappingChange.Complete(KErrCancel);
 	} //lint !e1762 Suppress member function could be made const
 
 
-TInt CApaAppListServSession::PreferredBufSize() const
+TInt CApaAppArcServSession::PreferredBufSize() const
 	{
 	TInt preferredBufferSize = 0;
 	TRAPD(err, preferredBufferSize = iServ.DataRecognizerPreferredBufSizeL());
 	return (err==KErrNone) ? Min(iMaxBufSize, preferredBufferSize) : iMaxBufSize;
 	}
 
-void CApaAppListServSession::RegisterNonNativeApplicationTypeL(const RMessage2& aMessage)
+void CApaAppArcServSession::RegisterNonNativeApplicationTypeL(const RMessage2& aMessage)
 	{
 	const TUid applicationType(TUid::Uid(aMessage.Int0()));
 	HBufC* const nativeExecutable=HBufC::NewLC(User::LeaveIfError(aMessage.GetDesLength(1)));
@@ -525,7 +576,7 @@ void CApaAppListServSession::RegisterNonNativeApplicationTypeL(const RMessage2& 
 	CleanupStack::PopAndDestroy(nativeExecutable);
 	}
 
-void CApaAppListServSession::DeregisterNonNativeApplicationTypeL(const RMessage2& aMessage)
+void CApaAppArcServSession::DeregisterNonNativeApplicationTypeL(const RMessage2& aMessage)
 	{
 	const TUid applicationType(TUid::Uid(aMessage.Int0()));
 	iServ.DeregisterNonNativeApplicationTypeL(applicationType);
@@ -534,15 +585,15 @@ void CApaAppListServSession::DeregisterNonNativeApplicationTypeL(const RMessage2
 void CApaAppListServSession::GetAppTypeL(const RMessage2& aMessage)
 	{
 	TInt uid = aMessage.Int0();
-	CApaAppData* appData = iServ.AppList().AppDataByUid(TUid::Uid(uid));
+	CApaAppData* appData = iAppList.AppDataByUid(TUid::Uid(uid));
 	if (!appData)
-		{
 		aMessage.Complete(KErrNotFound);
-		return;
+	else
+		{
+		TPckgBuf<TUid> typeUid(appData->NonNativeApplicationType());
+		aMessage.WriteL(1,typeUid);
+		aMessage.Complete(KErrNone);
 		}
-	TPckgBuf<TUid> typeUid(appData->NonNativeApplicationType());
-	aMessage.WriteL(1,typeUid);
-	aMessage.Complete(KErrNone);
 	}
 	
 void CApaAppListServSession::ForceRegistrationL(const RMessage2& aMessage)
@@ -562,19 +613,19 @@ void CApaAppListServSession::ForceRegistrationL(const RMessage2& aMessage)
 		HBufC* regFile = HBufC::NewLC(length);
   		TPtr ptr(regFile->Des());
   		readStream.ReadL(ptr, length);
-		iServ.AppList().AddForcedRegistrationL(regFile);
-		CleanupStack::Pop(regFile);
+		iAppList.AddForcedRegistrationL(*regFile);
+		CleanupStack::PopAndDestroy(regFile);
 		}
-	CleanupStack::PopAndDestroy(&readStream);
 	
+	CleanupStack::PopAndDestroy(&readStream);
 	CleanupStack::PopAndDestroy(buffer);
 	
 	// Trigger a rescan, when rescan completes it will complete iNotifyOnScanCompleteMsg
 	iNotifyOnScanCompleteMsg=aMessage;
-	iServ.UpdateApps();
+	iAppArcSrv.UpdateAppsByForceRegistration();
 	}
 	
-void CApaAppListServSession::AppForDocumentPassedByFileHandleL(const RMessage2& aMessage, const TUid* aServiceUid)
+void CApaAppArcServSession::AppForDocumentPassedByFileHandleL(const RMessage2& aMessage, const TUid* aServiceUid)
 	{
 #if defined(__PROFILE)
 	TProfile profile;
@@ -597,86 +648,100 @@ void CApaAppListServSession::AppForDocumentPassedByFileHandleL(const RMessage2& 
 #endif
 	}
 
-void CApaAppListServSession::AppForDocumentL(const RMessage2& aMessage, const TUid* aServiceUid)
+/**
+Call the recognizer framework to find the MIME-type of the data buffer,
+then find and return the UID of the "best" application to handle that data.
+*/
+void CApaAppArcServSession::AppForDocumentL(const RMessage2& aMessage, const TUid* aServiceUid)
 	{
 #if defined(__PROFILE)
 	TProfile profile;
 	RDebug::ProfileReset(5,1);
 	RDebug::ProfileStart(5);
 #endif
-	HBufC* const fileName=HBufC::NewLC(User::LeaveIfError(aMessage.GetDesLength(2)));
-	{TPtr fileName_asWritable(fileName->Des());
-	aMessage.ReadL(2,fileName_asWritable);}
-	HBufC8* const buffer=HBufC8::NewLC(User::LeaveIfError(aMessage.GetDesLength(3)));
+
+	// Get the document file name from the IPC message
+	HBufC* const docFileName = HBufC::NewLC(User::LeaveIfError(aMessage.GetDesLength(2)));
+	{TPtr docFileName_asWritable(docFileName->Des());
+	aMessage.ReadL(2, docFileName_asWritable);}
+	
+	// Get the data read from the document that will be used for recognition from the IPC message
+	HBufC8* const buffer = HBufC8::NewLC(User::LeaveIfError(aMessage.GetDesLength(3)));
 	{TPtr8 buffer_asWritable(buffer->Des());
 	aMessage.ReadL(3,buffer_asWritable);}
+	
+	// Call the recognizer framework to get the MIME-type
 	SReturnData_AppForDocument returnData;
-	returnData.iDataType=iServ.RecognizeDataL(*fileName, *buffer).iDataType;
-	returnData.iUid=(returnData.iDataType!=TDataType())? AppForDataTypeL(returnData.iDataType, aServiceUid): TUid::Null();
+	returnData.iDataType = iServ.RecognizeDataL(*docFileName, *buffer).iDataType;
+	// If a MIME-type was found, get the UID of the "best" app registered for that type
+	returnData.iUid = (returnData.iDataType!=TDataType() ? AppForDataTypeL(returnData.iDataType, aServiceUid) : TUid::Null());
+	
 #if defined(__PROFILE)
 	RDebug::ProfileEnd(5);
 	RDebug::ProfileResult(&profile,5,1);
 	RDebug::Print(KProfileAppForDocumentL,profile.iTime/1000000,profile.iTime%1000000);
 	RDebug::ProfileStart(5);
 #endif
-	CleanupStack::PopAndDestroy(2, fileName);
+	
+	// Send back the answer
+	CleanupStack::PopAndDestroy(2, docFileName);
 	aMessage.WriteL(0,TPckgC<SReturnData_AppForDocument>(returnData));
 	}
 
-void CApaAppListServSession::GetConfidenceL(const RMessage2& aMessage)
+void CApaAppArcServSession::GetConfidenceL(const RMessage2& aMessage)
 // void GetAcceptedConfidence(TInt& aConfidence);
 	{
-	aMessage.WriteL(0,TPckgBuf<TInt>(iServ.DataRecognizer()->AcceptedConfidence()));
+	aMessage.WriteL(0,TPckgBuf<TInt>(iServ.MimeTypeRecognizer()->AcceptedConfidence()));
 	}
 
-void CApaAppListServSession::SetConfidence(const RMessage2& aMessage)
+void CApaAppArcServSession::SetConfidence(const RMessage2& aMessage)
 // SetAcceptedConfidence(TInt aConfidence);
 	{
-	__ASSERT_DEBUG(iServ.DataRecognizer(), Panic(EPanicNullPointer));
-	iServ.DataRecognizer()->SetAcceptedConfidence(aMessage.Int0());
+	__ASSERT_DEBUG(iServ.MimeTypeRecognizer(), Panic(EPanicNullPointer));
+	iServ.MimeTypeRecognizer()->SetAcceptedConfidence(aMessage.Int0());
 	}
 
-void CApaAppListServSession::GetBufSize(const RMessage2& aMessage)
+void CApaAppArcServSession::GetBufSize(const RMessage2& aMessage)
 // GetMaxDataBufSize(TInt& aBufSize);
 	{
 	aMessage.Complete(iMaxBufSize);
 	}
 
-void CApaAppListServSession::SetBufSize(const RMessage2& aMessage)
+void CApaAppArcServSession::SetBufSize(const RMessage2& aMessage)
 // SetMaxDataBufSize(TInt aBufSize);
 	{
 	iMaxBufSize=aMessage.Int0();
 	}
 
-void CApaAppListServSession::GetDataTypesCountL(const RMessage2& aMessage)
+void CApaAppArcServSession::GetDataTypesCountL(const RMessage2& aMessage)
 	{
 	delete iBuffer;
-	iBuffer=NULL;
-	CDataTypeArray* const dataTypes=new(ELeave) CDataTypeArray(5);
+	iBuffer = NULL;
+	CDataTypeArray* const dataTypes = new(ELeave) CDataTypeArray(5);
 	CleanupStack::PushL(dataTypes);
 	iServ.DataTypeL(*dataTypes);
+	
 	TInt completionCode=0; // not KErrNone, as completion code of zero tells the client that zero data types were found
 	if (dataTypes->Count()>0)
 		{
-		CBufBase* const buffer=CBufFlat::NewL(sizeof(TDataType)); 
+		CBufBase* const buffer = CBufFlat::NewL(sizeof(TDataType)); 
 		CleanupStack::PushL(buffer); 
 		RBufWriteStream writeStream(*buffer); 
-		writeStream<<*dataTypes; 
+		writeStream << *dataTypes; 
 		CleanupStack::Pop(buffer); 
-		iBuffer=buffer;
-		completionCode=iBuffer->Ptr(0).Size(); // number of bytes in buffer (not number of data types)
+		iBuffer = buffer;
+		completionCode = iBuffer->Ptr(0).Size(); // number of bytes in buffer (not number of data types)
 		}
+	
 	CleanupStack::PopAndDestroy(dataTypes);
 	aMessage.Complete(completionCode);
 	}
 
-void CApaAppListServSession::GetDataTypesL(const RMessage2& aMessage)
+void CApaAppArcServSession::GetDataTypesL(const RMessage2& aMessage)
 // GetSupportedDataTypes(CDataTypeArray& aDataTypes);
 	{
-	if(iBuffer==NULL)
-		{
+	if(!iBuffer)
 		aMessage.Panic(KApaPanicCli,ENoSupportedDataTypes);
-		}
 	else
 		{
 		aMessage.WriteL(0,iBuffer->Ptr(0));
@@ -688,11 +753,10 @@ void CApaAppListServSession::GetDataTypesL(const RMessage2& aMessage)
 CApaAppData& CApaAppListServSession::FindAppInListL(TUid aUid)
 	{
 	TApaAppEntry dummy;
-	CApaAppData* app=NULL;
+	CApaAppData* app = NULL;
 	if (!FindAppInList(app, dummy, aUid))
-		{
 		User::Leave(KErrNotFound);
-		}
+
 	return *app;
 	}
 
@@ -701,11 +765,10 @@ void CApaAppListServSession::SendArrayL(const MArrayItemWriter& aArrayItemWriter
 	const TInt sizeOfBuffer=aMessage.Int1();
 	const TInt arrayItemCount=aArrayItemWriter.ArrayItemCount();
 	const TInt sizeRequired=sizeof(TInt)+(arrayItemCount*aArrayItemWriter.ArrayItemSize());
-	__ASSERT_DEBUG(sizeRequired>0,User::Invariant());
+	ASSERT(sizeRequired > 0);
 	if (sizeRequired>sizeOfBuffer)
-		{
 		User::Leave(sizeRequired); // causes aMessage to complete with sizeRequired
-		}
+
 	CBufFlat* const buf=CBufFlat::NewL(sizeRequired);
 	CleanupStack::PushL(buf);
 	buf->ExpandL(0,sizeRequired);
@@ -713,9 +776,8 @@ void CApaAppListServSession::SendArrayL(const MArrayItemWriter& aArrayItemWriter
 	writeStream.Open(*buf);
 	writeStream.WriteUint32L(arrayItemCount);
 	for (TInt i=0; i<arrayItemCount; ++i)
-		{
 		aArrayItemWriter.WriteArrayItemL(writeStream,i);
-		}
+
 	writeStream.CommitL();
 	aMessage.WriteL(2,buf->Ptr(0));
 	CleanupStack::PopAndDestroy(buf);
@@ -724,11 +786,9 @@ void CApaAppListServSession::SendArrayL(const MArrayItemWriter& aArrayItemWriter
 void CApaAppListServSession::AppIconSizesL(const RMessage2& aMessage)
 	{
 	const TUid uid=TUid::Uid(aMessage.Int0());
-	CApaAppData& app = FindAppInListL(uid);
+	const CApaAppData& app = FindAppInListL(uid);
 	if (app.NonMbmIconFile())
-		{
 		User::Leave(KErrNotSupported);
-		}
 		
 	CArrayFixFlat<TSize>* array = app.IconSizesL();
 	CleanupStack::PushL(array);
@@ -740,7 +800,7 @@ void CApaAppListServSession::AppIconSizesL(const RMessage2& aMessage)
 void CApaAppListServSession::AppViewsL(const RMessage2& aMessage)
 	{
 	const TUid uid=TUid::Uid(aMessage.Int0());
-	CApaAppData& app = FindAppInListL(uid);
+	const CApaAppData& app = FindAppInListL(uid);
 	TViewDataArrayItemWriter arrayItemWriter(*app.Views());
 	SendArrayL(arrayItemWriter,aMessage);
 	}
@@ -748,30 +808,23 @@ void CApaAppListServSession::AppViewsL(const RMessage2& aMessage)
 void CApaAppListServSession::AppFileOwnershipInfoL(const RMessage2& aMessage)
 	{
 	const TUid uid=TUid::Uid(aMessage.Int0());
-	CApaAppData& app = FindAppInListL(uid);
+	const CApaAppData& app = FindAppInListL(uid);
 	TDesCArrayItemWriter arrayItemWriter(*app.OwnedFiles());
 	SendArrayL(arrayItemWriter,aMessage);
 	}
 
 void CApaAppListServSession::NumberOfOwnDefinedIconsL(const RMessage2& aMessage)
 	{
-	const TUid uid=TUid::Uid(aMessage.Int0());
-	TApaAppEntry entry;
-	CApaAppData* app=NULL;
-	if (!FindAppInList(app,entry,uid))
-		{
-		User::Leave(KErrNotFound);
-		}
-	if (app->NonMbmIconFile())
-		{
+	const TUid uid = TUid::Uid(aMessage.Int0());
+	const CApaAppData& app = FindAppInListL(uid);
+	if (app.NonMbmIconFile())
 		User::Leave(KErrNotSupported);
-		}
+
 	TInt count, defaultIconsUsed;
-	app->GetIconInfo(count, defaultIconsUsed);
+	app.GetIconInfo(count, defaultIconsUsed);
 	if (defaultIconsUsed)
-		{
 		count=0;
-		}
+
 	TPckgC<TInt> pckg(count); 
 	aMessage.Write(1,pckg);
 	}
@@ -779,13 +832,9 @@ void CApaAppListServSession::NumberOfOwnDefinedIconsL(const RMessage2& aMessage)
 void CApaAppListServSession::ApplicationLanguageL(const RMessage2& aMessage)
 	{
 	const TUid appUid = TUid::Uid(aMessage.Int0());
-	TApaAppEntry appEntry;
-	CApaAppData* appData = NULL;
-	if (!FindAppInList(appData, appEntry, appUid))
-		{
-		User::Leave(KErrNotFound);
-		}
-	const TLanguage appLanguage = appData->ApplicationLanguage();
+	const CApaAppData& appData = FindAppInListL(appUid);
+
+	const TLanguage appLanguage = appData.ApplicationLanguage();
 	TPckgC<TLanguage> pckg(appLanguage); 
 	aMessage.Write(1,pckg);
 	}
@@ -797,36 +846,31 @@ void CApaAppListServSession::IconForViewBySizeL(const RMessage2& aMessage)
 	TApaAppViewIconSizeData appViewIconSizeData;
 	{TPckg<TApaAppViewIconSizeData> appViewIconSizeData_asDescriptor(appViewIconSizeData);
 	aMessage.ReadL(0,appViewIconSizeData_asDescriptor);}
-	TApaAppEntry entry;
-	CApaAppData* app=NULL;
-	if (!FindAppInList(app,entry,appViewIconSizeData.iAppUid))
-		{
-		User::Leave(KErrNotFound);
-		}
-	ASSERT(app->Views());
-	const CArrayPtr<CApaAppViewData>& viewDataArray=*app->Views();
-	CApaMaskedBitmap* icon=NULL;
-	const TInt count=viewDataArray.Count();
+	const CApaAppData& app = FindAppInListL(appViewIconSizeData.iAppUid);
+	
+	ASSERT(app.Views());
+	const CArrayPtr<CApaAppViewData>& viewDataArray = *app.Views();
+	CApaMaskedBitmap* icon = NULL;
+	const TInt count = viewDataArray.Count();
 	for (TInt ii=0; ii<count; ii++)
 		{
-		const CApaAppViewData& appViewData=*viewDataArray[ii];
-		if (appViewData.Uid()==appViewIconSizeData.iViewUid)
+		const CApaAppViewData& appViewData = *viewDataArray[ii];
+		if (appViewData.Uid() == appViewIconSizeData.iViewUid)
 			{
 			if (appViewData.NonMbmIconFile())
-				{
 				User::Leave(KErrNotSupported);
-				}
+
 			icon=appViewData.Icon(appViewIconSizeData.iSize);
 			break;
 			}
 		}
-	if (icon==NULL)
-		{
+		
+	if (!icon)
 		User::Leave(KErrNotFound);
-		}
+
 	SReturnData_ViewIconByUidAndSize returnData;
-	returnData.iIcon=icon->Handle();
-	returnData.iIconMask=icon->Mask()->Handle();
+	returnData.iIcon = icon->Handle();
+	returnData.iIconMask = icon->Mask()->Handle();
 	aMessage.WriteL(1,TPckgC<SReturnData_ViewIconByUidAndSize>(returnData));
 	}
 
@@ -834,26 +878,19 @@ void CApaAppListServSession::IconForAppBySizeL(const RMessage2& aMessage)
 	{
 	const TUid uid=TUid::Uid(aMessage.Int0());
 	const TSize size(aMessage.Int1(),aMessage.Int2());
-	TApaAppEntry entry;
-	CApaAppData* app=NULL;
-	if (!FindAppInList(app,entry,uid))
-		{
-		User::Leave(KErrNotFound);
-		}
-	if (app->NonMbmIconFile())
-		{
+	const CApaAppData& app=FindAppInListL(uid);
+
+	if (app.NonMbmIconFile())
 		User::Leave(KErrNotSupported);
-		}
-	CApaMaskedBitmap* const icon=app->Icon(size);
-	if (icon==NULL)
-		{
+
+	CApaMaskedBitmap* const icon=app.Icon(size);
+	if (!icon)
 		User::Leave(KErrNotFound);
-		}
+
 	SReturnData_AppIconByUidAndSize returnData;
 	returnData.iIcon=icon->Handle();
 	returnData.iIconMask=icon->Mask()->Handle();
 	aMessage.WriteL(3,TPckgC<SReturnData_AppIconByUidAndSize>(returnData));
-
 	}
 
 void CApaAppListServSession::IconFileHandleForAppL(const RMessage2& aMessage)
@@ -862,18 +899,17 @@ void CApaAppListServSession::IconFileHandleForAppL(const RMessage2& aMessage)
 	TApaAppEntry entry;
 	CApaAppData* app=NULL;
 	if (!FindAppInList(app,entry,uid))
-		{
 		User::Leave(KErrNotFound);
-		}
+
 	TPtrC iconFileName = app->IconFileName();
 	if (iconFileName.Length()==0)
-		{
 		User::Leave(KErrNotFound);
-		}
+
 	RFs fs;
 	User::LeaveIfError(fs.Connect());
 	CleanupClosePushL(fs);
 	User::LeaveIfError(fs.ShareProtected());
+
 	RFile file;
 	CleanupClosePushL(file);
 	User::LeaveIfError(file.Open(fs, iconFileName, EFileShareReadersOnly));
@@ -886,30 +922,24 @@ void CApaAppListServSession::IconForAppL(const RMessage2& aMessage)
 // BUT!  It's interface is uid, side, icon handle, mask handle for bitmap sharing 
 // and avoiding IPC overhead
 	{
-	const TUid uid=TUid::Uid(aMessage.Int0());
-	const TInt side=aMessage.Int1();
-	TApaAppEntry entry;
-	CApaAppData* app=NULL;
-	if (!FindAppInList(app,entry,uid))
-		{
-		User::Leave(KErrNotFound);
-		}
-	if (app->NonMbmIconFile())
-		{
+	const TUid uid = TUid::Uid(aMessage.Int0());
+	const CApaAppData& app = FindAppInListL(uid);
+
+	if (app.NonMbmIconFile())
 		User::Leave(KErrNotSupported);
-		}
-	CApaMaskedBitmap* const icon=app->Icon(side);
-	if (icon==NULL)
-		{
+	
+	const TInt side = aMessage.Int1();
+	CApaMaskedBitmap* const icon = app.Icon(side);
+	if (!icon)
 		User::Leave(KErrNotFound);
-		}
+
 	SReturnData_AppIconByUid returnData;
-	returnData.iIcon=icon->Handle();
-	returnData.iIconMask=icon->Mask()->Handle();
+	returnData.iIcon = icon->Handle();
+	returnData.iIconMask = icon->Mask()->Handle();
 	aMessage.WriteL(2,TPckgC<SReturnData_AppIconByUid>(returnData));
 	}
 
-void CApaAppListServSession::AppForDataTypeL(const RMessage2& aMessage)
+void CApaAppArcServSession::AppForDataTypeL(const RMessage2& aMessage)
 // from AppForDataType(const TDataType& aDataType, TUid& aAppUid);
 	{
 	if (sizeof(TDataType) != aMessage.GetDesLengthL(0))
@@ -925,7 +955,7 @@ void CApaAppListServSession::AppForDataTypeL(const RMessage2& aMessage)
 	aMessage.Complete(KErrNone);
 	}
 
-void CApaAppListServSession::AppForDataTypeAndServiceL(const RMessage2& aMessage)
+void CApaAppArcServSession::AppForDataTypeAndServiceL(const RMessage2& aMessage)
 	{
 	TDataType dataType;
 	{TPckg<TDataType> dataType_asDescriptor(dataType);
@@ -936,49 +966,39 @@ void CApaAppListServSession::AppForDataTypeAndServiceL(const RMessage2& aMessage
 	aMessage.Complete(KErrNone);
 	}
 
-TUid CApaAppListServSession::AppForDataTypeL(const TDataType& aDataType, const TUid* aServiceUid)
+TUid CApaAppArcServSession::AppForDataTypeL(const TDataType& aDataType, const TUid* aServiceUid)
 	{
 	// It is possible to register apps as datatype handlers with system priority,
 	// which means that they are not overridable by user mappings.
 	// So search the list of apps for a datahandler and get the associated
 	// priority
-	TUid uid;
-	TInt priority;
-	uid=AppList().PreferredDataHandlerL(aDataType, aServiceUid, priority);
+	 
+	TInt priority = KDataTypePriorityNormal;
+	TUid uid = iAppListSession->AppList().PreferredDataHandlerL(aDataType, aServiceUid, priority);
 	if (priority == KDataTypePrioritySystem)
-		{
-		// We have found a handler with system priority
-		return uid;
-		}
+		return uid;	// We have found a handler with system priority
 		
 	// No handler with system priority so see if there is a user mapping
 	TUid userUid = KNullUid;
 	if (aServiceUid)
-		{
-		iServ.GetAppByDataType(aDataType,*aServiceUid,userUid);
-		}
+		iServ.GetAppForMimeType(aDataType,*aServiceUid,userUid);
 	else
-		{
-		iServ.GetAppByDataType(aDataType,userUid);
-		}
+		iServ.GetAppForMimeType(aDataType,userUid);
+
 	TApaAppEntry entry;
-	CApaAppData* app=NULL;
-	if ((userUid.iUid!=0) && FindAppInList(app,entry,userUid))
-		{
-		// The user mapping is valid
-		return userUid;
-		}
+	const CApaAppData* app = NULL;
+	if (userUid.iUid && iAppListSession->FindAppInList(app,entry,userUid))
+		return userUid;	// The user mapping is valid
 		
 	// A user mapping was not found or is invalid so try to use
 	// the uid returned by PreferredDataHandlerL.
-	if (uid.iUid==0 && aDataType.IsNative())
-		{
-		uid=aDataType.Uid();
-		}
+	if (!uid.iUid && aDataType.IsNative())
+		uid = aDataType.Uid();
+
 	return uid;
 	}
 
-void CApaAppListServSession::InsertDataMappingL(const RMessage2& aMessage)
+void CApaAppArcServSession::InsertDataMappingL(const RMessage2& aMessage)
 	{
 	TPckgBuf<TDataType> dataType;
 	aMessage.ReadL(0, dataType);
@@ -987,7 +1007,7 @@ void CApaAppListServSession::InsertDataMappingL(const RMessage2& aMessage)
 
 	if(priority>KDataTypeUnTrustedPriorityThreshold || priority == KDataTypePrioritySystem ) 
 	   {   
-	   CApaAppData* appData = AppList().AppDataByUid(appUid);
+	   CApaAppData* appData = iAppListSession->AppList().AppDataByUid(appUid);
 	   if( appData )	
 		  {
           TBool hasWriteDeviceDataCap( EFalse );
@@ -1007,7 +1027,7 @@ void CApaAppListServSession::InsertDataMappingL(const RMessage2& aMessage)
               }
           else
               {
-              TPtrC registrationFilePath = appData->RegistrationFileName ( );
+              TPtrC registrationFilePath = appData->RegistrationFileName();
               TInt match = registrationFilePath.MatchF (
                                           KLitPathForUntrustedRegistrationResourceFiles );
               //Check if registration file is in path for untrusted apps 
@@ -1027,26 +1047,24 @@ void CApaAppListServSession::InsertDataMappingL(const RMessage2& aMessage)
               priority = KDataTypeUnTrustedPriorityThreshold;
 		  }
 	   }
+
 	const TUid serviceUid = { aMessage.Int3() };
 	if(aMessage.Function() == EAppListInsertDataMappingIfHigher)
 		{
 		const TBool response = iServ.InsertAndStoreIfHigherL(dataType(), priority, appUid);
 		aMessage.WriteL(3, TPckgC<TBool>(response));
-
 		}
 	else
-		{
 		iServ.InsertAndStoreDataMappingL(dataType(), priority, appUid, serviceUid);
-		}
 	}
 
-void CApaAppListServSession::DeleteDataMappingL(const RMessage2& aMessage)
+void CApaAppArcServSession::DeleteDataMappingL(const RMessage2& aMessage)
 	{
 	TPckgBuf<TDataType> dataType;
 	aMessage.ReadL(0, dataType);
 	const TUid serviceUid = { aMessage.Int1() };
 	TUid uid;
-	iServ.GetAppByDataType(dataType(),serviceUid,uid);
+	iServ.GetAppForMimeType(dataType(),serviceUid,uid);
 	if (uid != KNullUid)
 		{
 		// TypeStore doesn't support deletion of an inexistent mapping
@@ -1054,109 +1072,22 @@ void CApaAppListServSession::DeleteDataMappingL(const RMessage2& aMessage)
 		aMessage.Complete(KErrNone);
 		}
 	else
-		{
 		aMessage.Complete(KErrNotFound);
-		}
 	}
 	
-void CApaAppListServSession::GetAppByDataTypeL(const RMessage2& aMessage) const
+void CApaAppArcServSession::GetAppByDataTypeL(const RMessage2& aMessage) const
 	{
 	TPckgBuf<TDataType> dataType;
 	aMessage.ReadL(0,dataType);
 	const TUid serviceUid = { aMessage.Int1() };
 	TUid uid;
-	iServ.GetAppByDataType(dataType(),serviceUid,uid);
+	iServ.GetAppForMimeType(dataType(),serviceUid,uid);
 	TPckgC<TUid> uidpckg(uid);
 	aMessage.WriteL(2,uidpckg);
 	aMessage.Complete(KErrNone);
 	}
 
-void CApaAppListServSession::StartDocumentL(const RMessage2& aMessage,TAppListDocumentStart aStartType)
-// from StartDocument(const TDesC& aFileName, TThreadId& aId, TLaunchType aLaunchType);
-// from StartDocument(const TDesC& aFileName, const TDataType& aDataType, TThreadId& aId, TLaunchType aLaunchType);
-// from StartDocument(const TDesC& aFileName, TUid aAppUid, TThreadId& aId, TLaunchType aLaunchType);
-// from CreateDocument(const TDesC& aFileName, TUid aAppUid, TThreadId& aId, TLaunchType aLaunchType);
-// This method needs to open the file, mime type it then launch it.
-	{
-	HBufC* const fileName=HBufC::NewLC(User::LeaveIfError(aMessage.GetDesLength(1)));
-	{TPtr fileName_asWritable(fileName->Des());
-	aMessage.ReadL(1,fileName_asWritable);}
-
-	TUid uid;
-	if ((aStartType==EStartByUid) || (aStartType==ECreateByUid))
-		{
-		uid.iUid=aMessage.Int2();
-		}
-	else
-		{
-		TDataType* const dataType=new(ELeave) TDataType();
-		CleanupStack::PushL(dataType);
-		if (aStartType==EStart)
-			{
-			HBufC8* const buffer=HBufC8::NewLC(User::LeaveIfError(aMessage.GetDesLength(2)));
-			{TPtr8 buffer_asWritable(buffer->Des());
-			aMessage.ReadL(2,buffer_asWritable);}
-			*dataType=iServ.RecognizeDataL(*fileName, *buffer).iDataType;
-			CleanupStack::PopAndDestroy(buffer);
-			}
-		else
-			{
-			__ASSERT_DEBUG(aStartType==EStartByDataType,User::Invariant());
-			TPckg<TDataType> dataType_asDescriptor(*dataType);
-			aMessage.ReadL(2,dataType_asDescriptor);
-			}
-		uid=AppForDataTypeL(*dataType, NULL);
-		CleanupStack::PopAndDestroy(dataType);
-		}
-	const TThreadId threadId=StartDocumentL(*fileName,uid,(aStartType==ECreateByUid)? EApaCommandCreate: EApaCommandOpen);
-	CleanupStack::PopAndDestroy(fileName);
-	aMessage.WriteL(0, TPckgC<TThreadId>(threadId));
-	}
-
-TThreadId CApaAppListServSession::StartDocumentL(const TDesC& aFileName, TUid aUid, TApaCommand aCommand)
-// Launch the document of aFileName with the app with Uid aUid
-	{
-	CApaAppData* app=NULL;
-	CApaFileRecognizerType* type=NULL;
-	TApaAppEntry entry;
-	const TBool findApp=FindAppInList(app,entry,aUid);
-	if (findApp)
-	    {
-	    if (app->RegistrationFileUsed())
-			{
-			TApaAppCapabilityBuf buf;
-			app->Capability(buf);
-	 		if (((buf().iEmbeddability == TApaAppCapability::EEmbeddableOnly) || (buf().iEmbeddability == TApaAppCapability::EEmbeddableUiNotStandAlone)) && !(buf().iAttributes & TApaAppCapability::EBuiltAsDll))
-	              {
-				   User::Leave(KErrNotSupported);		
-                  }
-	 		}
-	    }
-
-	if (!findApp || aUid.iUid==0)
-		{
-		// if we can't bind the type from the Mime type stuff then use the old scheme
-		TRAP_IGNORE(type=FileRecognizer()->RecognizeFileL(aFileName));
-		}
-	else
-		{
-		if (findApp)
-			{
-			TRAP_IGNORE(type=FileRecognizer()->RecognizeFileL(entry.iFullName));
-			}
-		}
-	if (!type)
-		{
-		User::Leave(KErrNotFound);
-		}
-	if (aFileName.Length()==0)
-		{
-		return type->RunL(EApaCommandRun,NULL,NULL);
-		}
-	return type->RunL(aCommand,&aFileName,NULL);
-	}
-
-void CApaAppListServSession::GetExecutableNameGivenDocumentL(const RMessage2& aMessage)
+void CApaAppArcServSession::GetExecutableNameGivenDocumentL(const RMessage2& aMessage)
 	{
 	HBufC* const name=HBufC::NewLC(User::LeaveIfError(aMessage.GetDesLength(2)));
 	{TPtr name_asWritable(name->Des());
@@ -1171,7 +1102,7 @@ void CApaAppListServSession::GetExecutableNameGivenDocumentL(const RMessage2& aM
 	GetExecutableNameL(aMessage, appUid);
 	}
 
-void CApaAppListServSession::GetExecutableNameGivenDocumentPassedByFileHandleL(const RMessage2& aMessage)
+void CApaAppArcServSession::GetExecutableNameGivenDocumentPassedByFileHandleL(const RMessage2& aMessage)
 	{
 	RFile file;
 	CleanupClosePushL(file);
@@ -1183,7 +1114,7 @@ void CApaAppListServSession::GetExecutableNameGivenDocumentPassedByFileHandleL(c
 	GetExecutableNameL(aMessage, appUid);
 	}
 
-void CApaAppListServSession::GetExecutableNameGivenDataTypeL(const RMessage2& aMessage)
+void CApaAppArcServSession::GetExecutableNameGivenDataTypeL(const RMessage2& aMessage)
 	{
 	if (sizeof(TDataType) != aMessage.GetDesLengthL(2))
 		{
@@ -1197,73 +1128,66 @@ void CApaAppListServSession::GetExecutableNameGivenDataTypeL(const RMessage2& aM
 	GetExecutableNameL(aMessage, appUid);
 	}
 
-void CApaAppListServSession::GetExecutableNameGivenAppUidL(const RMessage2& aMessage)
+void CApaAppArcServSession::GetExecutableNameGivenAppUidL(const RMessage2& aMessage)
 	{
 	const TUid appUid(TUid::Uid(aMessage.Int2()));
 	GetExecutableNameL(aMessage, appUid);
 	}
 
-void CApaAppListServSession::GetExecutableNameL(const RMessage2& aMessage, TUid aAppUid)
+void CApaAppArcServSession::GetExecutableNameL(const RMessage2& aMessage, TUid aAppUid)
 	{
-	CApaAppData* appData=NULL;
+	const CApaAppData* appData=NULL;
 	TApaAppEntry entry;
-	if (!FindAppInList(appData, entry, aAppUid))
-		{
-		User::Leave(AppList().IsFirstScanComplete() ?
-					KErrNotFound : RApaLsSession::EAppListInvalid);
-		}
+	if (!iAppListSession->FindAppInList(appData, entry, aAppUid))
+		User::Leave(iAppListSession->AppList().IsFirstScanComplete() ? KErrNotFound : RApaLsSession::EAppListInvalid);
+
 	const TDesC& executableName(entry.iFullName);
-	if (executableName.Length() == 0)
-		{
+	if (!executableName.Length())
 		User::Leave(KErrNotFound);
-		}
+
 	aMessage.WriteL(1, executableName); // the "logical" executable name - for non-native applications this is the name of the MIDlet, Python script, etc
 	WriteNativeExecutableIfNonNativeAndPrepareForClientRetrievalOfOpaqueDataL(aMessage, 0, *appData);
 	}
 
-void CApaAppListServSession::GetNativeExecutableNameIfNonNativeL(const RMessage2& aMessage)
+void CApaAppArcServSession::GetNativeExecutableNameIfNonNativeL(const RMessage2& aMessage)
 	{
 	RBuf logicalExecutableName;
 	logicalExecutableName.CreateL(User::LeaveIfError(aMessage.GetDesLength(1)));
 	CleanupClosePushL(logicalExecutableName);
 	aMessage.ReadL(1, logicalExecutableName);
-	CApaAppData* const appData=AppList().AppDataByFileName(logicalExecutableName);
+	CApaAppData* const appData=iAppListSession->AppList().AppDataByFileName(logicalExecutableName);
 	if (appData!=NULL)
-		{
 		WriteNativeExecutableIfNonNativeAndPrepareForClientRetrievalOfOpaqueDataL(aMessage, 0, *appData);
-		}
+
 	CleanupStack::PopAndDestroy(&logicalExecutableName);
 	}
 
-void CApaAppListServSession::WriteNativeExecutableIfNonNativeAndPrepareForClientRetrievalOfOpaqueDataL(const RMessage2& aMessage, TInt aMessageSlotForNativeExecutable, const CApaAppData& aAppData)
+void CApaAppArcServSession::WriteNativeExecutableIfNonNativeAndPrepareForClientRetrievalOfOpaqueDataL(const RMessage2& aMessage, TInt aMessageSlotForNativeExecutable, const CApaAppData& aAppData)
 	{
 	HBufC8* opaqueData=NULL;
 	const TPtrC8 opaqueData_asTPtrC8(aAppData.OpaqueData());
 	const TInt lengthOfOpaqueData(opaqueData_asTPtrC8.Length());
 	if (lengthOfOpaqueData>0)
-		{
 		opaqueData=opaqueData_asTPtrC8.AllocLC();
-		}
+
 	const TUid nonNativeApplicationType(aAppData.NonNativeApplicationType());
 	if (nonNativeApplicationType!=TUid::Null())
-		{
 		aMessage.WriteL(aMessageSlotForNativeExecutable, iServ.NativeExecutableL(nonNativeApplicationType));
-		}
+
 	delete iOpaqueData_pendingDispatchToClient; // only done when the potentially leaving stuff has all succeeded
 	iOpaqueData_pendingDispatchToClient=opaqueData; // want to do this, even if opaqueData is NULL
-	if (opaqueData!=NULL)
+	if (opaqueData)
 		{
 		CleanupStack::Pop(opaqueData);
 		aMessage.Complete(lengthOfOpaqueData);
 		}
 	}
 
-void CApaAppListServSession::GetOpaqueDataL(const RMessage2& aMessage)
+void CApaAppArcServSession::GetOpaqueDataL(const RMessage2& aMessage)
 	{
 	if (iOpaqueData_pendingDispatchToClient==NULL)
-		{
 		User::Leave(KErrGeneral); // the protocol was broken: EAppListServGetOpaqueData can only be called immediately after one of the EAppListServGetExecutableNameGivenXxx or EAppListServGetNativeExecutableNameGivenXxx opcodes - see the client-side implementation of this protocol in RApaLsSession::GetOpaqueData (and the places that call it)
-		}
+
 	aMessage.WriteL(0, *iOpaqueData_pendingDispatchToClient);
 	delete iOpaqueData_pendingDispatchToClient;
 	iOpaqueData_pendingDispatchToClient=NULL;
@@ -1271,53 +1195,79 @@ void CApaAppListServSession::GetOpaqueDataL(const RMessage2& aMessage)
 
 void CApaAppListServSession::GetAppInfoL(TUid aUid, TApaAppInfo& aInfo)
 	{
-	CApaAppData* app=NULL;
+	const CApaAppData* app = NULL;
 	TApaAppEntry entry;
-	if (!FindAppInList(app,entry,aUid))
-		{
+	if (!FindAppInList(app, entry, aUid))
 		User::Leave(KErrNotFound);
-		}
+
 	aInfo.iUid = entry.iUidType[2];
 	aInfo.iFullName = entry.iFullName;
 	aInfo.iCaption = app->Caption();
 	aInfo.iShortCaption = app->ShortCaption();
 	}
 	
-void CApaAppListServSession::DoRecognizeUnpackLC(HBufC*& aName, HBufC8*& aBuffer, const RMessage2& aMessage)
+TPtrC8 CApaAppArcServSession::DoRecognizeUnpackLC(HBufC*& aName, RChunk& aLocalChunk, const RMessage2& aMessage)
 	{
-	__ASSERT_DEBUG(aName==NULL,User::Invariant());
-	__ASSERT_DEBUG(aBuffer==NULL,User::Invariant());
-	aName=HBufC::NewLC(User::LeaveIfError(aMessage.GetDesLength(1)));
-	TPtr name(aName->Des());
-	aMessage.ReadL(1, name);
-	aBuffer=HBufC8::NewLC(User::LeaveIfError(aMessage.GetDesLength(2)));
-	TPtr8 buffer(aBuffer->Des());
-	aMessage.ReadL(2, buffer);
+    ASSERT(aName==NULL);
+    
+    aName=HBufC::NewLC(User::LeaveIfError(aMessage.GetDesLength(1)));
+    TPtr name(aName->Des());
+    aMessage.ReadL(1, name);
+    
+    HBufC8* buffer=NULL;
+    TInt error=KErrNone;
+    TInt bufferSize= aMessage.GetDesLength(2);
+    User::LeaveIfError(bufferSize);
+    //Allocate memory in apparc's process heap.
+    TRAP(error, buffer=HBufC8::NewL(bufferSize));
+
+    if(error==KErrNone)
+        {
+        CleanupStack::PushL(buffer);
+        TPtr8 bufPtr(buffer->Des());
+        aMessage.ReadL(2, bufPtr);   
+        return bufPtr;
+        }
+    else if(error==KErrNoMemory)
+        {
+        //If memory is not available in apparc's process heap, then allocate in kernel heap
+        User::LeaveIfError(aLocalChunk.CreateLocal(bufferSize,bufferSize));
+        CleanupClosePushL(aLocalChunk);
+        TPtr8 bufPtr(aLocalChunk.Base(), bufferSize);
+        aMessage.ReadL(2, bufPtr); 
+        return bufPtr;        
+        }
+    else
+        {
+        User::Leave(error);
+        }
+    
+    TPtrC8 bufPtr(NULL,0); //Never executed. To make compiler happy
+    return bufPtr;
 	}
 
-void CApaAppListServSession::RecognizeDataL(const RMessage2& aMessage)
+void CApaAppArcServSession::RecognizeDataL(const RMessage2& aMessage)
 // Recognize the data type of an object
 	{
 	HBufC* name=NULL;
-	HBufC8* buffer=NULL;
-	DoRecognizeUnpackLC(name,buffer,aMessage);
+    RChunk localChunk;
+    
+	TPtrC8 bufPtr=DoRecognizeUnpackLC(name, localChunk, aMessage);
 
-	const TDataRecognitionResult result = iServ.RecognizeDataL(*name, *buffer);
+	const TDataRecognitionResult result = iServ.RecognizeDataL(*name, bufPtr);
 
-	CleanupStack::PopAndDestroy(2); // name & buffer
+	CleanupStack::PopAndDestroy(2); // name & buffer or localChunk
 	aMessage.WriteL(0,TPckgC<TDataRecognitionResult>(result));
 	}
 
 
-void CApaAppListServSession::RecognizeFilesL(const RMessage2& aMessage)
+void CApaAppArcServSession::RecognizeFilesL(const RMessage2& aMessage)
 	{
 	// if there is an outstanding async. request, we even don't allow 
 	// a synchronous request at the same time (due to the two required
 	// server messages)
 	if (iAsyncRecognitionActive)
-		{
 		User::Leave(KErrInUse);
-		}
 
 	_LIT8(KAllDataTypes,"*");
 
@@ -1351,7 +1301,7 @@ void CApaAppListServSession::RecognizeFilesL(const RMessage2& aMessage)
 	aMessage.WriteL(1,TPckgBuf<TUint>(iRecognitionResult->RequiredBufferSize()));
 	}
 
-void CApaAppListServSession::TransferRecognitionResultL(const RMessage2& aMessage)
+void CApaAppArcServSession::TransferRecognitionResultL(const RMessage2& aMessage)
 	{
 	if(iRecognitionResult == NULL)
 		User::Leave(KErrNotReady);
@@ -1379,23 +1329,20 @@ void CApaAppListServSession::TransferRecognitionResultL(const RMessage2& aMessag
 	CleanupStack::PopAndDestroy(buf);
 	}
 
-void CApaAppListServSession::RecognizeFilesAsyncL(const RMessage2& aMessage)
+void CApaAppArcServSession::RecognizeFilesAsyncL(const RMessage2& aMessage)
 	{
 	if (iAsyncRecognitionActive)
-		{
 		User::Leave(KErrInUse);
-		}
 	else
 		{
 		_LIT8(KAllDataTypes,"*");
 
-		HBufC* path=HBufC::NewLC(User::LeaveIfError(aMessage.GetDesLength(0)));
+		HBufC* path = HBufC::NewLC(User::LeaveIfError(aMessage.GetDesLength(0)));
 		TPtr pathPtr(path->Des());
 		aMessage.ReadL(0,pathPtr);
 
 		// retrieve data type filter
-		HBufC8* dataType = 0;
-		dataType=HBufC8::NewLC(User::LeaveIfError(aMessage.GetDesLength(2)));
+		HBufC8* dataType = HBufC8::NewLC(User::LeaveIfError(aMessage.GetDesLength(2)));
 		TPtr8 dataTypePtr(dataType->Des());
 		aMessage.ReadL(2,dataTypePtr);
 
@@ -1426,47 +1373,64 @@ CAppLaunchChecker::EAppLaunchIndifferent.
 The application will be launched if the return code is not equal to
 CAppLaunchChecker::EAppLaunchDecline 
 */
-void CApaAppListServSession::RuleBasedLaunchingL(const RMessage2& aMessage)
+void CApaAppArcServSession::AquirePermissionToLaunchAppL(const RMessage2& aMessage) const
 	{
-	CApaScanningRuleBasedPlugIns* theRuleBasedPlugIns = iServ.RuleBasedPlugIns();
-	if(!theRuleBasedPlugIns)
+	const CApaScanningRuleBasedPlugIns* theRuleBasedPlugIns = iServ.RuleBasedPlugIns();
+	const TInt theNumImp = (theRuleBasedPlugIns ? theRuleBasedPlugIns->ImplementationCount() : 0);
+	if(!theNumImp || !iServ.WsSession().Handle())
 		{
-		//we proceed with launching even if rule based plug-ins framework was not initialized
+		// Proceed with launch if rule based plug-in framework was not initialized
 		aMessage.Complete(ETrue);
 		return;
 		}
 
-	HBufC* theFullFileName=HBufC::NewLC(User::LeaveIfError(aMessage.GetDesLength(0)));
+	// Get the name of the app to start from the IPC message object
+	HBufC* theFullFileName = HBufC::NewLC(User::LeaveIfError(aMessage.GetDesLength(0)));
 	TPtr theFullFileNamePtr(theFullFileName->Des());
 	aMessage.ReadL(0, theFullFileNamePtr);
-	TUid theUid = AppUidFromFullFileNameL(theFullFileNamePtr);
+	
+	// Ge the application's UID from its name
+	const TUid theUid = iAppListSession->AppUidFromFullFileNameL(theFullFileNamePtr);
 	CleanupStack::PopAndDestroy(theFullFileName); 
 
+	// Iterate through all plug-ins and look for one that's not indifferent
 	CAppLaunchChecker::TAppLaunchCode theLaunchCode = CAppLaunchChecker::EAppLaunchIndifferent;	
-	TInt theNumImp = theRuleBasedPlugIns->ImplementationCount();
-
 	TApaTaskList theTaskList(iServ.WsSession());
 	for(TInt ii = 0; ii < theNumImp; ii++)
 		{
-		CAppLaunchChecker* theLauncherChecker = (*theRuleBasedPlugIns)[ii];
-		TRAP_IGNORE((theLaunchCode = theLauncherChecker->OkayToLaunchL(theUid, theTaskList)));
-		if(theLaunchCode > CAppLaunchChecker::EAppLaunchIndifferent)
+		CAppLaunchChecker* const theLauncherChecker = (*theRuleBasedPlugIns)[ii];
+		TRAP_IGNORE(theLaunchCode = theLauncherChecker->OkayToLaunchL(theUid, theTaskList));
+		if(theLaunchCode != CAppLaunchChecker::EAppLaunchIndifferent)
 			break;
 		}
-	//writing the result
-	TBool okayToLaunch = theLaunchCode != CAppLaunchChecker::EAppLaunchDecline;
+		
+	// Return the result
+	const TBool okayToLaunch = (theLaunchCode != CAppLaunchChecker::EAppLaunchDecline);
 	aMessage.Complete(okayToLaunch);
 	}
 
 /** 
 @param aFullFileName This filename is parsed and the path is replaced with "\\sys\\bin\\". 
-		And uses ".exe" if no other is provided in the filename passed.  If drive name is 
+		It uses ".exe" if no other is provided in the filename passed.  If drive name is 
 		present in the filename then it scans through the \\sys\\bin of that particular drive,
 		otherwise it scans through the \\sys\\bin folders in all the avaliable drives.
 @return Returns the Application Uid for the aFullFileName application.
 */
 TUid CApaAppListServSession::AppUidFromFullFileNameL(const TDesC& aFullFileName) const
 	{
+	
+	// If the appliation still wasn't found, use AppArc's appliation list
+	// Since we cannot get the Uid of NonNative apps by passing filename to RFs::Entry
+	CApaAppData* appData = iAppList.AppDataByFileName(aFullFileName);
+	if (appData)
+		{
+		TApaAppEntry appEntry = appData->AppEntry();
+		return appEntry.iUidType[2];
+		}
+	
+	
+//mm: Why does this code not use AppArc's application list only?	
+//mm: The order in which different methods to locate the app is used seems inefficient.
 	_LIT(KSysBin, "\\sys\\bin\\");
 	_LIT(KFileExtension, ".EXE");
 	
@@ -1474,10 +1438,12 @@ TUid CApaAppListServSession::AppUidFromFullFileNameL(const TDesC& aFullFileName)
 	User::LeaveIfError(loader.Connect());
 	CleanupClosePushL(loader);
 	TPckgBuf<RLibrary::TInfo> dllInfo;
-	TInt error = KErrNotFound;
 
 	TParse parse;
 	parse.Set(aFullFileName,NULL,NULL);
+
+	// If the drive letter has been specified, look on that drive only...
+	TInt error = KErrNotFound;
 	if (parse.DrivePresent())
 		{
 		const TPtrC appDrive = parse.Drive();
@@ -1486,9 +1452,8 @@ TUid CApaAppListServSession::AppUidFromFullFileNameL(const TDesC& aFullFileName)
 		User::LeaveIfError(parse.SetNoWild(fileName, &aFullFileName, &KFileExtension));
 		error = loader.GetInfo(parse.FullName(), dllInfo);
 		}
-	else
+	else	// ...otherwise scan all drives.
 		{
-		// scan all drives
 		User::LeaveIfError(parse.SetNoWild(KSysBin, &aFullFileName, &KFileExtension)); 
 		TFileName tempFileName(parse.FullName());
 		TDriveList driveList;
@@ -1500,65 +1465,52 @@ TUid CApaAppListServSession::AppUidFromFullFileNameL(const TDesC& aFullFileName)
 				User::LeaveIfError(parse.SetNoWild(TDriveUnit(driveNumber).Name(), &tempFileName, NULL));
 				error = loader.GetInfo(parse.FullName(), dllInfo);
 				if (error == KErrNone)
-					{
 					break;
-					}
 				}
 			}
 		}
-	CleanupStack::PopAndDestroy(&loader);
-	if (error == KErrNone)
-		{
-		return dllInfo().iUids[2];
-		}
 
-	//we can't use RFs::Entry if path refers to a system directory i.e. \\sys\\bin
+	CleanupStack::PopAndDestroy(&loader);
+	// Return the UID if found and no errors occured
+	if(!error)
+		return dllInfo().iUids[2];
+	
+	// If the application wasn't found
+	// Try looking for the application using normal F32. This won't work in protected directories
+
+	// Since we can't use RFs::Entry if the path refers the protected system directory (i.e. \sys\bin)...
 	User::LeaveIfError(parse.SetNoWild(aFullFileName, NULL, NULL));
 	if(parse.Path().FindF(KSysBin) == 0)
-		{
-		User::Leave(KErrNotFound);
-		}
-	
-	//the following valid for non-native applications
+		User::Leave(KErrNotFound);	// ... then return not-found.
+
+//mm: Surely we should still be allowed to use AppArc below?
+
+	// The following is valid for non-native applications only
 	TEntry entry;
 	error = iFs.Entry(aFullFileName, entry);
-	if (error != KErrNone)
-		{
-		// Since we cannot get the Uid of NonNative apps by passing filename to RFs::Entry
-		CApaAppData* appData = AppList().AppDataByFileName(aFullFileName);
-		if (appData)
-			{
-			TApaAppEntry appEntry = appData->AppEntry();
-			return appEntry.iUidType[2];
-			}
-		User::Leave(KErrNotFound);
-		}
-			
-	return entry.iType[2];
+	if(!error)
+		return entry.iType[2];
+
+	User::Leave(KErrNotFound);
+	return TUid::Null();	// Won't be called
 	}
 
+/**
+Applies the scanning order Y: through A: then Z: last.
+*/
 TInt CApaAppListServSession::NextDriveToScan(TInt aCurrentDrive)
-// applies the scanning order y:->a: then z:
 	{
 	if (aCurrentDrive == EDriveZ)
-		{
 		return KFinishedScanning;
-		}
 	else if (aCurrentDrive == 0)
-		{
-		return EDriveZ; // finally scan the last one
-		}
+		return EDriveZ; 	// finally scan the last one
 	else if (aCurrentDrive > 0 && aCurrentDrive < KMaxDrives)
-		{
 		return aCurrentDrive - 1;
-		}
 	else
-		{
 		return KErrGeneral; // never gets here, but it wont compile otherwise
-		}
 	}
 
-void CApaAppListServSession::CancelRecognizeFiles()
+void CApaAppArcServSession::CancelRecognizeFiles()
 	{
 	if (iAsyncRecognitionActive)
 		{
@@ -1568,7 +1520,7 @@ void CApaAppListServSession::CancelRecognizeFiles()
 		}
 	}
 
-void CApaAppListServSession::RecognizeDataPassedByFileHandleL(const RMessage2& aMessage)
+void CApaAppArcServSession::RecognizeDataPassedByFileHandleL(const RMessage2& aMessage)
 // Recognize the data type of an object
 	{
 	RFile file;
@@ -1579,20 +1531,21 @@ void CApaAppListServSession::RecognizeDataPassedByFileHandleL(const RMessage2& a
 	aMessage.WriteL(0, TPckgC<TDataRecognitionResult>(result));
 	}
 	
-void CApaAppListServSession::RecognizeSpecificDataL(const RMessage2& aMessage)
+void CApaAppArcServSession::RecognizeSpecificDataL(const RMessage2& aMessage)
 // Determine whether an object is of a specific data type
 	{
 	HBufC* name=NULL;
-	HBufC8* buffer=NULL;
-	DoRecognizeUnpackLC(name,buffer,aMessage);
+	RChunk localChunk;
+	
+	TPtrC8 bufPtr=DoRecognizeUnpackLC(name, localChunk, aMessage);
 	TDataType dataType;
 	{TPckg<TDataType> dataType_asDescriptor(dataType);
 	aMessage.ReadL(0, dataType_asDescriptor);}
-	aMessage.Complete(iServ.RecognizeDataL(*name,*buffer,dataType));
-	CleanupStack::PopAndDestroy(2); // name & buffer
+	aMessage.Complete(iServ.RecognizeDataL(*name,bufPtr,dataType));
+	CleanupStack::PopAndDestroy(2); // name & buffer or localChunk
 	}
 
-void CApaAppListServSession::RecognizeSpecificDataPassedByFileHandleL(const RMessage2& aMessage)
+void CApaAppArcServSession::RecognizeSpecificDataPassedByFileHandleL(const RMessage2& aMessage)
 	{
 	RFile file;
 	CleanupClosePushL(file);
@@ -1616,15 +1569,16 @@ void CApaAppListServSession::InitListL(const RMessage2& aMessage, TAppListType a
 		aMessage.ReadL(1,filter_asDescriptor);}
 		iEmbeddabilityFilter = filter;
 		}
+
 	if (aType == EListCapabilityAttrFilteredApps)
 		{
 		iCapabilityAttrFilterMask = aMessage.Int1();
 		iCapabilityAttrFilterValue = aMessage.Int2();
 		}
+
 	if (aType == EListServerApps)
-		{
 		iServiceUid = TUid::Uid(aMessage.Int1());
-		}
+
 	iApaAppInfoArray.ResetAndDestroy();
 	iFlags|=EAppListPopulationPending;
 	}
@@ -1633,7 +1587,7 @@ void CApaAppListServSession::EmbedCount(const RMessage2& aMessage) const
 // writes back the number of embedded apps in the list
 	{
 	TInt count=0;
-	const CApaAppList& list=AppList();
+	const CApaAppList& list = iAppList;
 	CApaAppData* app = list.FirstApp();
 	TApaEmbeddabilityFilter filter;
 	filter.AddEmbeddability(TApaAppCapability::EEmbeddable);
@@ -1641,28 +1595,28 @@ void CApaAppListServSession::EmbedCount(const RMessage2& aMessage) const
 	while (app)
 		{
 		if (!AppIsControlPanelItem(*app) && AppMatchesEmbeddabilityFilter(*app, filter))
-			{
 			count++;
-			}
+
 		app = list.NextApp(app);
 		}
+
 	aMessage.Complete(count);
 	}
 
 void CApaAppListServSession::AppCount(const RMessage2& aMessage) const
 // writes back the number of apps in the list
 	{
-	TInt count=0;
-	const CApaAppList& list=AppList();
+	TInt count = 0;
+	const CApaAppList& list = iAppList;
 	CApaAppData* app = list.FirstApp();
 	while (app)
 		{
 		if (!AppIsControlPanelItem(*app))
-			{
 			count++;
-			}
+
 		app = list.NextApp(app);
 		}
+
 	aMessage.Complete(count);
 	}
 
@@ -1670,27 +1624,22 @@ void CApaAppListServSession::GetNextAppL(const RMessage2& aMessage)
 	{
 	if (iFlags&EAppListPopulationPending)
 		{
-		const CApaAppList& list=AppList();
+		const CApaAppList& list=iAppList;
 		if (!(list.IsFirstScanComplete()))
-			{
 			User::Leave(KErrCorrupt);
-			}
-
+		
 		iApaAppInfoArray.ResetAndDestroy();
 		for (CApaAppData* appData = list.FirstApp(iAppListScreenMode); appData != NULL; appData = list.NextApp(appData, iAppListScreenMode))
 			{
 			if (iAppListType==EListFilteredEmbeddedApps && (AppIsControlPanelItem(*appData) || !AppMatchesEmbeddabilityFilter(*appData, iEmbeddabilityFilter)))
-				{
 				continue;
-				}
+
 			if (iAppListType==EListCapabilityAttrFilteredApps && !AppMatchesCapabilityAttrFilter(*appData))
-				{
 				continue;
-				}
+
 			if (iAppListType==EListServerApps && !appData->ImplementsService(iServiceUid))
-				{
 				continue;
-				}
+
 			CApaAppInfo* apaAppInfo= new (ELeave)CApaAppInfo();
 			CleanupStack::PushL(apaAppInfo);
 			apaAppInfo->SetCaptionL(appData->Caption());
@@ -1700,13 +1649,13 @@ void CApaAppListServSession::GetNextAppL(const RMessage2& aMessage)
 			User::LeaveIfError(iApaAppInfoArray.Append(apaAppInfo));
 			CleanupStack::Pop(apaAppInfo);
 			}
-		iFlags&=~EAppListPopulationPending;
+		
+		iFlags &= ~EAppListPopulationPending;
 		}
 
-	if (iApaAppInfoArray.Count()==0)
-		{
+	if (!iApaAppInfoArray.Count())
 		User::Leave(KErrNotFound);
-		}
+
 	TApaAppInfo* info=new(ELeave)TApaAppInfo; 
 	CleanupStack::PushL(info);
 	CApaAppInfo* apaAppInfo = iApaAppInfoArray[0];
@@ -1716,17 +1665,14 @@ void CApaAppListServSession::GetNextAppL(const RMessage2& aMessage)
 	// Get the length of the target descriptor
 	TInt targetLen=aMessage.GetDesMaxLength(1);
 	if (targetLen==KApaAppInfoDesMaxLength)
-		{
 		info->iShortCaption = apaAppInfo->ShortCaption();
-		}
-	//
+
 	iApaAppInfoArray.Remove(0);
 	delete apaAppInfo;
 	TPckgC<TApaAppInfo> infoPk(*info);
 	if (targetLen<KApaAppInfoDesMaxLength)
-		{
 		infoPk.Set(infoPk.Left(_FOFF(TApaAppInfo,iShortCaption))); // reduce the length of infoPk to the 7.0 size of TApaAppInfo
-		}
+
 	aMessage.WriteL(1,infoPk);
 	CleanupStack::PopAndDestroy(info);
 	}
@@ -1736,11 +1682,8 @@ TBool CApaAppListServSession::AppMatchesEmbeddabilityFilter(const CApaAppData& a
 	{
 	TApaAppCapabilityBuf capabilityBuf;
 	aAppData.Capability(capabilityBuf);
-	if (aEmbeddabilityFilter.MatchesEmbeddability(capabilityBuf().iEmbeddability))
-		{
-		return ETrue;
-		}
-	return EFalse;
+
+	return (aEmbeddabilityFilter.MatchesEmbeddability(capabilityBuf().iEmbeddability));
 	}
 
 TBool CApaAppListServSession::AppMatchesCapabilityAttrFilter(const CApaAppData& aAppData) const
@@ -1748,11 +1691,7 @@ TBool CApaAppListServSession::AppMatchesCapabilityAttrFilter(const CApaAppData& 
 	{
 	TApaAppCapabilityBuf capabilityBuf;
 	aAppData.Capability(capabilityBuf);
-	if ((capabilityBuf().iAttributes & iCapabilityAttrFilterMask) == (iCapabilityAttrFilterValue & iCapabilityAttrFilterMask))
-		{
-		return ETrue;
-		}
-	return EFalse;
+	return ((capabilityBuf().iAttributes & iCapabilityAttrFilterMask) == (iCapabilityAttrFilterValue & iCapabilityAttrFilterMask));
 	}
 
 TBool CApaAppListServSession::AppIsControlPanelItem(const CApaAppData& aAppData)
@@ -1760,56 +1699,52 @@ TBool CApaAppListServSession::AppIsControlPanelItem(const CApaAppData& aAppData)
 	{
 	TApaAppCapabilityBuf capabilityBuf;
 	aAppData.Capability(capabilityBuf);
-	if (capabilityBuf().iAttributes & TApaAppCapability::EControlPanelItem)
-		{
-		return ETrue;
-		}
-	return EFalse;
+	return (capabilityBuf().iAttributes & TApaAppCapability::EControlPanelItem);
 	}
 
-TBool CApaAppListServSession::FindAppInList(CApaAppData*& aApp,TApaAppEntry& aEntry,TUid aAppUid)
-// locate app in list, return EFalse if it isn't present
-// search is regardless of screen mode.
+/**
+locate app in list, return EFalse if it isn't present
+search is regardless of screen mode.
+@internalComponent
+*/
+TBool CApaAppListServSession::FindAppInList(CApaAppData*& aApp, TApaAppEntry& aEntry, TUid aAppUid)
 	{
-	const CApaAppList& list=AppList();
+	// Look for the app with aAppUid in the app list we keep
+	const CApaAppList& list = iAppList;
 	aApp = list.AppDataByUid(aAppUid);
-	TBool found=EFalse;
 	if (aApp)
-		{
-		found = ETrue;
 		aEntry = aApp->AppEntry();
-		}
 	
-	TBool appPendingOnLangChange = found && list.IsLanguageChangePending() && aApp->IsPending();	
-		
-	if ((!found || appPendingOnLangChange) && !list.IsIdleUpdateComplete())
+	// If the app list is currently in flux, try to nail down the app by looking for it specifically
+	const TBool appPendingOnLangChange = (aApp && list.IsLanguageChangePending() && aApp->IsPending());	
+	if ((!aApp || appPendingOnLangChange) && !list.IsIdleUpdateComplete())
 		{
-		// 1. app wasn't found, but an app scan is currently in progress,
+		// 1. App wasn't found, but an app scan is currently in progress,
 		// so try to find and add the specific app we're looking for to the list
 		
 		// 2. On language change event, current app scan could not yet update the found app, 
 		// so try to update the specific app we're looking for, in the list.
-		CApaAppData* app = NULL;
-		if(aAppUid!=KNullUid)
+		if(aAppUid != KNullUid)
 			{
-			TRAPD(ret, app = FindSpecificAppL(aAppUid));
-			if (ret == KErrNone && app)
+			CApaAppData* app = NULL;
+			TRAPD(err, app = FindSpecificAppL(aAppUid));
+			if (!err && app)
 				{
 				// app has been found and added to the app list
 				aApp = app;
 				aEntry = aApp->AppEntry();
-				found = ETrue;
 				}
  			}
  		}
-	return found;
+
+	return (aApp != NULL);
 	}
 
 CApaAppData* CApaAppListServSession::FindSpecificAppL(TUid aAppUid)
 	{
 	//Scans the drives and folder lists for the specific app
 	CApaAppRegFinder* regFinder = CApaAppRegFinder::NewLC(iFs);
-	CApaAppData* app = iServ.AppList().FindAndAddSpecificAppL(regFinder, aAppUid);
+	CApaAppData* app = iAppList.FindAndAddSpecificAppL(regFinder, aAppUid);
 	CleanupStack::PopAndDestroy(regFinder);
 	return app;
 	}
@@ -1817,90 +1752,57 @@ CApaAppData* CApaAppListServSession::FindSpecificAppL(TUid aAppUid)
 void CApaAppListServSession::GetAppInfoL(const RMessage2& aMessage)
 	{
 	// get UID of required app
-	const TUid uid=TUid::Uid(aMessage.Int0());
-	TApaAppInfo* info=new(ELeave) TApaAppInfo; // on heap to avoid running out of stack
+	const TUid uid = TUid::Uid(aMessage.Int0());
+	TApaAppInfo* info = new(ELeave) TApaAppInfo; // on heap to avoid running out of stack
 	CleanupStack::PushL(info);
 	GetAppInfoL(uid, *info);
 	TPckgC<TApaAppInfo> infoPk(*info);	
-	aMessage.WriteL(1,infoPk);
+	aMessage.WriteL(1, infoPk);
 	CleanupStack::PopAndDestroy(info);
 	}
 
 void CApaAppListServSession::GetAppCapabilityL(const RMessage2& aMessage)
 	{	  								  
-	const TUid uid=TUid::Uid(aMessage.Int1());
-	CApaAppData* app=NULL;
-	TApaAppEntry entry;
-	if (!FindAppInList(app,entry,uid))
-		{
-		User::Leave(KErrNotFound);
-		}
-	TInt targetLen=aMessage.GetDesMaxLength(0);
-	HBufC8* buf=HBufC8::NewLC(User::LeaveIfError(targetLen));
-	TPtr8 ptr=buf->Des();
-	app->Capability(ptr);
+	const TUid uid = TUid::Uid(aMessage.Int1());
+	const CApaAppData& app = FindAppInListL(uid);
+
+	TInt targetLen = aMessage.GetDesMaxLength(0);
+	HBufC8* buf = HBufC8::NewLC(User::LeaveIfError(targetLen));
+	TPtr8 ptr = buf->Des();
+	app.Capability(ptr);
 	ptr.SetLength(targetLen);
-	aMessage.WriteL(0,*buf);
+	aMessage.WriteL(0, *buf);
 	CleanupStack::PopAndDestroy(buf); 
 	}
 
 void CApaAppListServSession::GetDefaultScreenNumberL(const RMessage2& aMessage)
 	{
 	const TUid uid=TUid::Uid(aMessage.Int0());
-	CApaAppData* app=NULL;
-	TApaAppEntry entry;
-	if (!FindAppInList(app,entry,uid))
-		{
-		User::Leave(KErrNotFound);
-		}
-	aMessage.Complete(app->DefaultScreenNumber());
+	const CApaAppData& app = FindAppInListL(uid);
+
+	aMessage.Complete(app.DefaultScreenNumber());
 	}
 
-void CApaAppListServSession::StartAppL(const RMessage2& aMessage, TBool aReturnThreadId)
-	{
-	CApaCommandLine* commandLine=CApaCommandLine::NewLC();
-	commandLine->ConstructCmdLineFromMessageL(aMessage);
-
-	CApaFileRecognizerType* type=NULL;
-	TRAP_IGNORE(type=FileRecognizer()->RecognizeFileL(commandLine->ExecutableName()));
-	if (type==NULL)
-		{
-		User::Leave(KErrNotFound);
-		}
-	CleanupStack::PushL(TCleanupItem(&NullifyAppCommandLinePointer,&iServ));
-	iServ.SetAppCmdLine(commandLine);
-	TPtrC fileName=commandLine->DocumentName();
-	TPtrC8 tailEnd=commandLine->TailEnd();
-	const TThreadId threadId(type->RunL(commandLine->Command(),(fileName.Length()?&fileName:NULL),(tailEnd.Length()?&tailEnd:NULL))); // pass in NULL for components that are not present
-	CleanupStack::PopAndDestroy(&iServ); // calls iServ.SetAppCmdLine(NULL);
-	CleanupStack::PopAndDestroy(commandLine);
-
-	if (aReturnThreadId)
-		{
-		aMessage.WriteL(CApaCommandLine::EIpcFirstFreeSlot,TPckgC<TThreadId>(threadId));
-		}
-	}
 
 void CApaAppListServSession::SetNotify(const RMessage2& aMessage)
 	{
 	if (!iNotifyMessage.IsNull())
-		{
 		aMessage.Panic(KApaPanicCli,ENotifierAlreadyPresent);
-		}
 	else
 		{
 		const TBool completeImmediatelyIfNoScanImpendingOrInProgress=aMessage.Int0();
 		if ((!completeImmediatelyIfNoScanImpendingOrInProgress) ||
-			iServ.AppFsMonitor().AnyNotificationImpending() ||
-			AppList().AppScanInProgress())
-			{
+			iAppArcSrv.AppFsMonitor().AnyNotificationImpending() ||
+			iAppList.AppScanInProgress())
 			iNotifyMessage=aMessage;
-			}
 		else
-			{
 			aMessage.Complete(KErrNone);
-			}
 		}
+	}
+
+void CApaAppArcServSession::NotifyClients(TInt aReason)
+	{
+	iAppListSession->NotifyClients(aReason);
 	}
 
 void CApaAppListServSession::CancelNotify()
@@ -1911,9 +1813,8 @@ void CApaAppListServSession::CancelNotify()
 void CApaAppListServSession::NotifyClients(TInt aReason)
 	{
 	if (!iNotifyMessage.IsNull())
-		{
 		iNotifyMessage.Complete(aReason);
-		}
+	
 	//Notify client for scan complete.
 	NotifyScanComplete();
 	}
@@ -1921,17 +1822,12 @@ void CApaAppListServSession::NotifyClients(TInt aReason)
 void CApaAppListServSession::AppInfoProvidedByRegistrationFileL(const RMessage2& aMessage)
 	{
 	// get UID of required app
-	const TUid uid=TUid::Uid(aMessage.Int0());
+	const TUid uid = TUid::Uid(aMessage.Int0());
 
 	// locate app in list
-	CApaAppData* app=NULL;
-	TApaAppEntry entry;
-	if (!FindAppInList(app,entry,uid))
-		{
-		User::Leave(KErrNotFound);
-		}
-
-	const TBool registrationFileUsed = app->RegistrationFileUsed();
+	const CApaAppData& app = FindAppInListL(uid);
+	
+	const TBool registrationFileUsed = app.RegistrationFileUsed();
 	TPckgC<TBool> pckg(registrationFileUsed);
 	aMessage.WriteL(1, pckg);
 	}
@@ -1942,24 +1838,15 @@ void CApaAppListServSession::IconFileNameL(const RMessage2& aMessage)
 	const TUid uid=TUid::Uid(aMessage.Int0());
 
 	// locate app in list
-	CApaAppData* app=NULL;
-	TApaAppEntry entry;
-	if (!FindAppInList(app,entry,uid))
-		{
-		User::Leave(KErrNotFound);
-		}
+	const CApaAppData& app = FindAppInListL(uid);
 
-	if (!app->RegistrationFileUsed())
-		{
+	if (!app.RegistrationFileUsed())
 		User::Leave(KErrNotSupported);
-		}
 	else
 		{
-		TPtrC iconFileName(app->IconFileName());
+		TPtrC iconFileName(app.IconFileName());
 		if (iconFileName.Length() == 0)
-			{
 			User::Leave(KErrNotFound);
-			}
 		else
 			{
 			TFileName fileName = iconFileName;
@@ -1979,34 +1866,26 @@ void CApaAppListServSession::ViewIconFileNameL(const RMessage2& aMessage)
 	TPtrC viewIconFileName;
 
 	// locate app in list
-	CApaAppData* app=NULL;
-	TApaAppEntry entry;
-	if (!FindAppInList(app,entry,uid))
-		{
-		User::Leave(KErrNotFound);
-		}
+	const CApaAppData& app = FindAppInListL(uid);
 
-	if (!app->RegistrationFileUsed())
-		{
+	if (!app.RegistrationFileUsed())
 		User::Leave(KErrNotSupported);
-		}
 	else
 		{
-		const CArrayPtr<CApaAppViewData>& viewDataArray=*app->Views();
-		const TInt count=viewDataArray.Count();
+		const CArrayPtr<CApaAppViewData>& viewDataArray = *app.Views();
+		const TInt count = viewDataArray.Count();
 		for (TInt ii=0; ii<count; ii++)
 			{
-			const CApaAppViewData& appViewData=*viewDataArray[ii];
-			if (appViewData.Uid()==viewUid)
+			const CApaAppViewData& appViewData = *viewDataArray[ii];
+			if (appViewData.Uid() == viewUid)
 				{
 				viewIconFileName.Set(appViewData.IconFileName());
 				break;
 				}
 			}
+
 		if (viewIconFileName.Length() == 0)
-			{
 			User::Leave(KErrNotFound);
-			}
 		else
 			{
 			TFileName fileName = viewIconFileName;
@@ -2016,7 +1895,7 @@ void CApaAppListServSession::ViewIconFileNameL(const RMessage2& aMessage)
 		}
 	}
 
-void CApaAppListServSession::GetAppServicesL(const RMessage2& aMessage)
+void CApaAppArcServSession::GetAppServicesL(const RMessage2& aMessage)
 	{
 	const TInt initialBufSize = aMessage.Int2();
 	if (initialBufSize)
@@ -2025,10 +1904,7 @@ void CApaAppListServSession::GetAppServicesL(const RMessage2& aMessage)
 		iBuffer = NULL;
 		iBuffer = GetServiceBufferL(aMessage);
 		if (iBuffer->Size() > initialBufSize)
-			{
-			// default buffer provided by client is too small, ask client to provide buffer of correct size
-			User::Leave(iBuffer->Ptr(0).Size());
-			}
+			User::Leave(iBuffer->Ptr(0).Size());	// default buffer provided by client is too small, ask client to provide buffer of correct size
 		}
 	__ASSERT_ALWAYS(iBuffer, aMessage.Panic(KApaPanicCli,EClientBadRequest));
 	aMessage.WriteL(3, iBuffer->Ptr(0));
@@ -2036,43 +1912,39 @@ void CApaAppListServSession::GetAppServicesL(const RMessage2& aMessage)
 	iBuffer = NULL;
 	}
 
-CBufBase* CApaAppListServSession::GetServiceBufferL(const RMessage2& aMessage) const
+CBufBase* CApaAppArcServSession::GetServiceBufferL(const RMessage2& aMessage) const
 	{
 	CBufBase* buffer = NULL;
 	const TUid uid = TUid::Uid(aMessage.Int0());
 	switch (aMessage.Function())
 		{
 	case EAppListServGetAppServices:
-		buffer = AppList().ServiceArrayBufferL(uid);
+		buffer = iAppListSession->AppList().ServiceArrayBufferL(uid);
 		break;
 	case EAppListServGetServiceImplementations:
-		buffer = AppList().ServiceImplArrayBufferL(uid);
+		buffer = iAppListSession->AppList().ServiceImplArrayBufferL(uid);
 		break;
 	case EAppListServGetServiceImplementationsDataType:
 		{
 		TDataType dataType;
 		TPckg<TDataType> dataType_asDescriptor(dataType);
 		aMessage.ReadL(1,dataType_asDescriptor);
-		buffer = AppList().ServiceImplArrayBufferL(uid, dataType);
+		buffer = iAppListSession->AppList().ServiceImplArrayBufferL(uid, dataType);
 		}
 		break;
 	case EAppListServGetAppServiceUids:
-		buffer = AppList().ServiceUidBufferL(uid);
+		buffer = iAppListSession->AppList().ServiceUidBufferL(uid);
 		break;
 	case EAppListServGetAppServiceOpaqueData:
-		buffer = AppList().ServiceOpaqueDataBufferL(uid, TUid::Uid(aMessage.Int1()));
+		buffer = iAppListSession->AppList().ServiceOpaqueDataBufferL(uid, TUid::Uid(aMessage.Int1()));
 		break;
 	default:
 		aMessage.Panic(KApaPanicCli,EClientBadRequest);
 		User::Leave(KErrNotSupported);
 		break;
 		}
-	return buffer;
-	}
 
-void CApaAppListServSession::NullifyAppCommandLinePointer(TAny* aServer)
-	{
-	static_cast<CApaAppListServer*>(aServer)->SetAppCmdLine(NULL);
+	return buffer;
 	}
 
 CApaAppListServSession::CApaAppInfo::CApaAppInfo()
@@ -2116,45 +1988,38 @@ void CApaAppListServSession::CApaAppInfo::SetFullNameL(const TDesC& aFullName)
 void CApaAppListServSession::RegisterListPopulationCompleteObserver(const RMessage2& aMessage)
 	{
 	if (!iCompletionOfListPopulationObserverMsg.IsNull())
-		{
 		aMessage.Panic(KApaPanicCli,EObserverAlreadyPresent);
-		}
 	else
 		{
-		if(AppList().IsFirstScanComplete())
-			{
+		if(iAppList.IsFirstScanComplete())
 			aMessage.Complete(KErrNone);
-			}
 		else
-			{
 			iCompletionOfListPopulationObserverMsg=aMessage;
-			}
 		}
+	}
+
+void CApaAppArcServSession::NotifyClientForCompletionOfListPopulation()
+	{
+	iAppListSession->NotifyClientForCompletionOfListPopulation();
 	}
 
 void CApaAppListServSession::NotifyClientForCompletionOfListPopulation()
 	{
 	if (!iCompletionOfListPopulationObserverMsg.IsNull())
-		{
 		iCompletionOfListPopulationObserverMsg.Complete(KErrNone);
-		}
 	} //lint !e1762 Suppress member function could be made const
 
 
 void CApaAppListServSession::CancelListPopulationCompleteObserver()
 	{
 	if (!iCompletionOfListPopulationObserverMsg.IsNull())
-		{
 		iCompletionOfListPopulationObserverMsg.Complete(KErrCancel);
-		}
 	} //lint !e1762 Suppress member function could be made const
 	
-void CApaAppListServSession::NotifyClientOfDataMappingChange()
+void CApaAppArcServSession::NotifyClientOfDataMappingChange()
 	{
 	if (!iMessage_NotifyOnDataMappingChange.IsNull())
-		{
 		iMessage_NotifyOnDataMappingChange.Complete(KErrNone);
-		}
 	} //lint !e1762 Suppress member function could be made const
 
 void CApaAppListServSession::MatchesSecurityPolicyL(const RMessage2& aMessage)
@@ -2179,14 +2044,11 @@ void CApaAppListServSession::MatchesSecurityPolicyL(const RMessage2& aMessage)
 			process.Close();
 			}
 		else
-			{
 			aMessage.Complete(result);
-			}
 		}
 	else
-		{
 		aMessage.Complete(KErrNotFound);
-		}
+
 	CleanupStack::PopAndDestroy(appInfo);
 	}
 	
@@ -2196,34 +2058,30 @@ void CApaAppListServSession::SetAppShortCaptionL(const RMessage2& aMessage)
 	CApaAppData* app=NULL;
 	TApaAppEntry entry;
 	if (!FindAppInList(app,entry,uid))
-		{
 		User::Leave(KErrNotFound);
-		}
 
-	TInt length=aMessage.GetDesLength(1);
+	const TInt length = aMessage.GetDesLength(1);
 	if(length < 0)
-		{
 		User::Leave(length);
-		}
 
-	HBufC* const shortCaption=HBufC::NewLC(length);
+	HBufC* const shortCaption = HBufC::NewLC(length);
 	TPtr captionPtr(shortCaption->Des());
 	aMessage.ReadL(1, captionPtr);
 
-	TLanguage appLanguage=TLanguage(aMessage.Int2());
-	CCustomAppInfoData* customAppInfo=CCustomAppInfoData::NewL(uid, appLanguage, *shortCaption);
-	CleanupStack::PushL(customAppInfo);
-	iServ.AddCustomAppInfoInListL(customAppInfo);
-	CleanupStack::Pop(customAppInfo);
+	TLanguage appLanguage = TLanguage(aMessage.Int2());
+	iAppList.AddCustomAppInfoInListL(uid, appLanguage, *shortCaption);
 	if(app->ApplicationLanguage() == appLanguage)
-		{
 		app->SetShortCaptionL(*shortCaption);
-		}
 	else if(appLanguage==ELangNone)
-		{
-		iServ.UpdateAppListByShortCaptionL(); 
-		}
+		iAppList.UpdateAppListByShortCaptionL(); 
+
 	CleanupStack::PopAndDestroy(shortCaption);
+	}
+
+
+void CApaAppArcServSession::NotifyScanComplete()
+	{
+	iAppListSession->NotifyScanComplete();
 	}
 
 void CApaAppListServSession::NotifyScanComplete()
@@ -2289,3 +2147,4 @@ void TDesCArrayItemWriter::WriteArrayItemL(RWriteStream& aWriteStream,TInt aInde
 	{
 	aWriteStream << iArray[aIndex];
 	}
+

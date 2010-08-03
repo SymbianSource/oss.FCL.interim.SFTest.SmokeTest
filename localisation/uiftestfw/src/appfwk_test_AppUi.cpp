@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @test
@@ -22,8 +20,8 @@
 */
 
 
-#include <eikmenub.h>
-#include <eikbtgpc.h>
+#include <mw/eikmenub.h>
+#include <mw/eikbtgpc.h>
 #include <eikenv.h>
 #include <hal.h>
 
@@ -140,7 +138,7 @@ EXPORT_C void CAutoTestManager::SetTestCaseNumber(TInt aNumber)
 	}
 
 
-EXPORT_C CTestCoeAppUi::CTestCoeAppUi(CTestStep* aStep) :
+EXPORT_C CTestCoeAppUi::CTestCoeAppUi(CTmsTestStep* aStep) :
 		iStep(aStep) 
 	{
 	}
@@ -168,7 +166,7 @@ EXPORT_C void CTestCoeAppUi::ConstructL()
 	}
 
 
-EXPORT_C CTestAppUi::CTestAppUi(CTestStep* aStep, const	TDesC& aRes, TInt aResourceHotKeysId,  TInt aResourceMenuBarId, TInt aResourceToolBarId) :
+EXPORT_C CTestAppUi::CTestAppUi(CTmsTestStep* aStep, const	TDesC& aRes, TInt aResourceHotKeysId,  TInt aResourceMenuBarId, TInt aResourceToolBarId) :
 		CEikAppUi(),
 		iResourceHotKeysId(aResourceHotKeysId), 
 		iResourceMenuBarId(aResourceMenuBarId),
@@ -286,3 +284,5 @@ TInt  E32Dll()
 	{
 	return 0;
 	}
+
+

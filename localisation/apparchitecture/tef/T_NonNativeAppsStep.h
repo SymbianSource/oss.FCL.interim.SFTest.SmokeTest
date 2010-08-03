@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @test
@@ -24,10 +22,10 @@
 #if (!defined __T_NONNATIVEAPPSTEP_H__)
 #define __T_NONNATIVEAPPSTEP_H__
 
-#include <APASERVERAPP.H>
-#include <EIKSERVERAPP.H>
+#include <apaserverapp.h>
+#include <eikserverapp.h>
 
-#include "ApparcTestServer.h"
+#include "apparctestserver.h"
 
 // RTstFileArray
 
@@ -79,6 +77,12 @@ public:
 	virtual TVerdict doTestStepPreambleL();
 	virtual TVerdict doTestStepPostambleL();
 	virtual TVerdict doTestStepL();
+	
+	enum TOption 
+	{
+	EAppA,
+	EAppB
+	};
 
 private:
 	HBufC8* OpenFileAndReadBufferLC(RApaLsSession& aApparcServer, RFs& aFileServer, const TDesC& aFullFileName);
@@ -86,8 +90,8 @@ private:
 	void TestFilePosition(RFile& aFile, TInt aFilePosition);
 	void TestResultsOfAppForDocumentAndServiceL(TUid aServiceUid, TInt aError, const TUid& aAppUid, const TDataType& aDataType, const TDesC8& aExpectedDataType);
 	void CheckPropertyUpdateAndResetL(const TDesC& aExpectedNewValue);
-	void CheckApplicationLaunchesOkayL(RApaLsSession& aApparcServer, const CApaCommandLine& aCommandLine, TAny* aOption);
-	void CheckApplicationFailsToLaunchL(RApaLsSession& aApparcServer, const CApaCommandLine& aCommandLine, TAny* aOption);	
+	void CheckApplicationLaunchesOkayL(RApaLsSession& aApparcServer, const CApaCommandLine& aCommandLine, TOption aOption);
+	void CheckApplicationFailsToLaunchL(RApaLsSession& aApparcServer, const CApaCommandLine& aCommandLine, TOption aOption);	
 	void WaitForApplistUpdate(RApaLsSession& aApparcServer);
 private:
 	void TestAppForDocumentL(RApaLsSession& aApparcServer, RFs& aFileServer, const RTstFileArray& aFileArray);
@@ -96,12 +100,12 @@ private:
 	void TestStartDocumentL(RApaLsSession& aApparcServer, RFs& aFileServer, const RTstFileArray& aFileArray);
 	void TestRegisterNonNativeApplicationL(RApaLsSession& aApparcServer, RFs& aFileServer);
 	void TestGetAppIconForNonNativeL(RApaLsSession& aApparcServer, RFs& aFileServer, CApaRegistrationResourceFileWriter* const aRegistrationResourceFileWriter, CApaLocalisableResourceFileWriter* const aLocalisableResourceFileWriter);	
-	void TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer);	
+	void TestCommitNNAppUpdatesL(RApaLsSession& aApparcServer);
 	void TestForceCommitNNAppUpdatesL(RApaLsSession& aApparcServer);
 	void TestForceCommitL(RApaLsSession& aApparcServer, CApaRegistrationResourceFileWriter& aRegistrationResourceFileWriter, CApaRegistrationResourceFileWriter& aRegistrationResourceFileWriterB, CApaCommandLine& aNextCommandLine);
 	void TestRollbackRegistrationL(RApaLsSession& aApparcServer, CApaRegistrationResourceFileWriter& aRegistrationResourceFileWriter, CApaRegistrationResourceFileWriter& aRegistrationResourceFileWriterB, CApaCommandLine& aNextCommandLine);
 	void TestRollbackDeregistrationL(RApaLsSession& aApparcServer, CApaRegistrationResourceFileWriter& aRegistrationResourceFileWriter, CApaRegistrationResourceFileWriter& aRegistrationResourceFileWriterB, CApaCommandLine& aNextCommandLine);	
-
+	
 private:
 
 	};
@@ -110,3 +114,4 @@ private:
 _LIT(KT_NonNativeAppsStep,"T_NonNativeApps");
 
 #endif
+

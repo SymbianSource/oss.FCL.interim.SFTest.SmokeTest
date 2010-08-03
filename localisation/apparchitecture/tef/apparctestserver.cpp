@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,12 +11,11 @@
 // Contributors:
 //
 // Description:
+// apparctestserver.cpp
 //
 
-
-
 /**
- @file
+ @file apparctestserver.cpp
  @test
  @internalComponent - Internal Symbian test code 
 */
@@ -24,22 +23,21 @@
 #include <basched.h>
 #include <eikenv.h>
 #include <eikappui.h>
-#include <eikon.hrh>
+#include <mw/eikon.hrh>
 #include <eikapp.h>
 #include <eikdoc.h>
-#include <eiklabel.h>
+#include <mw/eiklabel.h>
 #include <eikfctry.h>
 #include <coecntrl.h>
 #include <barsread.h>
-#include <eiktbar.h>
-#include <eikmenub.h>
+#include <mw/eiktbar.h>
+#include <mw/eikmenub.h>
 
-#include "appfwk_test_AppUi.h"
-#include "ApparcTestServer.h"
+#include "appfwk_test_appui.h"
+#include "apparctestserver.h"
 #include "t_foreground.h"
 #include "T_ProStep.h"
 #include "T_OOMStep.h"
-#include "T_File1Step.h"
 #include "T_File2Step.h"
 #include "T_File3Step.h"
 #include "T_BackupStep.h"
@@ -80,10 +78,8 @@
 #include "T_ApsScan.h"
 #include "T_EndTaskStep.h"
 #include "T_RecUpgrade.h"
-#ifdef SYMBIAN_APPARC_APPINFO_CACHE
 #include "T_AppListFileBootStep.h"
 #include "T_AppListFileUpdateStep.h"
-#endif //SYMBIAN_APPARC_APPINFO_CACHE
 #include "t_largestackstep.h"
 #include "t_drivenotification.h"
 #include "t_mimecontentpolicystep.h"
@@ -134,10 +130,6 @@ CTestStep* CApparctestServer::CreateTestStep(const TDesC& aStepName)
 	else if(aStepName == KT_OOMStep)
 		{
 		testStep = new CT_OOMStep();
-		}	
-	else if(aStepName == KT_File1Step)
-		{
-		testStep = new CT_File1Step();
 		}
 	else if(aStepName == KT_File2Step)
 		{
@@ -310,7 +302,6 @@ CTestStep* CApparctestServer::CreateTestStep(const TDesC& aStepName)
 		{
 		testStep = new CTEndTaskStep();
 		}	
-	#ifdef SYMBIAN_APPARC_APPINFO_CACHE
 	else if (aStepName == KT_AppListFileUpdate)
 		{
 		testStep = new CT_AppListFileUpdateStep();
@@ -327,7 +318,6 @@ CTestStep* CApparctestServer::CreateTestStep(const TDesC& aStepName)
 		{
 		testStep = new CT_AppListFileBootStep(3);
 		}
-	#endif //SYMBIAN_APPARC_APPINFO_CACHE
 	else if (aStepName == KT_LargeStackStep)
 		{
 		testStep = new CT_LargeStackStep();
@@ -348,7 +338,7 @@ CTestStep* CApparctestServer::CreateTestStep(const TDesC& aStepName)
 		{
 		testStep = new CT_RecUpgradeStep();
 		}
-	
+
 	return testStep;
 	}
 

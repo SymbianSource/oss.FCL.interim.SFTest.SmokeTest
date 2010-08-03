@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -24,8 +24,6 @@
 // 
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code 
@@ -40,21 +38,21 @@
 #include <eikappui.h>
 #include <eikapp.h>
 #include <eikdoc.h>
-#include <eikmenup.h>
-#include <eikstart.h> ////TKAS added for exe-app
+#include <mw/eikmenup.h>
+#include <eikstart.h> //TKAS added for exe-app
 
 #include <eikserverapp.h> // REikAppServiceBase
-#include <eikon.hrh>
+#include <mw/eikon.hrh>
 
 //  Test stuff
-#include "twindowchaining.h"
+#include "TWindowChaining.h"
 
 class CPackagerAppUi;
 
 
-////////////////////////////////////////////////////////////////////////
+//
 // CMyAppService
-////////////////////////////////////////////////////////////////////////
+//
 class CMyAppService : public CApaAppServiceBase
 	{
 private:
@@ -63,9 +61,9 @@ private:
 	};
 	
 
-////////////////////////////////////////////////////////////////////////
+//
 // CMyEikAppServer
-////////////////////////////////////////////////////////////////////////	
+//	
 class CMyEikAppServer : public CEikAppServer
 	{
 private:
@@ -73,11 +71,11 @@ private:
 	};
 
 	
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CChainChildApplication
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CChainChildApplication : public CEikApplication
 	{
 public:
@@ -95,11 +93,11 @@ private:
 	TUid AppDllUid() const;
 	};
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CChainChildAppUi
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CChainChildAppUi : public CEikAppUi
     {
 public:
@@ -123,11 +121,11 @@ private:
 	};
 
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CChainChildDocument
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CChainChildDocument : public CEikDocument
 	{
 public:
@@ -141,3 +139,4 @@ private:
 
 
 #endif // T_WINCHAINCHILD
+

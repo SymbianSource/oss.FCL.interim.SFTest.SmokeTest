@@ -2,7 +2,7 @@
 @rem Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 @rem All rights reserved.
 @rem This component and the accompanying materials are made available
-@rem under the terms of the License "Eclipse Public License v1.0"
+@rem under the terms of "Eclipse Public License v1.0"
 @rem which accompanies this distribution, and is available
 @rem at the URL "http://www.eclipse.org/legal/epl-v10.html".
 @rem
@@ -18,27 +18,41 @@ setlocal
 
 :: Initialise local variables
 set COMMAND_CHOICE=%1
-set RSC_LOCATION=Z\private\10205C44
 set TEST_CASE=%2
-set TESTCASE_NUMBER=%3
-set TEST_RSC=%RSC_LOCATION%\tssaac_emulator.RSC
-set TEST_EXE_RSC=%RSC_LOCATION%\tssaac_tapp_emulator.RSC
-set SM0_RSC=%RSC_LOCATION%\SSCForStartupMode0.RSC
+set TEST_BOOTMODE=%3
+set TESTCASE_NUMBER=%4
+
+set FALLBACK_RSC_LOCATION=Z\private\10205C44
+set FALLBACK_TEST_RSC=%FALLBACK_RSC_LOCATION%\tssaac_emulator.RSC
+set FALLBACK_TEST_EXE_RSC=%FALLBACK_RSC_LOCATION%\tssaac_tapp_emulator.RSC
+set FALLBACK_SM0_RSC=%FALLBACK_RSC_LOCATION%\SSCForStartupMode0.RSC
+
+set SSMA_RSC_LOCATION=Z\private\2000d75b\startup\0
+set SSMA_RSC_NAME=0
+set SSMA_RSC_LOCATION_ORIGINAL=Z\private\2000d75b\startup\0.original
+set SSMA_RSC_NAME_ORIGINAL=0.original
+set SSMA_SM0_RSC=%SSMA_RSC_LOCATION%\gsastartupcmdlist0.rsc
+set SSMA_RSC_TEST_LOCATION=Z\private\2000d75b\startup\test\tssaac_emulator_ssma.RSC
+set SSMA_RSC_TEST_EXE_LOCATION=Z\private\2000d75b\startup\test\tssaac_tapp_emulator_ssma.RSC
+set SSMA_SM0_RSC_LOCATION=Z\private\2000d75b\startup\test\gsastartupcmdlist0.rsc
+
 
 set TESTCASE_CONFIG=z\apparctest\TestCaseConfig.txt
 set EPOCWIND=%TEMP%\epocwind.out
 set TESTNONPANIC_RESULT_FILE=\epoc32\winscw\c\SysStartApparc_TestNonPanic.txt
 
-goto :%COMMAND_CHOICE%
+set CHOICE=%COMMAND_CHOICE%%TEST_BOOTMODE%
+goto :%CHOICE%
 
-:install
-	if not exist "%TEST_RSC%" echo SysStart Test: ERROR - test resource file does not exist & goto :EOF
-	if not exist "%TEST_EXE_RSC%" echo SysStart Test: ERROR - test resource file does not exist & goto :EOF
+:instfb
+	if exist "%SSMA_RSC_LOCATION%" ren %SSMA_RSC_LOCATION% %SSMA_RSC_NAME_ORIGINAL%
+	if not exist "%FALLBACK_TEST_RSC%" echo SysStart Test: ERROR - test resource file does not exist & goto :EOF
+	if not exist "%FALLBACK_TEST_EXE_RSC%" echo SysStart Test: ERROR - test resource file does not exist & goto :EOF
 
-	if not exist %SM0_RSC%.original copy %SM0_RSC% %SM0_RSC%.original > NUL
+	if not exist %FALLBACK_SM0_RSC%.original copy %FALLBACK_SM0_RSC% %FALLBACK_SM0_RSC%.original > NUL
 	
-	if /i "%TEST_CASE%" NEQ "T_TestLocalisedCaptionL" copy %TEST_RSC% %SM0_RSC% > NUL
-	if /i "%TEST_CASE%" == "T_TestLocalisedCaptionL" copy %TEST_EXE_RSC% %SM0_RSC% > NUL
+	if /i "%TEST_CASE%" NEQ "T_TestLocalisedCaptionL" copy %FALLBACK_TEST_RSC% %FALLBACK_SM0_RSC% > NUL
+	if /i "%TEST_CASE%" == "T_TestLocalisedCaptionL" copy %FALLBACK_TEST_EXE_RSC% %FALLBACK_SM0_RSC% > NUL
 	
 	if exist %TESTCASE_CONFIG% del %TESTCASE_CONFIG%
 	if exist %TESTNONPANIC_RESULT_FILE% del %TESTNONPANIC_RESULT_FILE%
@@ -47,8 +61,43 @@ goto :%COMMAND_CHOICE%
 
 goto :EOF
 
-:uninstall
-	call :restore	
+:uninstfb
+	if exist %SSMA_RSC_LOCATION_ORIGINAL% ren %SSMA_RSC_LOCATION_ORIGINAL% %SSMA_RSC_NAME% > NUL
+	if exist %FALLBACK_SM0_RSC%.original copy %FALLBACK_SM0_RSC%.original %FALLBACK_SM0_RSC% > NUL
+	if exist %FALLBACK_SM0_RSC%.original del %FALLBACK_SM0_RSC%.original
+
+	:: TestStartApp1L and TestLocalisedCaptionL are the only non-paniccing test cases
+	if /i %TEST_CASE% == "T_TestStartApp1L" goto :bypass
+	if /i %TEST_CASE% == "T_TestLocalisedCaptionL" goto :bypass
+
+	call :test
+	:bypass
+	if exist %EPOCROOT%epoc32\winscw\c\T_SSAAC_PanicResultFile.txt del %EPOCROOT%epoc32\winscw\c\T_SSAAC_PanicResultFile.txt
+goto :EOF
+
+:instss
+	if not exist "%SSMA_RSC_TEST_LOCATION%" echo Ssma Test: ERROR - test resource file does not exist %SSMA_RSC_TEST_LOCATION% & goto :EOF
+	if not exist "%SSMA_RSC_TEST_EXE_LOCATION%" echo Ssma Test: ERROR - test resource file does not exist %SSMA_RSC_TEST_EXE_LOCATION% & goto :EOF
+
+	if exist %SSMA_SM0_RSC% copy %SSMA_SM0_RSC% %SSMA_SM0_RSC_LOCATION% > NUL
+	if exist %SSMA_SM0_RSC% del %SSMA_SM0_RSC%
+
+	
+	if /i "%TEST_CASE%" NEQ "T_TestLocalisedCaptionL" copy %SSMA_RSC_TEST_LOCATION% %SSMA_SM0_RSC% > NUL
+	if /i "%TEST_CASE%" == "T_TestLocalisedCaptionL" copy %SSMA_RSC_TEST_EXE_LOCATION% %SSMA_SM0_RSC% > NUL
+	
+	if exist %TESTCASE_CONFIG% del %TESTCASE_CONFIG%
+	if exist %TESTNONPANIC_RESULT_FILE% del %TESTNONPANIC_RESULT_FILE%
+
+	echo Test Case %TEST_CASE%=%TESTCASE_NUMBER% > %TESTCASE_CONFIG%
+
+goto :EOF
+
+:uninstss
+	if exist %SSMA_SM0_RSC_LOCATION% copy %SSMA_SM0_RSC_LOCATION% %SSMA_SM0_RSC% > NUL
+
+	if exist %SSMA_SM0_RSC_LOCATION% del %SSMA_SM0_RSC_LOCATION%
+
 	:: TestStartApp1L and TestLocalisedCaptionL are the only non-paniccing test cases
 	if /i "%TEST_CASE%" == "T_TestStartApp1L" goto :bypass
 	if /i "%TEST_CASE%" == "T_TestLocalisedCaptionL" goto :bypass

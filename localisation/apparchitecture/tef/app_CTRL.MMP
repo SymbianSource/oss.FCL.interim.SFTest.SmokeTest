@@ -2,7 +2,7 @@
 * Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Eclipse Public License v1.0"
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
 * at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
@@ -18,9 +18,7 @@
 // App_CTRL.MMP for test component App_CTRL (released in APPARC)
 //
 
-#include <platform_paths.hrh>
-
-target		APP_CTRL.EXE
+target		app_ctrl.exe
 TARGETTYPE 	exe
 
 UID             0x100039CE 0x13008ACE
@@ -31,16 +29,16 @@ VENDORID 	0x70000001
 SOURCEPATH	.	
 
 // your public include directory should be here
-systeminclude   ../inc
-systeminclude   /epoc32/include
-systeminclude   /epoc32/include/techview
+userinclude   ../inc
 
-MW_LAYER_SYSTEMINCLUDE
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+//systeminclude   /epoc32/include/techview
 
 // Application exe specific resource which is localised to the application
 resource  	App_CTRL.rss
 start resource  App_CTRL.rss
-targetpath	/Resource/apps
+targetpath	/resource/apps
 lang 		sc
 end
 
@@ -52,17 +50,19 @@ lang		sc
 end
 
 // Application localisable resource file
-resource  	App_CTRL_loc.rss
-start resource 	App_CTRL_loc.rss
-targetpath 	/Resource/apps
+resource  	App_ctrl_loc.RSS
+start resource 	App_ctrl_loc.RSS
+targetpath 	/resource/apps
 lang		sc
 end
 
-SOURCE		App_CTRL.CPP
+SOURCE		app_CTRL.CPP
 
 
-LIBRARY       	APPARC.LIB
-LIBRARY       	CONE.LIB 
-LIBRARY       	EIKCORE.LIB 
-LIBRARY       	EUSER.LIB
-LIBRARY       	GDI.LIB
+LIBRARY       	apparc.lib
+LIBRARY       	cone.lib 
+LIBRARY       	eikcore.lib 
+LIBRARY       	euser.lib
+LIBRARY       	gdi.lib
+
+SMPSAFE

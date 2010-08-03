@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -16,8 +16,6 @@
 // checking setter and getter function.\n
 // 
 //
-
-
 
 /**
  @file
@@ -145,8 +143,8 @@ void CT_CmdlnStep::testPositiveInputsL()
 	TInt ret = fSession.Entry(KTempDir,dirEntry);	
 	if(ret==KErrNotFound)
 	{
-		INFO_PRINTF1(_L("Create C:\\System\\Data Directory if not existing already"));
-		fSession.MkDir(KTempDir); /* Create Data Directory as it does not exist  */				
+		INFO_PRINTF1(_L("Create C:\\System\\Data Directory if not existing already"));	
+		fSession.MkDir(KTempDir); /* Created Data Directory as it does not exist  */
 	}	
 	User::LeaveIfError(file.Replace(fSession, KTDocName, EFileStreamText|EFileShareAny));
 	User::LeaveIfError(file.Write(KTWriteData));//write some test data
@@ -277,7 +275,8 @@ void CT_CmdlnStep::testInitializationL()
 				TInt ret = fSession.Entry(KTempDir,dirEntry);	
 				if(ret==KErrNotFound)
 					{
-					INFO_PRINTF1(_L("Create C:\\System\\Data Directory if not existing already"));	
+					INFO_PRINTF1(_L("Create C:\\System\\Data Directory if not existing already"));
+					fSession.MkDir(KTempDir); /* Created Data Directory as it does not exist  */
 					}	
 				User::LeaveIfError(file.Replace(fSession, KTDocName, EFileStreamText|EFileShareAny));
     			TRAP(ret,cmdLine->SetFileByHandleL(file));
@@ -408,6 +407,7 @@ void CT_CmdlnStep::testRecAppLaunchL(RApaLsSession& aLs)
 	if(ret==KErrNotFound)
 	{
 		INFO_PRINTF1(_L("Create C:\\System\\Data Directory if not existing already"));	
+		fSession.MkDir(KTempDir); /* Created Data Directory as it does not exist  */
 	}
 	
 	User::LeaveIfError(file.Replace(fSession, KTDocName, EFileStreamText|EFileShareAny));
@@ -675,3 +675,5 @@ TVerdict CT_CmdlnStep::doTestStepL()
 	INFO_PRINTF1(_L("Test completed!"));
 	return TestStepResult();
 }
+
+

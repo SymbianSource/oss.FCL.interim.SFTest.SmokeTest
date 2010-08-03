@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -91,8 +89,8 @@ TInt CT_IntegritySupportTestStep::RunTestCasesL()
 #ifdef __WINS__
 	HEAP_TEST_LS_SESSION(iSession, 0, DONT_CHECK, TestReregisterApplicationL(), NO_CLEANUP);
 	HEAP_TEST_LS_SESSION(iSession, 0, DONT_CHECK, TestDoubleInstallFailsL(), NO_CLEANUP);
-	HEAP_TEST_LS_SESSION(iSession, 0, DONT_CHECK, TestRollbackOnFailedUpdateStepL(), NO_CLEANUP);
 #endif
+	HEAP_TEST_LS_SESSION(iSession, 0, DONT_CHECK, TestRollbackOnFailedUpdateStepL(), NO_CLEANUP);
 	return KErrNone;
 	}
 
@@ -138,7 +136,7 @@ void CT_IntegritySupportTestStep::TestNormalInstallation1L()
 	INFO_PRINTF1(_L("Testing normal application installation..."));
 
 	RProcess().SetPriority(EPriorityLow); // so that we're pre-empted by the Apparc server when it does its scan
-	CleanupAndReset(iSession, KApplication1);
+	CleanupAndResetL(iSession, KApplication1);
 
 	iSession.PrepareNonNativeApplicationsUpdatesL();
 
@@ -180,7 +178,7 @@ void CT_IntegritySupportTestStep::TestNormalInstallation1L()
 void CT_IntegritySupportTestStep::TestManualRollback1L()
 	{
 	INFO_PRINTF1(_L("Testing manual rollback during installation..."));
-	CleanupAndReset(iSession, KApplication2);
+	CleanupAndResetL(iSession, KApplication2);
 
 	iSession.PrepareNonNativeApplicationsUpdatesL();
 	INFO_PRINTF1(_L("..registering app using RegisterNonNativeApplicationL() "));
@@ -229,7 +227,7 @@ void CT_IntegritySupportTestStep::TestRollbackOnSessionCloseL()
 	User::LeaveIfError(apaSession.Connect());
 	CleanupClosePushL(apaSession);
 
-	CleanupAndReset(apaSession, KApplication3);
+	CleanupAndResetL(apaSession, KApplication3);
 
 	apaSession.PrepareNonNativeApplicationsUpdatesL();
 	INFO_PRINTF1(_L("..registering app using RegisterNonNativeApplicationL() "));
@@ -263,7 +261,7 @@ void CT_IntegritySupportTestStep::TestRollbackOnSessionCloseL()
 void CT_IntegritySupportTestStep::TestNormalRemoval1L()
 	{
 	INFO_PRINTF1(_L("Testing removal..."));
-	CleanupAndReset(iSession, KApplication4);
+	CleanupAndResetL(iSession, KApplication4);
 
 	INFO_PRINTF1(_L("..registering app using RegisterNonNativeApplicationL() "));
 	CompleteRegisterL(iSession, KApplication4);
@@ -299,7 +297,7 @@ void CT_IntegritySupportTestStep::TestNormalRemoval1L()
 void CT_IntegritySupportTestStep::TestManualRollback2L()
 	{
 	INFO_PRINTF1(_L("Testing removal rollback..."));
-	CleanupAndReset(iSession, KApplication5);
+	CleanupAndResetL(iSession, KApplication5);
 
 	iSession.PrepareNonNativeApplicationsUpdatesL();
 	INFO_PRINTF1(_L("..registering app using RegisterNonNativeApplicationL() "));
@@ -413,7 +411,7 @@ void CT_IntegritySupportTestStep::TestCallingPrepareTwiceL()
   
    @SYMTestCaseDesc Tests that commiting an app update when another session
    has already installed it is successfull.
-
+   
    @SYMTestPriority 
   
    @SYMTestStatus Implemented
@@ -428,7 +426,7 @@ void CT_IntegritySupportTestStep::TestCallingPrepareFromTwoSessionsL()
 	INFO_PRINTF1(_L("Testing PrepareNonNativeApplicationsUpdatesL and other function calls from 2 sessions..."));
 	INFO_PRINTF1(_L("    Cleaning up any existing reg files first..."));
 	
-	CleanupAndReset(iSession, KApplication1);
+	CleanupAndResetL(iSession, KApplication1);
 
 	INFO_PRINTF1(_L("    Running test..."));
 
@@ -442,10 +440,10 @@ void CT_IntegritySupportTestStep::TestCallingPrepareFromTwoSessionsL()
 	CallRegisterL(iSession, KApplication1);
 
 	// Prepare, Register & Deregister with the second session
-	TRAPD(err,session2.PrepareNonNativeApplicationsUpdatesL());
+	TRAPD(err, session2.PrepareNonNativeApplicationsUpdatesL());
 	TEST(err == KErrNone);
 	CallRegisterL(session2, KApplication1);
-	
+
 	// commit the updates with iSession, installing app 1
 	TRAP(err, iSession.CommitNonNativeApplicationsUpdatesL());
 	TEST(err == KErrNone);
@@ -492,7 +490,7 @@ void CT_IntegritySupportTestStep::TestReregisterApplicationL()
 	INFO_PRINTF1(_L("Testing deregister/register of an application in one transaction..."));
 	INFO_PRINTF1(_L("    Cleaning up any existing reg files first..."));
 	
-	CleanupAndReset(iSession, KApplication1);
+	CleanupAndResetL(iSession, KApplication1);
 
 	INFO_PRINTF1(_L("    Registering beforehand so that the deregister has something to do..."));
 	CompleteRegisterL(iSession, KApplication1);
@@ -535,7 +533,7 @@ void CT_IntegritySupportTestStep::TestDoubleInstallFailsL()
 	INFO_PRINTF1(_L("Testing double register of an application in one transaction..."));
 	INFO_PRINTF1(_L("    Cleaning up any existing reg files first..."));
 	
-	CleanupAndReset(iSession, KApplication1);
+	CleanupAndResetL(iSession, KApplication1);
 
 	// test that the application is absent
 	TEST(AppAbsent(iSession, KApplication1));
@@ -545,7 +543,7 @@ void CT_IntegritySupportTestStep::TestDoubleInstallFailsL()
 	CallRegisterL(iSession, KApplication1);
 	CallRegisterL(iSession, KApplication1);
 	TRAPD(err, iSession.CommitNonNativeApplicationsUpdatesL());
-	TEST(err == KErrAccessDenied); // Since app is already registered, KErrAccessDenied will be returned when try to delete the registered app.
+	TEST(err == KErrAccessDenied);
 
 	// test that the rollback happened when the second register failed,
 	// and thus the app is still absent
@@ -580,8 +578,8 @@ void CT_IntegritySupportTestStep::TestRollbackOnFailedUpdateStepL()
 	INFO_PRINTF1(_L("Testing register app1, deregister app2, then a force-failed update that causes the first two to roll back..."));
 	INFO_PRINTF1(_L("    Cleaning up any existing reg files first..."));
 	
-	CleanupAndReset(iSession, KApplication1);
-	CleanupAndReset(iSession, KApplication2);
+	CleanupAndResetL(iSession, KApplication1);
+	CleanupAndResetL(iSession, KApplication2);
 
 	// test that both apps are absent
 	TEST(AppAbsent(iSession, KApplication1));

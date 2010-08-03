@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,29 +13,30 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code  
 */
 
 
-target			TNNAPP2.EXE
+target			tnnapp2.exe
 targettype		exe
 uid				0x100039ce 0x10207f94
 capability		none
 
 sourcepath		.
-source			TNNAPP2.CPP
-systeminclude	/epoc32/include
+source			TNNApp2.cpp
+
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
 
 
-resource  		TNNAPP2_REG.RSS
-start resource	TNNAPP2_REG.RSS
+resource  		TNNApp2_reg.rss
+start resource	TNNApp2_reg.rss
 targetpath		/private/10003a3f/apps
 lang			sc
 end
 
 
-library			EUSER.LIB EFSRV.LIB APPARC.LIB
+library			euser.lib efsrv.lib apparc.lib
+
+SMPSAFE

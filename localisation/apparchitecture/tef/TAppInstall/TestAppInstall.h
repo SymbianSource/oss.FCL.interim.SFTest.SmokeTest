@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,8 +15,6 @@
 // containing a single view with the text "App Installed !" drawn on it.
 // 
 //
-
-
 
 /**
  @file
@@ -34,20 +32,20 @@
 #include <eikappui.h>
 #include <eikapp.h>
 #include <eikdoc.h>
-#include <eikmenup.h>
+#include <mw/eikmenup.h>
 
-#include <eikon.hrh>
+#include <mw/eikon.hrh>
 
 #include <testappinstall.rsg>
-#include "testappinstall.hrh"
+#include "TestAppInstall.hrh"
 
 
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleApplication
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CExampleApplication : public CEikApplication
 	{
@@ -57,11 +55,11 @@ private:
 	TUid AppDllUid() const;
 	};
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleAppView
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CExampleAppView : public CCoeControl
     {
 public:
@@ -79,11 +77,11 @@ private:
     };
 
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleAppUi
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CExampleAppUi : public CEikAppUi
     {
 public:
@@ -99,11 +97,11 @@ private:
 	};
 
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleDocument
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CExampleDocument : public CEikDocument
 	{
 public:
@@ -117,3 +115,4 @@ private:
 
 
 #endif
+

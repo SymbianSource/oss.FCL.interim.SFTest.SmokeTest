@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -14,19 +14,18 @@
 // The following test case is used to test whether apparctestserver has the capability
 // to access writable apis
 // 
+// t_capability2.cpp
 //
 
-
-
 /**
- @file
+ @file t_capability2.cpp
  @internalComponent - Internal Symbian test code
 */
 
 #include "T_Capability2.h"
 #include "tstapp.h"
 #include "testableapalssession.h"
-#include <appfwk_test.h>
+#include "appfwk_test.h"
 
 /**
    @SYMTestCaseID		APPFWK-APPARC-0030

@@ -1,7 +1,7 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,20 +11,15 @@
 // Contributors:
 //
 // Description:
+// apsclsv.h
 //
 
-#if !defined(__APGCLSV_H__)
+#ifndef __APGCLSV_H__
 #define __APGCLSV_H__
 
-#if !defined(__E32BASE_H__)
 #include <e32base.h>
-#endif
-#if !defined(__APAID_H__)
 #include <apaid.h>
-#endif
-#if !defined(__APMSTD_H__)
 #include <apmstd.h>
-#endif
 
 // A version must be specifyed when creating a session with the server
 const TUint KAppListServMajorVersionNumber=7;
@@ -41,7 +36,7 @@ enum TAppListServRanges
 enum TCountServRqst
 	{
 	//No Capability requirement
-	EAppListServFirst = EFirstUnrestrictedOpcodeInAppListServ,
+	EAppListServFirst = EFirstUnrestrictedOpcodeInAppListServ,	// = 0
 	EAppListServInitFullList,
 	EAppListServInitEmbedList,
 	EAppListServGetNextApp,
@@ -49,19 +44,19 @@ enum TCountServRqst
 	EAppListServAppCount,
 	EAppListServGetAppInfo,
 	EAppListServGetAppCapability,
-	EAppListServStartAppWithoutReturningThreadId,
-	EAppListServStartAppReturningThreadId,
-	EAppListServRecognizeData,
+	EAppListServStartAppWithoutReturningThreadId,	// deprecated
+	EAppListServStartAppReturningThreadId,			// deprecated
+	EAppListServRecognizeData,	// = 10
 	EAppListServRecognizeDataPassedByFileHandle,
 	EAppListServRecognizeSpecificData,
 	EAppListServRecognizeSpecificDataPassedByFileHandle,
 	EAppListServAppForDataType,
-	EAppListServStartDocument,
-	EAppListServStartDocumentByDataType,
-	EAppListServStartDocumentByUid,
-	EAppListServCreateDocumentByUid,
+	EAppListServStartDocument,						// deprecated
+	EAppListServStartDocumentByDataType,			// deprecated
+	EAppListServStartDocumentByUid,					// deprecated
+	EAppListServCreateDocumentByUid,				// deprecated
 	EAppListServGetExecutableNameGivenDocument,
-	EAppListServGetExecutableNameGivenDocumentPassedByFileHandle,
+	EAppListServGetExecutableNameGivenDocumentPassedByFileHandle,	// = 20
 	EAppListServGetExecutableNameGivenDataType,
 	EAppListServGetExecutableNameGivenAppUid,
 	EAppListServGetOpaqueData,
@@ -71,7 +66,7 @@ enum TCountServRqst
 	EAppListServAppForDocumentPassedByFileHandle,
 	EAppListServGetConfidence,
 	EAppListServGetBufSize,
-	EAppListServSetBufSize,
+	EAppListServSetBufSize,	// = 30
 	EAppListServGetDataTypesPhase1,
 	EAppListServGetDataTypesPhase2,
 	ESetNotify,
@@ -81,7 +76,7 @@ enum TCountServRqst
 	EAppListServGetAppIconSizes,
 	EAppListServGetAppViews,
 	EAppListServViewIconByUidAndSize,
-	EAppListServGetFileOwnershipInfo,
+	EAppListServGetFileOwnershipInfo,	// = 40
 	EAppListServNumberOfOwnDefinedIcons,
 	EAppListServInitFilteredEmbedList,
 	EAppListServInitAttrFilteredList,
@@ -91,7 +86,7 @@ enum TCountServRqst
 	EAppListServGetAppServices,
 	EAppListServGetServiceImplementations,
 	EAppListServGetServiceImplementationsDataType,
-	EAppListServGetAppServiceUids,
+	EAppListServGetAppServiceUids,	// = 50
 	EAppListServGetAppServiceOpaqueData,
 	EAppListServAppForDataTypeAndService,
 	EAppListServAppForDocumentAndService,
@@ -101,7 +96,7 @@ enum TCountServRqst
 	ECancelListPopulationCompleteObserver,
 	EAppListServPreferredBufSize,
 	EAppListServRecognizeFiles,
-	EAppListServRecognizeFilesAsync,
+	EAppListServRecognizeFilesAsync,	// = 60
 	ECancelRecognizeFiles,
 	EAppListServTransferRecognitionResult,
 	EAppListServGetAppByDataType,
@@ -111,7 +106,7 @@ enum TCountServRqst
 	EAppListServDeregisterNonNativeApplicationType,
 	EAppListServPrepareNonNativeApplicationsUpdates,
 	EAppListServRegisterNonNativeApplication,
-	EAppListServDeregisterNonNativeApplication,
+	EAppListServDeregisterNonNativeApplication,	// = 70
 	EAppListServCommitNonNativeApplications,
 	EAppListServRollbackNonNativeApplications,
 	EAppListServGetAppType,
@@ -121,7 +116,7 @@ enum TCountServRqst
 	EAppListServSetAppShortCaption,
 	EAppListServForceRegistration,
 	EDebugHeapMark,
-	EDebugHeapMarkEnd,
+	EDebugHeapMarkEnd,	// = 80
 	EDebugHeapFailNext,
 	EDebugClearAppInfoArray,
 	EDebugFlushRecognitionCache,
@@ -131,10 +126,10 @@ enum TCountServRqst
 	EDebugAddFailingNonNativeApplicationsUpdate,
 	EDebugAddPanicingNonNativeApplicationsUpdate,
 	EDebugAddRollbackPanicingNonNativeApplicationsUpdate, // = 89
-	EAppListServAppInfoProvidedByRegistrationFile = 99,
+	EAppListServAppInfoProvidedByRegistrationFile = 99,	// = 99
 	//WriteDeviceData Capability requirement
 	// ER5
-	EAppListServSetConfidence=EFirstOpcodeNeedingWriteDeviceDataInAppListServ,
+	EAppListServSetConfidence=EFirstOpcodeNeedingWriteDeviceDataInAppListServ,	// = 100
 	// 8.1
 	EAppListInsertDataMapping,
 	EAppListInsertDataMappingIfHigher,
@@ -188,4 +183,4 @@ struct SNonNativeApplicationInfo
 	TInt iDrive;
 	};
 
-#endif
+#endif	// __APGCLSV_H__

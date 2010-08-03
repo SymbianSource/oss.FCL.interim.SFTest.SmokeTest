@@ -1,7 +1,7 @@
-// Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
+// Copyright (c) 2007-2010 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @test
@@ -25,8 +23,8 @@
 #define __T_MIMECONTENTPOLICY_STEP_H__
 
 #include "testableapalssession.h"
-#include "appfwk_test_AppUi.h"
-#include <ApfMimeContentPolicy.h>
+#include "appfwk_test_appui.h"
+#include <apfmimecontentpolicy.h>
 
 _LIT(KT_MimeContentPolicyStep,"t_mimecontentpolicy");
 
@@ -48,6 +46,7 @@ private:
     // aIsDRMEnvelope is ETrue for DRM Envelope and EFalse for ClosedFile
     TBool DoCCPTestUsingFileHandleL(const TDesC &aName, TBool aIsDRMEnvelope);
     void CCPOOMTestL();
+    void CCPTestIsClosedContentAndExtenstionInfoRepositoryReadOnlyL();
 
 private:
 	CApfMimeContentPolicy* iCcp;

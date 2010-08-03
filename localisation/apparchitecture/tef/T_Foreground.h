@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code 
@@ -24,9 +22,9 @@
 #define		__T_FOREGROUND_H
 
 
-#include <TestExecuteStepBase.h>
-#include "ApparcTestServer.h"
-#include "appfwk_test_AppUi.h"
+#include <test/testexecutestepbase.h>
+#include "apparctestserver.h"
+#include "appfwk_test_appui.h"
 
 
 const TInt KTVwaStandardAppUiId=0;
@@ -56,9 +54,9 @@ private:
 
 
 //
-// A CTestStep Derived Class
+// A CTmsTestStep Derived Class
 //
-class CTestForegroundStep : public CTestStep
+class CTestForegroundStep : public CTmsTestStep
 	{
 public:
 	CTestForegroundStep();
@@ -75,7 +73,7 @@ private:
 class CTestForegroundAppUi : public CTestCoeAppUi
     {
 public:	// from CCoeAppUi
-	CTestForegroundAppUi(CTestStep* aStep);
+	CTestForegroundAppUi(CTmsTestStep* aStep);
 	~CTestForegroundAppUi();
 	void ConstructL();
 	void RunTestStepL(TInt aNumStep);
@@ -91,3 +89,5 @@ _LIT(KTestForegroundStep, "T_Foreground");
 
 
 #endif
+
+

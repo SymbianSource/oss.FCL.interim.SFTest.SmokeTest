@@ -1,7 +1,7 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,60 +11,45 @@
 // Contributors:
 //
 // Description:
+// apadll.h
 //
 
 #ifndef __APADLL_H__
 #define __APADLL_H__
 
-#if !defined(__E32STD_H__)
 #include <e32std.h>
-#endif
-#if !defined(__E32BASE_H__)
 #include <e32base.h>
-#endif
-#if !defined(__APADEF_H__)
 #include <apadef.h>
-#endif
-#if !defined(__APPARC_H__)
 #include <apparc.h>
-#endif
 
-
-// classes referenced
 class CApaApplication;
-class RFs;
 
-NONSHARABLE_CLASS(CApaAppHolder) : public CBase
-/** Provides an interface for obtaining data gathered differently for DLLs and EXEs. Derived
-classes create and own the application object. The equivalent of the old CApaDll derives from this.*/
-{
-public:
-	CApaAppHolder();
-	~CApaAppHolder();
-
-	virtual TFileName FileName() const = 0;
-	virtual TUid Uid() const = 0;
-	virtual CApaApplication* Application() const = 0;
-
-protected:
-	void UpdateAppsRefToThis();
-};
-
-NONSHARABLE_CLASS(CApaExe) : public CApaAppHolder
+NONSHARABLE_CLASS(RApaApplication)
 	{
 public:
-	CApaExe();
-	~CApaExe();
-
-	TFileName FileName() const;
-	TUid Uid() const;
-	CApaApplication* Application() const;
-
+	RApaApplication();
+	void Close();
 	void CreateApplicationL(TApaApplicationFactory aApplicationFactory); // Uses the factory to create the application
+	
+	TFileName AppFileName() const;
+	TUid AppFileUid() const;
+	CApaApplication* Application();
+	inline const CApaApplication* Application() const;
+	void ScheduleForAsyncDeletion(TBool aDoDelete = ETrue);
+	TBool IsScheduleForAsyncDeletion() const;
+private:
+	~RApaApplication();
 private:
 	CApaApplication* iApplication;
-	HBufC* iAppName;
+	RBuf iAppName;
 	TUid iFileUid;
+	TBool iScheduledForDeletion;
 	};
 
-#endif
+
+// inlines
+
+const CApaApplication* RApaApplication::Application() const
+	{ return const_cast<RApaApplication*>(this)->Application(); }
+
+#endif	// __APADLL_H__

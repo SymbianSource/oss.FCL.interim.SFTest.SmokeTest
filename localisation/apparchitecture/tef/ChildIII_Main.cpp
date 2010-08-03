@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,8 +15,6 @@
 // 
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code
@@ -28,12 +26,12 @@
 #include <eikappui.h>
 #include <eikapp.h>
 #include <eikdoc.h>
-#include <eikmenup.h>
+#include <mw/eikmenup.h>
 
-#include <eikon.hrh>
+#include <mw/eikon.hrh>
 #include <f32file.h>
 
-#include <ChildIII.rsg>
+#include <childiii.rsg>
 #include "ChildIII.hrh"
 
 
@@ -42,11 +40,11 @@ _LIT(KFilePath,"c:\\logs\\TestExecute\\Proc.txt");
 _LIT8(KTPass, "PASS");
 _LIT8(KTFail, "FAIL");
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleAppView
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CExampleAppView : public CCoeControl
     {
@@ -144,11 +142,11 @@ void CExampleAppView::Draw(const TRect& /*aRect*/) const
 	gc.DiscardFont();
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleAppUi
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CExampleAppUi : public CEikAppUi
     {
@@ -263,11 +261,11 @@ void CExampleAppUi::CompParentPidL()
 		}
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleDocument
 //
-////////////////////////////////////////////////////////////////////////
+//
 class CExampleDocument : public CEikDocument
 	{
 public:
@@ -299,11 +297,11 @@ CEikAppUi* CExampleDocument::CreateAppUiL()
     return new(ELeave) CExampleAppUi;
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleApplication
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CExampleApplication : public CEikApplication
 	{

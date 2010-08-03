@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,8 +15,6 @@
 // 
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code
@@ -28,19 +26,19 @@
 #include <eikappui.h>
 #include <eikapp.h>
 #include <eikdoc.h>
-#include <eikmenup.h>
+#include <mw/eikmenup.h>
 #include <eikstart.h>
 
-#include <eikon.hrh>
+#include <mw/eikon.hrh>
 
-#include <ParentProcess.rsg>
+#include <parentprocess.rsg>
 #include "ParentProcess.hrh"
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleAppView
 //										
-////////////////////////////////////////////////////////////////////////
+//
 
 class CExampleAppView : public CCoeControl
     {
@@ -141,11 +139,11 @@ void CExampleAppView::Draw(const TRect& /*aRect*/) const
 	gc.DiscardFont();
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleAppUi
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CExampleAppUi : public CEikAppUi
     {
@@ -221,11 +219,11 @@ void CExampleAppUi::HandleCommandL(TInt aCommand)
 		}
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleDocument
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CExampleDocument : public CEikDocument
 	{
@@ -258,11 +256,11 @@ CEikAppUi* CExampleDocument::CreateAppUiL()
     return new(ELeave) CExampleAppUi;
 	}
 
-////////////////////////////////////////////////////////////////////////
+//
 //
 // CExampleApplication
 //
-////////////////////////////////////////////////////////////////////////
+//
 
 class CExampleApplication : public CEikApplication
 	{
@@ -307,3 +305,4 @@ GLDEF_C TInt E32Main()
 	{
 	return EikStart::RunApplication(NewApplication);
 	}
+

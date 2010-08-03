@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,6 +11,7 @@
 // Contributors:
 //
 // Description:
+// apsnnapps.h
 //
 
 #ifndef APSNNAPPS_H
@@ -19,11 +20,12 @@
 #include <e32base.h>
 #include <f32file.h>
 #include <s32file.h>
+#include <badesca.h>	// typedef CDesCArray
 
 #include "apsnnappupdates.h"
 
 // classes referenced
-class CApaAppListServer;
+class CApaAppArcServer;
 class CApsNonNativeApplicationsUpdateList;
 
 _LIT(KLitPathForTemporaryNonNativeResourceAndIconFiles, "\\private\\10003a3f\\temp\\NonNativeUpdates\\");
@@ -34,11 +36,11 @@ _LIT(KLitPathForTemporaryNonNativeResourceAndIconFiles, "\\private\\10003a3f\\te
 NONSHARABLE_CLASS(CApsNonNativeApplicationsManager) : public CBase
 	{
 public:
-	static CApsNonNativeApplicationsManager* NewL(CApaAppListServer& aServ, RFs& aFs);
+	static CApsNonNativeApplicationsManager* NewL(CApaAppArcServer& aServ, RFs& aFs);
 	~CApsNonNativeApplicationsManager();
 
 private:
-	CApsNonNativeApplicationsManager(CApaAppListServer& aServ, RFs& aFs);
+	CApsNonNativeApplicationsManager(CApaAppArcServer& aServ, RFs& aFs);
 
 public:
 	void NotifyScanComplete();
@@ -61,7 +63,7 @@ private:
 	void CheckForUpdateAppsLockL();
 
 private:
-	CApaAppListServer& iServ;
+	CApaAppArcServer& iServ;
 	RFs& iFs;
 	RMessage2 iNotifyOnScanCompleteMsg;
 	TBool iNonNativeApplicationsUpdateAppsLock;
@@ -203,14 +205,13 @@ public:
 	void OpenL();
 	void Open(RFile& aFile, TUint aSeekPos);
 	void Close();
-	RPointerArray<HBufC>& NewRegistrationFiles();
-	RPointerArray<HBufC>& DrivesAffected();
+	CDesCArray& NewRegistrationFiles();
+	CDesCArray& DrivesAffected();
 	RWriteStream& LogWriteStream();
 private:
 	RFs& iFs;
-	// RPointerArray neccessary for use with CApaAppRegFinder
-	RPointerArray<HBufC> iFilesRegistered;
-	RPointerArray<HBufC> iDrivesAffected;
+	CDesCArray* iFilesRegistered;
+	CDesCArray* iDrivesAffected;
 	RFileWriteStream iLogWriteStream;
 	TFileName iLogFileName;
 	};

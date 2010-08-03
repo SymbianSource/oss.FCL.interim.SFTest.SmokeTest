@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,15 +13,13 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code
 */
 
 
-TARGET TAppLaunchChecker2.dll
+TARGET tapplaunchchecker2.dll
 CAPABILITY	All -Tcb
 TARGETTYPE PLUGIN
 VENDORID 0x70000001
@@ -30,20 +28,23 @@ VENDORID 0x70000001
 UID 0x10009D8D 0x102722ba
 
 SOURCEPATH ../tef 
-SOURCE TAppLaunchChecker2.cpp
+SOURCE tAppLaunchChecker2.cpp
 TARGETPATH /sys/bin
 
 USERINCLUDE ../tef
-SYSTEMINCLUDE ../inc
-SYSTEMINCLUDE /epoc32/include
-SYSTEMINCLUDE /epoc32/include/ecom
+USERINCLUDE ../inc
+
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+//SYSTEMINCLUDE /epoc32/include/ecom
 
 start resource 102722ba.rss
-target TAppLaunchChecker2.rsc
+target tapplaunchchecker2.rsc
 end
 
 LIBRARY euser.lib
-LIBRARY ECom.lib
+LIBRARY ecom.lib
 LIBRARY ws32.lib 
 LIBRARY apgrfx.lib
 LIBRARY apfile.lib
+
+SMPSAFE

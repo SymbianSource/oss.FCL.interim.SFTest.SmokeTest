@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,12 +11,11 @@
 // Contributors:
 //
 // Description:
+// t_rapalssessionstep.h
 //
 
-
-
 /**
- @file
+ @file t_rapalssessionstep.h
  @test
  @internalComponent - Internal Symbian test code  
 */
@@ -26,21 +25,25 @@
 
 _LIT(KT_RApaLsSessionStep,"T_RApaLsSession");
 
-#include "ApparcTestServer.h"
+#include "apparctestserver.h"
 
 #include <coecntrl.h>
 #include <coeccntx.h>
 #include <coemain.h>
 #include <coeview.h>
-#include <eikdialg.h>
+#include <mw/eikdialg.h>
 #include <eikdoc.h>
 #include <eikapp.h>
 #include <eiksrvc.h>
-#include <eikconso.h>
+#include <mw/eikconso.h>
 #include <eikenv.h>
 
 #include <apaid.h>
-#include "..\apparc\apadll.h"
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apaidpartner.h>
+#include <apgicnflpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
+#include "../apparc/apadll.h"
 #include <apgaplst.h>
 #include <apgicnfl.h>
 #include <apgdoor.h>
@@ -51,10 +54,10 @@ _LIT(KT_RApaLsSessionStep,"T_RApaLsSession");
 #include <apaflrec.h>
 #include "testableapalssession.h"
 #include <apacmdln.h>
-#include <apsserv.h>
 #include <datastor.h>
-#include "appfwk_test_AppUi.h"
+#include "appfwk_test_appui.h"
 #include "TAppEmbedUids.h"
+#include "appfwk_test_utils.h"
 
 
 class CT_RApaLsSessionTestStep : public CTestStep
@@ -106,9 +109,11 @@ private:
 
 	void TestAppListRecognizeDataL();
 	void TestAppListRecognizeDataBufferOnlyL();
+	void TestAppListRecognizeDataPassedByBufferL();
 	void TestAppListInstallationL();
 	void TestAppListInstallation1L();
 	void TestAppFolderNonRomDrivesL();
+	void TestZeroSizedIconFileL();
 
 	void EmbeddedAppsTestCases();
 	void DoGetAllApps();
@@ -132,9 +137,14 @@ private:
 	void TestDataPriorityForUnTrustedApps();
 	void TestDataPriorityForUnTrustedAppsRegFile();
 	void TestIconLoaderAndIconArrayMemoryLeaksL();
+	TInt DeleteFileL(RSmlTestUtils &aFs, const TDesC &aFileName);
 private:
 	RFs iFs;
 	RTestableApaLsSession iLs;
 	};
 
 #endif
+
+
+
+

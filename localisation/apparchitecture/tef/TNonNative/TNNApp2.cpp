@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,22 +13,23 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code  
 */
 
 
-#include <E32STD.H>
-#include <E32BASE.H>
-#include <E32PROPERTY.H>
-#include <APACMDLN.H>
-#include <APAID.H>
-#include <APGCLI.H>
-#include <APGICNFL.H>
-#include <APMSTD.H>
+#include <e32std.h>
+#include <e32base.h>
+#include <e32property.h>
+#include <apacmdln.h>
+#include <apaid.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apaidpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apgcli.h>
+#include <apgicnfl.h>
+#include <apmstd.h>
 
 const TUint KPropertyCategory=0x101F289C;
 const TUint KPropertyKey=0;
@@ -62,3 +63,4 @@ GLDEF_C TInt E32Main()
 	delete trapCleanup;
 	return error;
 	}
+

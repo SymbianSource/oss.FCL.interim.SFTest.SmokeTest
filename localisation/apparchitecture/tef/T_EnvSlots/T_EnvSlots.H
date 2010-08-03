@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,8 +15,6 @@
 // Declares literals and macros used in T_EnvSlots.CPP .\n
 // 
 //
-
-
 
 /**
  @file
@@ -34,8 +32,8 @@
 #include <e32test.h>
 #include <apacmdln.h>
 #include <apgcli.h>
-#include "ApparcTestServer.h"
-#include "appfwk_test_AppUi.h"
+#include "apparctestserver.h"
+#include "appfwk_test_appui.h"
 
 
 //!  A Environment slots reader test class. 
@@ -66,3 +64,4 @@ const TInt FAIL = 0;
 
 const TInt KMaxFilePath=50;
 #endif //__T_ENVSLOTS_H__
+

@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,38 +13,36 @@
 // Description:
 //
 
-
-
 /**
  @file
  @internalComponent - Internal Symbian test code
 */
 
-#include <platform_paths.hrh>
-
-TARGET        	ParentProcess.exe	
+TARGET        	parentprocess.exe	
 TARGETTYPE   	exe
 UID           	0x100039CE 0x10207f87
 VENDORID 	0x70000001
 SOURCEPATH    	.
 SOURCE        	ParentProcess_Main.cpp
 USERINCLUDE   	.
-SYSTEMINCLUDE 	/epoc32/include
-SYSTEMINCLUDE 	/epoc32/include/techview
 
-MW_LAYER_SYSTEMINCLUDE
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+//SYSTEMINCLUDE 	/epoc32/include/techview
 
-START RESOURCE	ParentProcess.RSS
+START RESOURCE	ParentProcess.rss
 HEADER
-TARGETPATH	/Resource/Apps
+TARGETPATH	/resource/apps
 end
 
 START RESOURCE	ParentProcess_reg.rss
 TARGETPATH	/private/10003a3f/apps
 END
 
-LIBRARY       	APPARC.LIB
-LIBRARY       	CONE.LIB 
-LIBRARY       	EIKCORE.LIB 
-LIBRARY       	EUSER.LIB
-LIBRARY       	GDI.LIB
+LIBRARY       	apparc.lib
+LIBRARY       	cone.lib 
+LIBRARY       	eikcore.lib 
+LIBRARY       	euser.lib
+LIBRARY       	gdi.lib
+
+SMPSAFE

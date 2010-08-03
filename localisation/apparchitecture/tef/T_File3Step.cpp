@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,20 +13,23 @@
 // Description:
 // Tests CApaAppRegFinder APIs.
 // 
+// t_file3step.cpp
 //
 
-
-
 /**
- @file
+ @file t_file3step.cpp
  @internalComponent - Internal Symbian test code
 */
 
 #include <apgicnfl.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apgicnflpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 #include <e32property.h>
 #include "T_File3Step.h"
-#include "..\apfile\aprfndr.h"
-#include "TSidChecker\TestSidChecker.h"
+#include "../aplist/aplappregfinder.h"	// class CApaAppRegFinder
+#include "../aplist/aplapplistitem.h"	// class TApaAppEntry 
+#include "TSidChecker/TestSidChecker.h"
 
 #include <e32test.h>
 #include <f32file.h>
@@ -211,17 +214,18 @@ void CT_File3Step::TestAppPresenceL()
 	CleanupClosePushL(fSession);
 	CApaAppRegFinder* regFinder=CApaAppRegFinder::NewLC(fSession);
 
-	TRAPD(ret, regFinder->FindAllAppsL() );
+	TRAPD(ret, regFinder->FindAllAppsL(CApaAppRegFinder::EScanAllDrives) );
 	TEST(ret==KErrNone);
 
+	CDesCArray* dummyArray = new (ELeave) CDesCArraySeg(1);
+	CleanupStack::PushL(dummyArray);
+	TApaAppEntry entry;
 	TBool more = ETrue;
 	TBool foundGoodApp = EFalse;
 	TBool foundBadApp = EFalse;
 	while (more)
 		{
-		TApaAppEntry entry;
-		RPointerArray<HBufC> dummy;
-		TRAPD(ret, more=regFinder->NextL(entry, dummy) );
+		TRAPD(ret, more=regFinder->NextL(entry, *dummyArray) );
 		TEST(ret==KErrNone);
 		if(entry.iUidType[2] == KApFileTestBadApp)
 			foundBadApp = ETrue;
@@ -231,6 +235,7 @@ void CT_File3Step::TestAppPresenceL()
 	TEST(foundGoodApp);
 	TEST(!foundBadApp);
 
+	CleanupStack::PopAndDestroy(dummyArray);
 	CleanupStack::PopAndDestroy(2,&fSession);	
 
 	/*
@@ -413,7 +418,7 @@ void CT_File3Step::TestCorruptedRegFileL()
 /**
    @SYMTestCaseID UIFRAMEWORKS-APPARC-0102
   
-   @SYMDEF PDEF139147
+   @SYMDEF PDEF139145
   
    @SYMTestCaseDesc Test that apparc calls sid checker only once for multiple registration resource file for same application.
    
@@ -478,7 +483,7 @@ void CT_File3Step::TestMultipleRegistrationFilesForSameAppL()
 	CleanupClosePushL(timer);
 	User::LeaveIfError(timer.CreateLocal());
 	TRequestStatus timerStatus;
-	timer.After(timerStatus,50 * 1000000);
+	timer.After(timerStatus,30 * 1000000);
 	
 	RPointerArray<TDesC> empty;
 	ret = iSession.ForceRegistration(empty);
@@ -602,3 +607,4 @@ CT_File3Step::~CT_File3Step()
  */
 	{
 	}
+

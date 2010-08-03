@@ -1,7 +1,7 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -14,6 +14,11 @@
 //
 
 #include <e32uid.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#if !defined(__APGCTL_LIST_H__)
+#include "apgctllist.h"
+#endif
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 #include "APGCTL.H"
 #include "APGICNFL.H" 
 #include "APGSTD.H" 
@@ -22,9 +27,9 @@
 #include "APGCLI.H"
 #include "APACMDLN.H"
 
-///////////////////////////////////////////
+//
 // CApaSystemControl
-///////////////////////////////////////////
+//
 
 CApaSystemControl* CApaSystemControl::NewL(RFs& aFs,const TDesC& aFullPath,const TUidType aUidType)
 	{
@@ -157,9 +162,9 @@ caption. */
 		return *iCaption;
 	}
 
-///////////////////////////////////////////
+//
 // CApaSystemControlList
-///////////////////////////////////////////
+//
 
 EXPORT_C CApaSystemControlList* CApaSystemControlList::NewL(RFs& aFs)
 /** Allocates and constructs a control panel application list. After construction, 
@@ -250,7 +255,7 @@ EXPORT_C CApaSystemControl* CApaSystemControlList::Control(TInt aIndex)const
 EXPORT_C CApaSystemControl* CApaSystemControlList::Control(TUid aType)const
 /** Gets the control panel application in the list with the specified UID. 
 
-@param aType The control panel application's third UID. 
+@param aType The control panel applications third UID. 
 @return The control panel application whose type matches aType, or null 
 if none match. */
 
@@ -398,3 +403,4 @@ by ones found on earlier drives in the search order(y:->a: then z:). */
 CApaSystemControlList::CApaSystemControlList(RFs& aFs):iFs(aFs)
 	{
 	}
+

@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,8 +13,8 @@
 // Description:
 // Non-Native application registration functionality for the AppArc server session
 // 
+// apsnnappupdates.cpp
 //
-
 
 #include "apsnnappupdates.h"
 
@@ -23,10 +23,10 @@
 #include <s32file.h>
 
 #include "APAID.H"
-#include "APGAPLST.H"
-#include "APSSERV.H"
+#include "../aplist/aplapplistitem.h"
+#include "apsserv.h"
 #include "APSSTD.H"
-#include "../apfile/aprfndr.h"
+#include "../aplist/aplappregfinder.h"
 #include "../apgrfx/apprivate.h"
 #include "apsnnapps.h"
 
@@ -155,7 +155,7 @@ void TFileDetails::CreateTemporaryL(RFs& aFs, const TFileName& aDir)
 	__ASSERT_DEBUG(iTempPath == KNullDesC, Panic(ENonNativeAppsTFileDetailsCreateTempWithTempPathSet));
 	RFile file;
 	CleanupClosePushL(file);
-	// TODO: remove this hack if/when RFile::Temp is fixed by base
+	// NOTE: remove this workaround if/when RFile::Temp is fixed by base
 	TInt tempErr = KErrAlreadyExists;
 	/* RFile::Temp is a bit dodgy, at least on Winscw with the proxy FS */
 	for(TInt tries = 0; tempErr == KErrAlreadyExists && tries < 50; ++tries)
@@ -212,14 +212,14 @@ TInt TFileDetails::RenameToReal(RFs& aFs)
 			return err;
 			}
 		}
-	//Check if file already exists, if it exists delete it because we might be trying to register an upgrade
-	if(BaflUtils::FileExists(aFs, iPath))
-		{
-		TInt err = BaflUtils::DeleteFile(aFs, iPath);
-		if(KErrNone != err)
-			{
-			return err;
-			}
+	//Check if file already exists, if it exists delete it because we might be trying to register an upgrade 
+	if(BaflUtils::FileExists(aFs, iPath)) 
+    	{ 
+        TInt err = BaflUtils::DeleteFile(aFs, iPath); 
+        if(KErrNone != err) 
+        	{ 
+            return err; 
+            } 
 		}
 	TInt err = iHandle.Rename(iPath);
 	if(err != KErrNone)
@@ -244,7 +244,7 @@ void TFileDetails::RenameToTemporaryL(RFs& aFs, const TFileName& aDir)
 	/* create a temp file and delete it to get an unused filename */
 	RFile file;
 	CleanupClosePushL(file);
-	// TODO: remove this hack if/when RFile::Temp is fixed by base
+	// NOTE: remove this workaround if/when RFile::Temp is fixed by base
 	TInt tempErr = KErrAlreadyExists;
 	/* RFile::Temp is a bit dodgy, at least on Winscw with the proxy FS */
 	for(TInt tries = 0; tempErr == KErrAlreadyExists && tries < 50; ++tries)
@@ -706,7 +706,7 @@ void CApsRegisterNonNativeApplication::WriteLocalisableResourceFileL(const TDesC
 	WriteResourceFileL(iLocalisableResourceFile, aData, aDataPrefix);
 	}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 
 /**
 Create a new file in a designated temporary-files directory
@@ -782,18 +782,9 @@ void CApsRegisterNonNativeApplication::CopyIconFileL(RFile& aSourceFile)
 
 void CApsRegisterNonNativeApplication::DoPerformUpdateL(RApsUpdateLog& aUpdateLog)
 	{
-	HBufC* hDrive = iDrive.AllocL();
-	TInt err = aUpdateLog.DrivesAffected().InsertInOrder(hDrive, TLinearOrder<HBufC>(CApaAppList::CompareStrings));
-	if(err != KErrNone)
-		{
-		delete hDrive;
-		}
-
-	if ((err != KErrNone) &&
-	    (err != KErrAlreadyExists)) // We silently ignore attempts to insert duplicates
-		{
-		User::Leave(err);
-		}
+	TRAPD(err,aUpdateLog.DrivesAffected().InsertIsqL(iDrive, ECmpFolded));
+	if (err != KErrAlreadyExists) // We silently ignore attempts to insert duplicates
+		User::LeaveIfError(err);
 	
 	RWriteStream& stream = aUpdateLog.LogWriteStream();
 
@@ -814,18 +805,9 @@ void CApsRegisterNonNativeApplication::DoPerformUpdateL(RApsUpdateLog& aUpdateLo
 		iResourceFile.ExternalizeContinuationL(stream, EIconFileUpdate);
 		}
 	
-	HBufC* hPath = iResourceFile.Path().AllocL();
-	err = aUpdateLog.NewRegistrationFiles().InsertInOrder(hPath, TLinearOrder<HBufC>(CApaAppList::CompareStrings));
-	if(err != KErrNone)
-		{
-		delete hPath;
-		}
-	
-	if ((err != KErrNone) &&
-	    (err != KErrAlreadyExists)) // We silently ignore attempts to insert duplicates
-		{
-		User::Leave(err);
-		}
+	TRAP(err,aUpdateLog.NewRegistrationFiles().InsertIsqL(iResourceFile.Path(), ECmpFolded));
+	if (err != KErrAlreadyExists) // We silently ignore attempts to insert duplicates
+		User::LeaveIfError(err);
 	}
 
 void CApsRegisterNonNativeApplication::DoRollbackUpdate(RApsUpdateLog& aUpdateLog)
@@ -849,7 +831,7 @@ void CApsRegisterNonNativeApplication::DoRollbackUpdate(RApsUpdateLog& aUpdateLo
 	}
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 
 void CApsRegisterNonNativeApplication::ExternalizeL(RWriteStream& aStream)
 	{
@@ -939,18 +921,18 @@ CApsRegisterNonNativeApplication::~CApsRegisterNonNativeApplication()
  * CApsDeregisterNonNativeApplication
  **************************************************************************************************************/
 
-CApsDeregisterNonNativeApplication* CApsDeregisterNonNativeApplication::NewL(RFs& aFs, CApaAppListServer& aServ, TUid aUid, TState aState)
+CApsDeregisterNonNativeApplication* CApsDeregisterNonNativeApplication::NewL(RFs& aFs, CApaAppArcServer& aServ, TUid aUid, TState aState)
 	{
 	return new(ELeave)CApsDeregisterNonNativeApplication(aFs, aServ, aUid, aState);
 	}
 
-CApsDeregisterNonNativeApplication::CApsDeregisterNonNativeApplication(RFs& aFs, CApaAppListServer& aServ, TUid aUid, TState aState) :
+CApsDeregisterNonNativeApplication::CApsDeregisterNonNativeApplication(RFs& aFs, CApaAppArcServer& aServ, TUid aUid, TState aState) :
 		CApsNonNativeApplicationsUpdate(aFs, aUid, aState, EDeregisterApplication),
 		iServ(aServ)
 	{
 	}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 
 
 CApaAppData* CApsDeregisterNonNativeApplication::FindAppDataLC(RApsUpdateLog& aUpdateLog)
@@ -986,18 +968,7 @@ CApaAppData* CApsDeregisterNonNativeApplication::FindAppDataLC(RApsUpdateLog& aU
 			entry.iUidType = fsEntry.iType;
 
 			appData = NULL;
-			#ifdef SYMBIAN_APPARC_APPINFO_CACHE
- 				TRAP_IGNORE(appData = CApaAppData::NewL(entry,iFs));
- 			#else
- 				{
- 				// find the default icons (.mbm file) for applications, wrt current locale
- 				TFileName* tempFileName = NULL;
- 				tempFileName->Append(KDefaultAppIconMbm);
- 				BaflUtils::NearestLanguageFile(iFs, *tempFileName); 
- 				HBufC* defaultAppIcon = tempFileName->AllocL();
- 				TRAP_IGNORE(appData = CApaAppData::NewL(entry,iFs,*defaultAppIcon));
- 				}
- 			#endif //SYMBIAN_APPARC_APPINFO_CACHE
+			TRAP_IGNORE(appData = CApaAppData::NewL(entry,iFs));
 			if(appData != NULL)
 				{
 				CleanupStack::PushL(appData);
@@ -1014,10 +985,10 @@ CApaAppData* CApsDeregisterNonNativeApplication::FindAppDataLC(RApsUpdateLog& aU
 	TBool found = EFalse;
 	TApaAppEntry appEntry;
 
-	regFinder->FindAllAppsL();
-	RPointerArray<HBufC>& forcedRegs = aUpdateLog.NewRegistrationFiles();
+	regFinder->FindAllAppsL(CApaAppRegFinder::EScanAllDrives);
+	const CDesCArray& forcedRegs = aUpdateLog.NewRegistrationFiles();
 
-	while(regFinder->NextL(appEntry,forcedRegs))
+	while(regFinder->NextL(appEntry, forcedRegs))
 		{
 		if (appEntry.iUidType[2] == Uid())
 			{
@@ -1029,18 +1000,7 @@ CApaAppData* CApsDeregisterNonNativeApplication::FindAppDataLC(RApsUpdateLog& aU
 
 	if(found)
 		{
-		#ifdef SYMBIAN_APPARC_APPINFO_CACHE
- 			appData = CApaAppData::NewL(appEntry, iFs);
- 		#else
-			{
- 			// find the default icons (.mbm file) for applications, wrt current locale
- 			TFileName* tempFileName = NULL;
- 			tempFileName->Append(KDefaultAppIconMbm);
- 			BaflUtils::NearestLanguageFile(iFs, *tempFileName); 
- 			HBufC* defaultAppIcon = tempFileName->AllocL();
- 			appData = CApaAppData::NewL(appEntry, iFs,*defaultAppIcon);	
- 			}
- 		#endif //SYMBIAN_APPARC_APPINFO_CACHE 
+		appData = CApaAppData::NewL(appEntry, iFs);
 		CleanupStack::PushL(appData);
 		return appData;
 		}
@@ -1060,17 +1020,12 @@ void CApsDeregisterNonNativeApplication::RenameToTemporaryL(TFileDetails& aFile,
 		User::Leave(KErrPathNotFound);
 		}
 	TDriveName drive(parse.Drive());
+	TRAPD(err, aUpdateLog.DrivesAffected().InsertIsqL(drive, ECmpFolded));
+	if (err != KErrAlreadyExists) // We silently ignore attempts to insert duplicates
+		User::LeaveIfError(err);
 
-	HBufC* hDrive = drive.AllocL();
-	TInt err = aUpdateLog.DrivesAffected().InsertInOrder(hDrive, TLinearOrder<HBufC>(CApaAppList::CompareStrings));
-	if(err != KErrNone)
-		{
-		delete hDrive;
-		}
-	
-	TFileName path(TemporaryFilePathL(drive));
-
-	aFile.RenameToTemporaryL(iFs,path);
+	const TFileName path(TemporaryFilePathL(drive));
+	aFile.RenameToTemporaryL(iFs, path);
 	}
 
 void CApsDeregisterNonNativeApplication::DoPerformUpdateL(RApsUpdateLog& aUpdateLog)

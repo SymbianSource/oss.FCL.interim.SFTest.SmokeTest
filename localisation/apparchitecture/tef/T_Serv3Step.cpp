@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,23 +15,25 @@
 // Tests Application information, Data recognition and application
 // launching capabilities of the application architecture server.\n
 // 
+// t_serv3step.cpp
 //
 
-
-
 /**
- @file
+ @file t_serv3step.cpp
  @internalComponent - Internal Symbian test code
 */
  
 #include <f32file.h>
 #include <fbs.h>
 #include <apaid.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apaidpartner.h>
+#include <apgicnflpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 #include <apgaplst.h>
 #include <apaflrec.h>
 #include "testableapalssession.h"
 #include <apacmdln.h>
-#include <apsserv.h>
 #include <apfrec.h>
 #include <datastor.h>
 #include <apgicnfl.h>
@@ -81,10 +83,6 @@ CT_Serv3Step::CT_Serv3Step()
 	{
 	// Call base class method to set up the human readable name for logging
 	SetTestStepName(KT_Serv3Step);
-
-	//Set up active scheduler
-	iActiveScheduler= new(ELeave) CActiveScheduler;
-	CActiveScheduler::Install(iActiveScheduler);
 	}
 
 /**
@@ -1801,7 +1799,6 @@ TInt CT_Serv3Step::DoServComTestL()
 	//DONT_CHECK Skips the heap check at server side. This heap imbalance occurs randomly in server side
 	// while canceling the outstanding async request.
 	HEAP_TEST_LS_SESSION(ls, 0, DONT_CHECK, DoAsyncFolderRecognizerTest14L(ls), ls.FlushRecognitionCache() );
-			
 	CleanupStack::PopAndDestroy(&ls);
 
 	// close the server session and we have done some type store reloading
@@ -1896,6 +1893,10 @@ TVerdict CT_Serv3Step::doTestStepL()
  * @return - TVerdict code
  */
 {
+	//Set up active scheduler
+	iActiveScheduler= new(ELeave) CActiveScheduler;
+	CActiveScheduler::Install(iActiveScheduler);
+	
 	FbsStartup();
 	TInt ret = RFbsSession::Connect();
 	TEST(ret==KErrNone);
@@ -1947,3 +1948,4 @@ void CActiveTest2::RunL()
 	//Stop AS
 	CActiveScheduler::Stop();
 	}
+

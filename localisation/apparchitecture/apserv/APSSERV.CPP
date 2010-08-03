@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,27 +11,32 @@
 // Contributors:
 //
 // Description:
+// apsserv.cpp
 //
 
-
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#if !defined(__APA_INTERNAL_H__)
+#include "apainternal.h"
+#endif
+#include "apaidpartner.h"
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 #include <e32svr.h>
 #include <u32hal.h>
-#include <bautils.h>
-#include "APSSERV.H"
+#include "apsserv.h"
 #include "APFREC.H"
 #include "APSSES.H"
 #include "APSSTD.H"
-#include "../apfile/aprfndr.h"
-#include "APGAPLST.H"
+#include "../aplist/aplappregfinder.h"
+#include "../aplist/aplapplistitem.h"
 #include "APSSCAN.H"
 #include "APSSTD.H"
 #include "APASVST.H"
-#include "datastor.h"
+#include <datastor.h>
 #include "APSRECCACHE.h"
 #include "apsnnapps.h"
-#include "../apfile/apuninstallmonitor.h"
+#include "../apfile/apinstallationmonitor.h"
 #include "../apgrfx/apprivate.h"
-#include "apsiconcaptionoverride.h"
+#include "apgnotif.h"
 
 _LIT(KAppArcServerSemaphore,"AppArcServerSemaphore");
 _LIT(KAppArcServerThread,"AppArcServerThread");
@@ -85,15 +90,16 @@ const CPolicyServer::TPolicy KApaServPolicy =
  	
 
 
-//////////////////////////////
-// CApaAppListServer
-//////////////////////////////
+//
+// CApaAppArcServer
+//
 
 const TInt KAppListServerPriority=CActive::EPriorityStandard;
 /**
 NameApaServStartSemaphore
 
 @internalTechnology
+@released
 */
 EXPORT_C TPtrC NameApaServStartSemaphore()
 	{
@@ -104,7 +110,8 @@ EXPORT_C TPtrC NameApaServStartSemaphore()
 /**
 NameApaServServerThread
 
-@internalTechnology 
+@internalTechnology
+@released
 */
 EXPORT_C TPtrC NameApaServServerThread()
 	{
@@ -112,30 +119,31 @@ EXPORT_C TPtrC NameApaServServerThread()
 	return nameApaServServerThread;
 	}
 
-EXPORT_C CApaAppListServer* CApaAppListServer::Self()
+EXPORT_C CApaAppArcServer* CApaAppArcServer::Self()
 	{ // static
-	return static_cast<CApaAppListServer*>(Dll::Tls());
+	return static_cast<CApaAppArcServer*>(Dll::Tls());
 	}
 
-EXPORT_C CApaAppListServer* CApaAppListServer::NewL(MApaAppStarter* aAppStarter)
-// Create a new CApaAppListServer which owns it's own resources
+EXPORT_C CApaAppArcServer* CApaAppArcServer::NewL()
+// Create a new CApaAppArcServer which owns it's own resources
 	{
-	CApaAppListServer* self=new(ELeave) CApaAppListServer(KAppListServerPriority);
+	CApaAppArcServer* self=new(ELeave) CApaAppArcServer(KAppListServerPriority);
 	CleanupStack::PushL(self);
-	self->ConstructL(aAppStarter);
+	self->ConstructL();
 	CleanupStack::Pop();
 	return self;
 	}
 
-CApaAppListServer::CApaAppListServer(TInt aPriority)
+CApaAppArcServer::CApaAppArcServer(TInt aPriority)
 	: CPolicyServer(aPriority,KApaServPolicy),
 	iAppList(0),
 	iTypeStoreModified(0),
 	iLoadRecognizersOnDemand(KApaLoadDataRecognizersOnDemand),
-	iLoadMbmIconsOnDemand(KApaLoadMbmIconsOnDemand)
+	iLoadMbmIconsOnDemand(KApaLoadMbmIconsOnDemand),
+	iForceRegistrationStatus(EForceRegistrationNone)
 	{
 	
-	#ifdef __WINS__
+#ifdef __WINS__
 	// KApaLoadDataRecognizersOnDemand and KApaloadIconsOnDemand are Rom patchable constants,
 	// so need an emulator equivalent
 	// if WINS then read value from epoc.ini
@@ -143,25 +151,18 @@ CApaAppListServer::CApaAppListServer(TInt aPriority)
 
 	TInt halValue = 0;
 	if (UserSvr::HalFunction(EHalGroupEmulator, EEmulatorHalIntProperty, (TAny*)"patchdata_apserv_dll_KApaLoadDataRecognizersOnDemand", &halValue) == KErrNone)
-		{
 		iLoadRecognizersOnDemand = halValue;
-		}
-	if (UserSvr::HalFunction(EHalGroupEmulator, EEmulatorHalIntProperty, (TAny*)"patchdata_apserv_dll_KApaLoadMbmIconsOnDemand", &halValue) == KErrNone)
-		{
-		iLoadMbmIconsOnDemand = halValue;
-		}
-	#endif
 
-	__DECLARE_NAME(_S("CApaAppListServer"));
+	if (UserSvr::HalFunction(EHalGroupEmulator, EEmulatorHalIntProperty, (TAny*)"patchdata_apserv_dll_KApaLoadMbmIconsOnDemand", &halValue) == KErrNone)
+		iLoadMbmIconsOnDemand = halValue;
+#endif
 	}
 
-void CApaAppListServer::ConstructL(MApaAppStarter* aAppStarter)
+void CApaAppArcServer::ConstructL()
 	{
 	StartL(KAppListServerName);
 	User::LeaveIfError(Dll::SetTls(this));
 	User::LeaveIfError(iFs.Connect());
-	
-	iScanningFileRecognizer=CApaScanningFileRecognizer::NewL(iFs,aAppStarter);
 		
 	// Get the idle timeout delay from the commandline if specified. The default is 50000ms
 	const TInt cmdLineLen = User::CommandLineLength();
@@ -223,14 +224,13 @@ void CApaAppListServer::ConstructL(MApaAppStarter* aAppStarter)
 		iRuleBasedPlugIns = CApaScanningRuleBasedPlugIns::NewL();
 		}
 	
-	CApaAppRegFinder* appRegFinder=CApaAppRegFinder::NewL(iFs); //non-standard transfer of ownership, no need for CleanupStack
-	iAppList=CApaAppList::NewL(iFs, appRegFinder, iLoadMbmIconsOnDemand, idlePeriodicDelay); // takes ownership of scanner
+	iAppList=CApaAppList::NewL(iFs, iLoadMbmIconsOnDemand, idlePeriodicDelay); // takes ownership of scanner
 
 	// If the phone rebooted halfway through processing updates, there will be a log file left
 	// look for one and recover if neccessary
 	CApsNonNativeApplicationsManager::RecoverFromUpdateLogL(iFs);
 
-	iDataRecognizer=CApaScanningDataRecognizer::NewL(iFs, !iLoadRecognizersOnDemand);
+	iMimeTypeRecognizer=CApaScanningDataRecognizer::NewL(iFs, !iLoadRecognizersOnDemand);
 
 	ConstructPathsToMonitorL();	
 
@@ -241,22 +241,26 @@ void CApaAppListServer::ConstructL(MApaAppStarter* aAppStarter)
 		}
 	TRAP_IGNORE(iAppList->InitListL(this));
 	
-#ifdef USING_ECOM_RECOGS
+	//
 	iRecEcomMonitor=CApaEComMonitor::NewL(TCallBack(&PlugInNotifyCallBack,this));
 	iRecEcomMonitor->Start();
-#endif
-	iTypeStoreManager=CTypeStoreManager::NewL(iFs);
-	TRAPD(err,iTypeStoreManager->RestoreL());
-	if(err==KErrNone)
-		{
-		User::LeaveIfError(iFs.Modified(iTypeStoreManager->IniFileName(),iTypeStoreModified));
-		}
-	iTypeStoreMonitor=CApaFsMonitor::NewL(iFs,iTypeStoreManager->IniFileName(),TCallBack(&TypeStoreNotifyCallback,this));
+
+	// Create the EMIME type store manager (part of the app-framework_emime component)
+	iMimeTypeToAppMappingsManager=CTypeStoreManager::NewL(iFs);
+	TRAPD(err,iMimeTypeToAppMappingsManager->RestoreL());
+	if(!err)
+		User::LeaveIfError(iFs.Modified(iMimeTypeToAppMappingsManager->IniFileName(),iTypeStoreModified));
+
+	// Create the EMIME type store monitor
+	iTypeStoreMonitor = CApaFsMonitor::NewL(iFs,iMimeTypeToAppMappingsManager->IniFileName(),TCallBack(&TypeStoreNotifyCallback,this));
 	iTypeStoreMonitor->Start(ENotifyWrite); // this presumably needs to be ENotifyWrite rather than ENotifyFile (the latter being used or the other CApaFsMonitor objects) because CTypeStoreManager internally uses CDictionaryFileStore::OpenL, which presumably itself uses RFile::Open, which isn't covered by ENotifyFile according to its documentation
 	TypeStoreNotifyCallback(this);
+
+	//
 	iBaBackupSessionWrapper=CBaBackupSessionWrapper::NewL();
 	iBaBackupSessionWrapper->RegisterBackupOperationObserverL(*((MBackupOperationObserver*)this));
 
+	//
 	TChar sysDrive = RFs::GetSystemDriveChar();
 	TInt maxSizeofFileName = KNonNativeApplicationTypeRegistry().Length() + 1;
 	iNonNativeApplicationTypeRegistry.CreateL(maxSizeofFileName);
@@ -265,18 +269,14 @@ void CApaAppListServer::ConstructL(MApaAppStarter* aAppStarter)
 
 	TRAP_IGNORE(InternalizeNonNativeApplicationTypeArrayL());	// We don't want a corrupt file to prevent from starting
 	if(iLoadRecognizersOnDemand)
-		{
 		iRecognizerUnloadTimer=CPeriodic::NewL(EPriorityNormal);
-		}
-	iAppUnInstallMonitor = CApaAppUnInstallMonitor::NewL(this);
-	iAppUnInstallMonitor->Start();
 
-	iIconCaptionOverrides = new(ELeave) CApaIconCaptionOverrides();
-	iIconCaptionObserver = CApaIconCaptionCenrepObserver::NewL(*iIconCaptionOverrides);
-	iIconCaptionObserver->LoadOverridesL();
+	//
+	iAppInstallationMonitor = CApaAppInstallationMonitor::NewL(this);
+	iAppInstallationMonitor->Start();
 	}
 	
-void CApaAppListServer::ConstructPathsToMonitorL()
+void CApaAppArcServer::ConstructPathsToMonitorL()
 	{
 	TInt drivesToMonitor = KApaDrivesToMonitor;
 	#ifdef __WINS__
@@ -338,42 +338,33 @@ void CApaAppListServer::ConstructPathsToMonitorL()
 		}	
 	}
 	
-EXPORT_C CApaAppListServer::~CApaAppListServer()
+EXPORT_C CApaAppArcServer::~CApaAppArcServer()
 	{
-	delete iIconCaptionObserver;
-	delete iIconCaptionOverrides;
 	if(iBaBackupSessionWrapper)
 		iBaBackupSessionWrapper->DeRegisterBackupOperationObserver(*this);
-	delete iAppUnInstallMonitor;
-	delete iScanningFileRecognizer;
+	delete iAppInstallationMonitor;
 	delete iAppList; // deletes scanners
-	delete iDataRecognizer;
-	delete iTypeStoreManager;
+	delete iMimeTypeRecognizer;
+	delete iMimeTypeToAppMappingsManager;
 	delete iAppFsMonitor;	
 	delete iTypeStoreMonitor;
 	delete iBaBackupSessionWrapper;
 	delete iRecognitionCache;
-#ifdef USING_ECOM_RECOGS
 	delete iRecEcomMonitor;
-#else
-	iRecEcomMonitor = NULL;
-#endif
+
 	iFs.Close();
-	iAppCmdLine=NULL;
 	iWsSession.Close();	
 	delete 	iRuleBasedPlugIns;
-	for (TInt i=iNonNativeApplicationTypeArray.Count()-1; i>=0; --i)
-		{
+	for (TInt i = iNonNativeApplicationTypeArray.Count()-1; i >= 0; --i)
 		delete iNonNativeApplicationTypeArray[i].iNativeExecutable;
-		}
+
 	iNonNativeApplicationTypeArray.Close();
-	iCustomAppList.ResetAndDestroy();
-	iCustomAppList.Close();
+
 	delete iRecognizerUnloadTimer;
 	iNonNativeApplicationTypeRegistry.Close();
 	}
 
-EXPORT_C void CApaAppListServer::HandleStartUninstallEvent()
+EXPORT_C void CApaAppArcServer::HandleInstallationStartEvent()
 	{
 	if ( iAppFsMonitor )
 		{
@@ -381,7 +372,8 @@ EXPORT_C void CApaAppListServer::HandleStartUninstallEvent()
 		}
 	AppList().StopScan();
 	}
-EXPORT_C void CApaAppListServer::HandleEndUninstallEventL()
+
+EXPORT_C void CApaAppArcServer::HandleInstallationEndEventL()
 	{
 	if ( iAppFsMonitor )
 		{
@@ -390,72 +382,81 @@ EXPORT_C void CApaAppListServer::HandleEndUninstallEventL()
 	AppList().RestartScanL();
 	}
 
-CSession2* CApaAppListServer::NewSessionL(const TVersion& aVersion,const RMessage2&/* aMessage*/) const
-
+CSession2* CApaAppArcServer::NewSessionL(const TVersion& aVersion,const RMessage2&/* aMessage*/) const
 // Create a new server session.
 	{
 	// check we're the right version
-	TVersion v(KAppListServMajorVersionNumber,KAppListServMinorVersionNumber,KAppListServBuildVersionNumber);
+	TVersion v(KAppListServMajorVersionNumber, KAppListServMinorVersionNumber, KAppListServBuildVersionNumber);
 	if (!User::QueryVersionSupported(v,aVersion))
 		User::Leave(KErrNotSupported);
 	// make new session
-	return CApaAppListServSession::NewL(const_cast<CApaAppListServer&>(*this), const_cast<RFs&>(iFs));
+	return CApaAppArcServSession::NewL(const_cast<CApaAppArcServer&>(*this), const_cast<RFs&>(iFs));
 	}
 
 //
 // scanning code here
 //
 
-EXPORT_C TCallBack CApaAppListServer::RescanCallBack()
+EXPORT_C TCallBack CApaAppArcServer::RescanCallBack()
 	{
 	return TCallBack(&AppFsNotifyWithForcedRegistrationsResetCallBack,this);
 	}
 
-TInt CApaAppListServer::AppFsNotifyWithForcedRegistrationsResetCallBack(TAny* aPtr)
+TInt CApaAppArcServer::AppFsNotifyWithForcedRegistrationsResetCallBack(TAny* aPtr)
 	{
 	ASSERT(aPtr);
-	reinterpret_cast<CApaAppListServer*>(aPtr)->AppList().ResetForcedRegistrations();
+	reinterpret_cast<CApaAppArcServer*>(aPtr)->AppList().ResetForcedRegistrations();
 	return AppFsNotifyCallBack(aPtr);
 	}
 
-TInt CApaAppListServer::AppFsNotifyCallBack(TAny* aObject)
+TInt CApaAppArcServer::AppFsNotifyCallBack(TAny* aObject)
 	{
 	ASSERT(aObject);
-	reinterpret_cast<CApaAppListServer*>(aObject)->UpdateApps();
+	reinterpret_cast<CApaAppArcServer*>(aObject)->UpdateApps();
 	return KErrNone;
 	}
 
-TInt CApaAppListServer::PlugInNotifyCallBack(TAny* aObject)
+TInt CApaAppArcServer::PlugInNotifyCallBack(TAny* aObject)
 	{
 	//update the pre-Platform-security style  recognizers and rule-based plug-ins
 	ASSERT(aObject);
-	reinterpret_cast<CApaAppListServer*>(aObject)->UpdatePlugIns();
+	reinterpret_cast<CApaAppArcServer*>(aObject)->UpdatePlugIns();
 	return KErrNone;
 	}
 
-TInt CApaAppListServer::TypeStoreNotifyCallback(TAny* aObject)
+TInt CApaAppArcServer::TypeStoreNotifyCallback(TAny* aObject)
 	{
 	ASSERT(aObject);
-	reinterpret_cast<CApaAppListServer*>(aObject)->UpdateTypeStore();
+	reinterpret_cast<CApaAppArcServer*>(aObject)->UpdateTypeStore();
 	return KErrNone;
 	}
 
-void CApaAppListServer::UpdateApps()
+void CApaAppArcServer::UpdateApps()
 // update the list
 	{
 	// File system change, rescan
 	TRAP_IGNORE(iAppList->StartIdleUpdateL (this));
 	}
 
-void CApaAppListServer::NotifyUpdate(TInt aReason)
+/*
+Updates application list with force registered applications.
+*/
+ 
+void CApaAppArcServer::UpdateAppsByForceRegistration()
+    {
+    iForceRegistrationStatus|=EForceRegistrationRequested;
+    UpdateApps();
+    }
+
+void CApaAppArcServer::NotifyUpdate(TInt aReason)
 // tell all sessions to update their clients
 	{
 	// Updates the applist with the icon caption details from the Central Repository.
-	TRAP_IGNORE(UpdateAppListByIconCaptionOverridesL());
+	TRAP_IGNORE(iAppList->UpdateAppListByIconCaptionOverridesL());
 	// The short caption value sets through the API has got the highest precedence over the
 	// values found in either central repository or resource file.
-	TRAP_IGNORE(UpdateAppListByShortCaptionL());
-		
+	TRAP_IGNORE(iAppList->UpdateAppListByShortCaptionL());
+
     //Delete any data mappings in service registry related to uninstalled applications.
     CArrayFixFlat<TUid>* uninstalledApps=iAppList->UninstalledAppArray();
     TBool modificationStatus=EFalse;
@@ -466,7 +467,7 @@ void CApaAppListServer::NotifyUpdate(TInt aReason)
         TInt count=uninstalledApps->Count();
         for(int index=0;index<count;index++)
             {
-            modified=iTypeStoreManager->DeleteApplicationDataMappings((*uninstalledApps)[index]);
+            modified=iMimeTypeToAppMappingsManager->DeleteApplicationDataMappings((*uninstalledApps)[index]);
         
             //Set modificationStatus if any data mapping is removed from the service registry
             if(modified)
@@ -477,30 +478,50 @@ void CApaAppListServer::NotifyUpdate(TInt aReason)
         
         //If service registry is modified, store it to a file
         if(modificationStatus)
-            TRAP_IGNORE(iTypeStoreManager->StoreL());
+            TRAP_IGNORE(iMimeTypeToAppMappingsManager->StoreL());
         }
     
 	// iterate through sessions
 	iSessionIter.SetToFirst();
-	CApaAppListServSession* ses=static_cast<CApaAppListServSession*>(&(*iSessionIter++));
+	CApaAppArcServSession* ses=static_cast<CApaAppArcServSession*>(&(*iSessionIter++));
 	while (ses!=NULL)
 		{
-		ses->NotifyClients(aReason);	
-		ses=static_cast<CApaAppListServSession*>(&(*iSessionIter++));
+		if(iForceRegistrationStatus & EForceRegistrationRequested)
+            {
+             //Notify clients about completion of force registration. 
+            ses->NotifyScanComplete();
+            }
+		else
+            {
+            ses->NotifyClients(aReason);
+            }
+		ses=static_cast<CApaAppArcServSession*>(&(*iSessionIter++));
 		}
+	
+     if(iForceRegistrationStatus & EForceRegistrationRequested)
+         {
+         //If this function is called because of force registration, clear force registration request status and
+        //set force registration applist change status
+        iForceRegistrationStatus &= (~EForceRegistrationRequested);
+         iForceRegistrationStatus |= EForceRegistrationAppListChanged;
+         }
+     else
+         {
+         //If this function is called not because of force registration, clear force registration applist change status. 
+        iForceRegistrationStatus &= (~EForceRegistrationAppListChanged);        
+         }
 	}
 
-void CApaAppListServer::UpdatePlugIns()
+void CApaAppArcServer::UpdatePlugIns()
 // update the pre-Platform-security style, ecom style recognizers and rule-based plug-ins
 	{
-	TRAP_IGNORE(iScanningFileRecognizer->ScanForRecognizersL());
 	//we want the recognizers to be loaded either if:
 	// 1) they are not loaded on demand
 	// 2) they are loaded on demand and actively used
 	// 3) they are loaded on demand but waiting for the timer to be unloaded
 	if(!iLoadRecognizersOnDemand || iRecognizerUsageCount > 0 || (iRecognizerUnloadTimer && iRecognizerUnloadTimer->IsActive()))
 		{
-		TRAP_IGNORE(iDataRecognizer->LoadRecognizersL());
+		TRAP_IGNORE(iMimeTypeRecognizer->LoadRecognizersL());
 		}
 	if (iRecognitionCache)
 		{	// RecognitionCache is flushed if there are any changes in plugins, i.e.,if:
@@ -512,16 +533,16 @@ void CApaAppListServer::UpdatePlugIns()
 	TRAP_IGNORE(iRuleBasedPlugIns->ScanForRuleBasedPlugInsL());
 	}
 
-void CApaAppListServer::UpdateTypeStore()
+void CApaAppArcServer::UpdateTypeStore()
 // Update the internal type store if things have changed
 	{
 	TRAP_IGNORE(DoUpdateTypeStoreL());
 	}
 
-void CApaAppListServer::DoUpdateTypeStoreL()
+void CApaAppArcServer::DoUpdateTypeStoreL()
 	{
 	TTime modified;
-	TInt err=iFs.Modified(iTypeStoreManager->IniFileName(),modified);
+	TInt err=iFs.Modified(iMimeTypeToAppMappingsManager->IniFileName(),modified);
 	// check the time stamp to see if we are interested in an update
 	if (modified>iTypeStoreModified && err==KErrNone)
 		{
@@ -529,22 +550,22 @@ void CApaAppListServer::DoUpdateTypeStoreL()
 		CleanupStack::PushL(manager);
 		manager->RestoreL();
 		iTypeStoreModified=modified;
-		delete iTypeStoreManager;
-		iTypeStoreManager=manager;
+		delete iMimeTypeToAppMappingsManager;
+		iMimeTypeToAppMappingsManager=manager;
 		CleanupStack::Pop(manager); 
 		}
+		
 	for (iSessionIter.SetToFirst(); ; iSessionIter++) //lint !e1757 prefix operator not defined for TDblQueIter
 		{
      	CSession2* const session=iSessionIter;
-     	if (session==NULL)
-			{
+     	if (!session)
   			break;
-			}
-     	static_cast<CApaAppListServSession*>(session)->NotifyClientOfDataMappingChange();
+
+     	static_cast<CApaAppArcServSession*>(session)->NotifyClientOfDataMappingChange();
 		}
 	}
 
-void CApaAppListServer::HandleBackupOperationEventL(const TBackupOperationAttributes& aBackupOperationAttributes)
+void CApaAppArcServer::HandleBackupOperationEventL(const TBackupOperationAttributes& aBackupOperationAttributes)
 //
 // Handle a signal from the backup server to indicate that a backup has started or finished.
 //
@@ -572,7 +593,7 @@ void CApaAppListServer::HandleBackupOperationEventL(const TBackupOperationAttrib
 		}
 	}
 
-void CApaAppListServer::InitialListPopulationComplete()
+void CApaAppArcServer::InitialListPopulationComplete()
 	{
 	if ( iAppFsMonitor )
 		{
@@ -581,24 +602,23 @@ void CApaAppListServer::InitialListPopulationComplete()
 	
 	// notify clients (whoever is interested) that initial population of list is completed
 	iSessionIter.SetToFirst();
-	CApaAppListServSession* ses=static_cast<CApaAppListServSession*>(&(*iSessionIter++));
+	CApaAppArcServSession* ses=static_cast<CApaAppArcServSession*>(&(*iSessionIter++));
 	// iterate through sessions
 	while (ses!=NULL)
 		{
 		ses->NotifyClientForCompletionOfListPopulation();	
-		ses=static_cast<CApaAppListServSession*>(&(*iSessionIter++));
+		ses=static_cast<CApaAppArcServSession*>(&(*iSessionIter++));
 		}
 	}
 
-void CApaAppListServer::RegisterNonNativeApplicationTypeL(TUid aApplicationType, const TDesC& aNativeExecutable)
+void CApaAppArcServer::RegisterNonNativeApplicationTypeL(TUid aApplicationType, const TDesC& aNativeExecutable)
 	{
 	for (TInt i=iNonNativeApplicationTypeArray.Count()-1; i>=0; --i)
 		{
 		if (iNonNativeApplicationTypeArray[i].iTypeUid.iUid==aApplicationType.iUid)
-			{
 			User::Leave(KErrAlreadyExists);
-			}
 		}
+		
 	SNonNativeApplicationType nonNativeApplicationType;
 	nonNativeApplicationType.iTypeUid.iUid=aApplicationType.iUid;
 	nonNativeApplicationType.iNativeExecutable=aNativeExecutable.AllocLC();
@@ -609,16 +629,15 @@ void CApaAppListServer::RegisterNonNativeApplicationTypeL(TUid aApplicationType,
 	CleanupStack::Pop(this); // the TCleanupItem
 	}
 
-void CApaAppListServer::DeregisterNonNativeApplicationTypeL(TUid aApplicationType)
+void CApaAppArcServer::DeregisterNonNativeApplicationTypeL(TUid aApplicationType)
 	{
 	TInt i;
 	for (i=iNonNativeApplicationTypeArray.Count()-1; i>=0; --i)
 		{
 		if (iNonNativeApplicationTypeArray[i].iTypeUid.iUid==aApplicationType.iUid)
-			{
 			break;
-			}
 		}
+		
 	if (i>=0)
 		{
 		ExternalizeNonNativeApplicationTypeArrayL(i);
@@ -628,7 +647,7 @@ void CApaAppListServer::DeregisterNonNativeApplicationTypeL(TUid aApplicationTyp
 		}
 	}
 
-void CApaAppListServer::InternalizeNonNativeApplicationTypeArrayL()
+void CApaAppArcServer::InternalizeNonNativeApplicationTypeArrayL()
 	{
 	RFile file;
 	CleanupClosePushL(file);
@@ -650,10 +669,11 @@ void CApaAppListServer::InternalizeNonNativeApplicationTypeArrayL()
 			}
 		CleanupStack::PopAndDestroy(&sourceStream);
 		}
+		
 	CleanupStack::PopAndDestroy(&file);
 	}
 
-void CApaAppListServer::ExternalizeNonNativeApplicationTypeArrayL(TInt aIndexToIgnore/*=-1*/) const
+void CApaAppArcServer::ExternalizeNonNativeApplicationTypeArrayL(TInt aIndexToIgnore/*=-1*/) const
 	{
 	RFs& fs=const_cast<RFs&>(iFs);
 	fs.MkDirAll(iNonNativeApplicationTypeRegistry); // ignore any error
@@ -666,9 +686,8 @@ void CApaAppListServer::ExternalizeNonNativeApplicationTypeArrayL(TInt aIndexToI
 	const TInt arrayCount(iNonNativeApplicationTypeArray.Count());
 	TInt arrayCountToExternalize=arrayCount;
 	if (aIndexToIgnore>=0)
-		{
 		--arrayCountToExternalize;
-		}
+
 	TCardinality(arrayCountToExternalize).ExternalizeL(targetStream);
 	for (TInt i=0; i<arrayCount; ++i)
 		{
@@ -679,182 +698,100 @@ void CApaAppListServer::ExternalizeNonNativeApplicationTypeArrayL(TInt aIndexToI
 			targetStream << *nonNativeApplicationType.iNativeExecutable;
 			}
 		}
+		
 	targetStream.CommitL();
 	CleanupStack::PopAndDestroy(2, &file);
 	}
 
-TPtrC CApaAppListServer::NativeExecutableL(TUid aNonNativeApplicationType) const
+TPtrC CApaAppArcServer::NativeExecutableL(TUid aNonNativeApplicationType) const
 	{
 	for (TInt i=iNonNativeApplicationTypeArray.Count()-1; i>=0; --i)
 		{
 		const SNonNativeApplicationType& nonNativeApplicationType=iNonNativeApplicationTypeArray[i];
 		if (nonNativeApplicationType.iTypeUid.iUid==aNonNativeApplicationType.iUid)
-			{
 			return *nonNativeApplicationType.iNativeExecutable;
-			}
 		}
+		
 	User::Leave(KErrNotSupported); // not KErrNotFound
 	return KNullDesC();
 	}
 
-void CApaAppListServer::DeleteLastNonNativeApplicationType(TAny* aThis)
+void CApaAppArcServer::DeleteLastNonNativeApplicationType(TAny* aThis)
 	{ // static
-	CApaAppListServer& self=*static_cast<CApaAppListServer*>(aThis);
+	CApaAppArcServer& self=*static_cast<CApaAppArcServer*>(aThis);
 	const TInt arrayIndex=self.iNonNativeApplicationTypeArray.Count()-1;
 	delete self.iNonNativeApplicationTypeArray[arrayIndex].iNativeExecutable;
 	self.iNonNativeApplicationTypeArray[arrayIndex].iNativeExecutable = NULL;
 	self.iNonNativeApplicationTypeArray.Remove(arrayIndex);
 	}
 
-void CApaAppListServer::NotifyScanComplete()
+void CApaAppArcServer::NotifyScanComplete()
 	{
 	// Updates the applist with the icon caption details from the Central Repository.
-	TRAP_IGNORE(UpdateAppListByIconCaptionOverridesL());
+	TRAP_IGNORE(iAppList->UpdateAppListByIconCaptionOverridesL());
 	// The short caption value sets through the API has got the highest precedence over the
 	// values found in either central repository or resource file.		
-	TRAP_IGNORE(UpdateAppListByShortCaptionL());
+	TRAP_IGNORE(iAppList->UpdateAppListByShortCaptionL());
 
 	// iterate through sessions
 	iSessionIter.SetToFirst();
-	CApaAppListServSession* ses=static_cast<CApaAppListServSession*>(&(*iSessionIter++));
-	while (ses!=NULL)
+	CApaAppArcServSession* ses=static_cast<CApaAppArcServSession*>(&(*iSessionIter++));
+	while (ses)
 		{
-		ses->NotifyScanComplete();	
-		ses=static_cast<CApaAppListServSession*>(&(*iSessionIter++));
-		}
-	}
-
-void CApaAppListServer::AddCustomAppInfoInListL(CCustomAppInfoData* aCustomAppInfo)
-	{
-	TBool replaced=EFalse;
-	for (TInt i=iCustomAppList.Count()-1; i>=0; --i)
-		{
-		if ((aCustomAppInfo->Uid()==iCustomAppList[i]->Uid()) && (aCustomAppInfo->Language()==iCustomAppList[i]->Language()))
-			{
-			CCustomAppInfoData* oldAppInfo = iCustomAppList[i];
-			iCustomAppList[i]=aCustomAppInfo;
-			delete oldAppInfo;
-			replaced=ETrue;
-			break;
-			}
-		}
-	//Add ELangNone items at the end and others at the beginning
-	if(!replaced)
-		{
-		if(aCustomAppInfo->Language()==ELangNone)
-			{
-			iCustomAppList.AppendL(aCustomAppInfo);
-			}
+		if((iForceRegistrationStatus & EForceRegistrationRequested) ||
+	            !(iForceRegistrationStatus & EForceRegistrationAppListChanged))
+		    {
+		    //Notify clients about completion of force registration or scan completion		
+		    ses->NotifyScanComplete();
+		    }
 		else
-			{
-			iCustomAppList.InsertL(aCustomAppInfo,0);
-			}
+		    {
+		    //If force registration changes applicaiton list,
+		    // then notify applist change to clients.
+		    ses->NotifyClients(MApaAppListServObserver::EAppListChanged);
+		    }		
+		ses=static_cast<CApaAppArcServSession*>(&(*iSessionIter++));
 		}
-	
-	} //lint !e818 Suppress pointer parameter could be declared as pointing to const - this method takes ownership
-
-
-void CApaAppListServer::UpdateAppListByShortCaptionL()
-	{
-	CApaAppData* app=NULL;
-	//Items with ELangNone are always found at the end and other languages at the beginning
-	//While iterating from end to beginning, we overwrite short caption set by ELangNone if there is any provided for the application language
-	for (TInt i=iCustomAppList.Count()-1; i>=0; --i)
-		{
-		const CCustomAppInfoData* const customAppInfo=iCustomAppList[i];
-		app=iAppList->AppDataByUid(customAppInfo->Uid());
-		if ( app && ((app->ApplicationLanguage()==customAppInfo->Language()) || (customAppInfo->Language()==ELangNone)))
-			{
-			app->SetShortCaptionL(*customAppInfo->ShortCaption());
-			}
-		}
-	}
-
-void CApaAppListServer::UpdateAppListByIconCaptionOverridesL()
-	{
-	// get the language downgrade path, so that most appropriate language can be used
-	RArray<TLanguage> languageDowngradePath;
-	CleanupClosePushL(languageDowngradePath);
-	BaflUtils::GetDowngradePathL(iFs, User::Language(), languageDowngradePath);
-	for (CApaAppData* app = iAppList->FirstApp(); app; app = iAppList->NextApp(app))
-		{
-		CApaIconCaptionOverridesForApp* appOverride = iIconCaptionOverrides->OverrideForApp(app->AppEntry().iUidType[2]);
-		if (appOverride)
-			{
-			TApaIconCaptionOverrideReader overrideReader = appOverride->Reader(languageDowngradePath);
-			const TDesC* shortCaption = overrideReader.ShortCaption();
-			if (shortCaption)
-				app->SetShortCaptionL(*shortCaption);
-			const TDesC* caption = overrideReader.Caption();
-			if (caption)
-				app->SetCaptionL(*caption);
-			const TDesC* iconFileName = overrideReader.IconFileName();
-			if (overrideReader.NumIconsSet() && iconFileName)
-				app->SetIconsL(*iconFileName, overrideReader.NumIcons());
-			}
-		}
-	CleanupStack::PopAndDestroy(&languageDowngradePath);
-	}
-
-CCustomAppInfoData* CCustomAppInfoData::NewL(TUid aAppUid, TLanguage aLanguage, const TDesC& aShortCaption)
-	{
-	CCustomAppInfoData* self=new(ELeave) CCustomAppInfoData(aAppUid, aLanguage);
-    CleanupStack::PushL(self);
-	self->ConstructL(aShortCaption);
-	CleanupStack::Pop(self);
-	return self;
-	}
-
-CCustomAppInfoData::~CCustomAppInfoData()
-	{
-	delete iShortCaption;
-	}
-
-CCustomAppInfoData::CCustomAppInfoData(TUid aAppUid, TLanguage aLanguage)
-	:iUid(aAppUid),
-	iLanguage(aLanguage)
-	{
-	}
-
-void CCustomAppInfoData::ConstructL(const TDesC& aShortCaption)
-	{
-	iShortCaption=aShortCaption.AllocL();
+	if(!(iForceRegistrationStatus & EForceRegistrationRequested))
+	    {
+	    //If this function is called not because of force registration, 
+	    //clear force registration applist change status. 
+            iForceRegistrationStatus &= (~EForceRegistrationAppListChanged);	        
+	    }
+	//Clear force registration request status
+        iForceRegistrationStatus &= (~EForceRegistrationRequested);
 	}
 
 /*
  * Data Recognizer calls
  */
  
-TBool CApaAppListServer::CachedRecognitionResult(const TParseBase& aParser, TDataRecognitionResult& aResult) const
+TBool CApaAppArcServer::CachedRecognitionResult(const TParseBase& aParser, TDataRecognitionResult& aResult) const
 	{
 	if(iRecognitionCache && aParser.PathPresent() && aParser.NamePresent())
-		{
 		return iRecognitionCache->Get(aParser.DriveAndPath(), aParser.NameAndExt(), aResult);
-		}
+
 	return EFalse;
 	}
 
 /**
 N.B. The @c CRecognitionResult object is reference counted so it must be closed!
 */
-CRecognitionResult* CApaAppListServer::CachedRecognitionResult(const RFile& aFile, const TParseBase& aParser) const
+CRecognitionResult* CApaAppArcServer::CachedRecognitionResult(const RFile& aFile, const TParseBase& aParser) const
 	{
 	if(iRecognitionCache && aParser.PathPresent() && aParser.NamePresent())
-		{
 		return iRecognitionCache->Get(aFile, aParser.DriveAndPath(), aParser.NameAndExt());
-		}
+
 	return NULL;
 	}
 
-void CApaAppListServer::CacheRecognitionResultL(const TParseBase& aParser, const TDataRecognitionResult& aResult)
+void CApaAppArcServer::CacheRecognitionResultL(const TParseBase& aParser, const TDataRecognitionResult& aResult)
 	{
 	if(iRecognitionCache && aParser.PathPresent() && aParser.NamePresent())
-		{
 		iRecognitionCache->AddL(aParser.DriveAndPath(), aParser.NameAndExt(), aResult);
-		}
 	}
 
-void CApaAppListServer::CacheRecognitionResultL(const RFile& aFile, const TParseBase& aParser, const TDataRecognitionResult& aResult)
+void CApaAppArcServer::CacheRecognitionResultL(const RFile& aFile, const TParseBase& aParser, const TDataRecognitionResult& aResult)
 	{
 	if(iRecognitionCache && aParser.PathPresent() && aParser.NamePresent())
 		{
@@ -862,7 +799,7 @@ void CApaAppListServer::CacheRecognitionResultL(const RFile& aFile, const TParse
 		}
 	}
 
-TDataRecognitionResult CApaAppListServer::RecognizeDataL(const TDesC& aName, const TDesC8& aBuffer)
+TDataRecognitionResult CApaAppArcServer::RecognizeDataL(const TDesC& aName, const TDesC8& aBuffer)
 	{
 	TParsePtrC parser(iFs.IsValidName(aName) ? aName : KNullDesC);
 	TDataRecognitionResult result;
@@ -872,14 +809,11 @@ TDataRecognitionResult CApaAppListServer::RecognizeDataL(const TDesC& aName, con
 		{
 		// recognize
 		if(iLoadRecognizersOnDemand)
-			{
 			LoadRecognizersLC();
-			}
-		result = iDataRecognizer->RecognizeL(aName, aBuffer);
+
+		result = iMimeTypeRecognizer->RecognizeL(aName, aBuffer);
 		if(iLoadRecognizersOnDemand)
-			{
 			CleanupStack::PopAndDestroy();
-			}
 
 		// add to cache
 		CacheRecognitionResultL(parser, result);
@@ -888,7 +822,7 @@ TDataRecognitionResult CApaAppListServer::RecognizeDataL(const TDesC& aName, con
 	return result;	
 	}
 
-TDataRecognitionResult CApaAppListServer::RecognizeDataL(RFile& aFile, TInt aPreferredBufSize)
+TDataRecognitionResult CApaAppArcServer::RecognizeDataL(RFile& aFile, TInt aPreferredBufSize)
 	{
 	CRecognitionResult* result = RecognizeDataAsCRecognitionResultL(aFile, aPreferredBufSize);
 	TDataRecognitionResult ret;
@@ -903,7 +837,7 @@ instead of a @c TDataRecognitionResult.
 
 N.B. The @c CRecognitionResult object is reference counted so it must be closed!
 */
-CRecognitionResult* CApaAppListServer::RecognizeDataAsCRecognitionResultL(RFile& aFile, TInt aPreferredBufSize)
+CRecognitionResult* CApaAppArcServer::RecognizeDataAsCRecognitionResultL(RFile& aFile, TInt aPreferredBufSize)
 	{
 	CRecognitionResult* result = NULL;
 	
@@ -917,15 +851,12 @@ CRecognitionResult* CApaAppListServer::RecognizeDataAsCRecognitionResultL(RFile&
 		{
 		// recognize
 		if(iLoadRecognizersOnDemand)
-			{
 			LoadRecognizersLC();
-			}
-		const TDataRecognitionResult recResult = iDataRecognizer->RecognizeL(aFile, aPreferredBufSize);
+
+		const TDataRecognitionResult recResult = iMimeTypeRecognizer->RecognizeL(aFile, aPreferredBufSize);
 		if(iLoadRecognizersOnDemand)
-			{
 			CleanupStack::PopAndDestroy();
-			}
-		
+	
 		//add to cache
 		CacheRecognitionResultL(aFile, parser, recResult);
 
@@ -935,83 +866,74 @@ CRecognitionResult* CApaAppListServer::RecognizeDataAsCRecognitionResultL(RFile&
 	return result;
 	}
 
-TBool CApaAppListServer::RecognizeDataL(const TDesC& aName, const TDesC8& aBuffer, const TDataType& aDataType)
+TBool CApaAppArcServer::RecognizeDataL(const TDesC& aName, const TDesC8& aBuffer, const TDataType& aDataType)
 	{
 	if(iLoadRecognizersOnDemand)
-		{
 		LoadRecognizersLC();
-		}
-	const TBool ret = iDataRecognizer->RecognizeL(aName,aBuffer,aDataType);
+
+	const TBool ret = iMimeTypeRecognizer->RecognizeL(aName,aBuffer,aDataType);
 	if(iLoadRecognizersOnDemand)
-		{
 		CleanupStack::PopAndDestroy();
-		}
+
 	return ret;
 	}
 
-TBool CApaAppListServer::RecognizeDataL(RFile& aFile, TInt aPreferredBufSize, const TDataType& aDataType)
+TBool CApaAppArcServer::RecognizeDataL(RFile& aFile, TInt aPreferredBufSize, const TDataType& aDataType)
 	{
 	if(iLoadRecognizersOnDemand)
-		{
 		LoadRecognizersLC();
-		}
-	const TBool ret = iDataRecognizer->RecognizeL(aFile,aPreferredBufSize,aDataType);
+
+	const TBool ret = iMimeTypeRecognizer->RecognizeL(aFile,aPreferredBufSize,aDataType);
 	if(iLoadRecognizersOnDemand)
-		{
 		CleanupStack::PopAndDestroy();
-		}
+
 	return ret;
 	}
 
-TInt CApaAppListServer::DataRecognizerPreferredBufSizeL()
+TInt CApaAppArcServer::DataRecognizerPreferredBufSizeL()
 	{
 	if(iLoadRecognizersOnDemand)
-		{
 		LoadRecognizersLC();
-		}
-	const TInt ret = iDataRecognizer->PreferredBufSize();
+
+	const TInt ret = iMimeTypeRecognizer->PreferredBufSize();
 	if(iLoadRecognizersOnDemand)
-		{
 		CleanupStack::PopAndDestroy();
-		}
+
 	return ret;
 	}
 
-void CApaAppListServer::DataTypeL(CDataTypeArray& aArray)
+void CApaAppArcServer::DataTypeL(CDataTypeArray& aArray)
 	{
 	if(iLoadRecognizersOnDemand)
-		{
 		LoadRecognizersLC();
-		}
-	iDataRecognizer->DataTypeL(aArray);
+
+	iMimeTypeRecognizer->DataTypeL(aArray);
 	if(iLoadRecognizersOnDemand)
-		{
 		CleanupStack::PopAndDestroy();
-		}
 	}
 
 /*
  * Recognizer loading/unloading code
  */
 
-void CApaAppListServer::LoadRecognizersLC()
+void CApaAppArcServer::LoadRecognizersLC()
 	{
 	ASSERT(iLoadRecognizersOnDemand);
 
 	LoadRecognizersL();
-	TCleanupItem cleanup(CApaAppListServer::RecognizerCleanup, this);
+	TCleanupItem cleanup(CApaAppArcServer::RecognizerCleanup, this);
 	CleanupStack::PushL(cleanup);
 	}
 
-void CApaAppListServer::RecognizerCleanup(TAny* aSelf)
+void CApaAppArcServer::RecognizerCleanup(TAny* aSelf)
 	{
 	if (aSelf)
 		{
-		static_cast<CApaAppListServer*>(aSelf)->UnloadRecognizers();
+		static_cast<CApaAppArcServer*>(aSelf)->UnloadRecognizers();
 		}
 	}
 
-void CApaAppListServer::LoadRecognizersL()
+void CApaAppArcServer::LoadRecognizersL()
 	{
 	ASSERT(iLoadRecognizersOnDemand);
 
@@ -1022,13 +944,13 @@ void CApaAppListServer::LoadRecognizersL()
 		}
 	else if(iRecognizerUsageCount==0)
 		{
-		iDataRecognizer->LoadRecognizersL();
+		iMimeTypeRecognizer->LoadRecognizersL();
 		}
 
 	++iRecognizerUsageCount;
 	}
 
-TInt CApaAppListServer::UnloadRecognizers()
+TInt CApaAppArcServer::UnloadRecognizers()
 	{
 	ASSERT(iLoadRecognizersOnDemand);
 
@@ -1036,62 +958,57 @@ TInt CApaAppListServer::UnloadRecognizers()
 	__ASSERT_DEBUG(iRecognizerUsageCount>=0,Panic(EReferenceCountingError2));
 	if (iRecognizerUsageCount==0)
 		{
-		iRecognizerUnloadTimer->Start(KApaUnloadRecognizersTimeout,0,TCallBack(CApaAppListServer::DoUnloadRecognizersCallback,this));
+		iRecognizerUnloadTimer->Start(KApaUnloadRecognizersTimeout,0,TCallBack(CApaAppArcServer::DoUnloadRecognizersCallback,this));
 		}
 	return KErrNone;
 	}
 	
-TInt CApaAppListServer::DoUnloadRecognizersCallback(TAny* aSelf)
+TInt CApaAppArcServer::DoUnloadRecognizersCallback(TAny* aSelf)
 	{
 	TInt ret=KErrNone;
 	if (aSelf)
 		{
-		ret = static_cast<CApaAppListServer*>(aSelf)->DoUnloadRecognizers();
+		ret = static_cast<CApaAppArcServer*>(aSelf)->DoUnloadRecognizers();
 		}
 	return ret;
 	}
 
-TInt CApaAppListServer::DoUnloadRecognizers()
+TInt CApaAppArcServer::DoUnloadRecognizers()
 	{
 	ASSERT(iLoadRecognizersOnDemand);
 
 	// need to cancel the periodic timer since we only want a oneshot timer
 	iRecognizerUnloadTimer->Cancel();
-	iDataRecognizer->UnloadRecognizers();
+	iMimeTypeRecognizer->UnloadRecognizers();
 	return KErrNone;
 	}
 	
-void CApaAppListServer::GetAppByDataType(const TDataType& aDataType, TUid& aUid) const
+void CApaAppArcServer::GetAppForMimeType(const TDataType& aDataType, TUid& aUid) const
 	{
-	iTypeStoreManager->GetAppByDataType(aDataType, aUid);
+	iMimeTypeToAppMappingsManager->GetAppByDataType(aDataType, aUid);
 	}
 	
-void CApaAppListServer::GetAppByDataType(const TDataType& aDataType, TUid aServiceUid, TUid& aUid) const
+void CApaAppArcServer::GetAppForMimeType(const TDataType& aDataType, TUid aServiceUid, TUid& aUid) const
 	{
-	iTypeStoreManager->GetAppByDataType(aDataType, aServiceUid, aUid);
+	iMimeTypeToAppMappingsManager->GetAppByDataType(aDataType, aServiceUid, aUid);
 	}
 	
-TBool CApaAppListServer::InsertAndStoreIfHigherL(const TDataType& aDataType, TDataTypePriority aPriority, TUid aUid)
+TBool CApaAppArcServer::InsertAndStoreIfHigherL(const TDataType& aDataType, TDataTypePriority aPriority, TUid aUid)
 	{
-	return iTypeStoreManager->InsertAndStoreIfHigherL(aDataType, aPriority, aUid);
+	return iMimeTypeToAppMappingsManager->InsertAndStoreIfHigherL(aDataType, aPriority, aUid);
 	}
 	
-void CApaAppListServer::InsertAndStoreDataMappingL(const TDataType& aDataType, TDataTypePriority aPriority, TUid aUid, TUid aServiceUid)
+void CApaAppArcServer::InsertAndStoreDataMappingL(const TDataType& aDataType, TDataTypePriority aPriority, TUid aUid, TUid aServiceUid)
 	{
-	iTypeStoreManager->InsertAndStoreDataMappingL(aDataType, aPriority, aUid, aServiceUid);
+	iMimeTypeToAppMappingsManager->InsertAndStoreDataMappingL(aDataType, aPriority, aUid, aServiceUid);
 	}
 	
-void CApaAppListServer::DeleteAndStoreDataMappingL(const TDataType& aDataType, TUid aServiceUid)
+void CApaAppArcServer::DeleteAndStoreDataMappingL(const TDataType& aDataType, TUid aServiceUid)
 	{
-	iTypeStoreManager->DeleteAndStoreDataMappingL(aDataType, aServiceUid);
-	}
-	
-CApaFileRecognizer* CApaAppListServer::FileRecognizer()
-	{ 
-	return static_cast<CApaFileRecognizer*>(iScanningFileRecognizer); 
+	iMimeTypeToAppMappingsManager->DeleteAndStoreDataMappingL(aDataType, aServiceUid);
 	}
 
-TBool CApaAppListServer::LoadMbmIconsOnDemand() const
+TBool CApaAppArcServer::LoadMbmIconsOnDemand() const
 	{
 	return iLoadMbmIconsOnDemand;
 	}
@@ -1103,7 +1020,7 @@ Flushes the recognition cache.
 
 Useful for debugging.
 */
-void CApaAppListServer::FlushRecognitionCache()
+void CApaAppArcServer::FlushRecognitionCache()
 	{
 	if(iRecognitionCache)
 		iRecognitionCache->Flush();
@@ -1114,7 +1031,7 @@ Sets whether or not recognizers should be loaded when they are needed.
 
 Useful for debugging.
 */	
-void CApaAppListServer::SetLoadRecognizersOnDemandL(TBool aLoadRecognizersOnDemand)
+void CApaAppArcServer::SetLoadRecognizersOnDemandL(TBool aLoadRecognizersOnDemand)
 	{
 	if(iLoadRecognizersOnDemand == aLoadRecognizersOnDemand)
 		return;
@@ -1132,9 +1049,9 @@ void CApaAppListServer::SetLoadRecognizersOnDemandL(TBool aLoadRecognizersOnDema
 		}
 	CleanupStack::PushL(newUnloadTimer);
 	
-	CApaScanningDataRecognizer* newDataRecognizer = CApaScanningDataRecognizer::NewL(iFs,!aLoadRecognizersOnDemand);
-	delete iDataRecognizer;
-	iDataRecognizer = newDataRecognizer;
+	CApaScanningDataRecognizer* newMimeTypeRecognizer = CApaScanningDataRecognizer::NewL(iFs,!aLoadRecognizersOnDemand);
+	delete iMimeTypeRecognizer;
+	iMimeTypeRecognizer = newMimeTypeRecognizer;
 	
 	delete iRecognizerUnloadTimer;
 	iRecognizerUnloadTimer = newUnloadTimer;
@@ -1150,7 +1067,7 @@ the unloading synchronously, instead of waiting for the unloading timer to go of
 
 Useful for debugging.
 */
-void CApaAppListServer::PerformOutstandingRecognizerUnloading()
+void CApaAppArcServer::PerformOutstandingRecognizerUnloading()
 	{
 	if(iLoadRecognizersOnDemand && iRecognizerUnloadTimer->IsActive())
 		{
@@ -1160,3 +1077,4 @@ void CApaAppListServer::PerformOutstandingRecognizerUnloading()
 	}
 
 #endif //_DEBUG
+

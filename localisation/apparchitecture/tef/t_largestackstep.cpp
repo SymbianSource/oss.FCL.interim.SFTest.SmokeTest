@@ -1,7 +1,7 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,20 +13,22 @@
 // Description:
 // The following test case is used to test whether or not Apparc can handle loading applications with excessively large stack frames.
 // 
+//t_largestackstep.cpp
 //
 
-
-
 /**
- @file
+ @file t_largestackstep.cpp
  @internalComponent - Internal Symbian test code
 */
 
 #include <apgcli.h>
 #include <apacmdln.h>
 #include <apgicnfl.h>
-#include "../apserv/APSCLSV.H"
-#include "T_LargeStackStep.h"
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apgicnflpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
+#include "../apserv/apsclsv.h"
+#include "t_largestackstep.h"
 
 const TUid KLargeStackAppUid = {0x10282B27};
 
@@ -84,9 +86,6 @@ void CT_LargeStackStep::TestLargeStackL()
 	commandline->SetCommandL(EApaCommandRunWithoutViews);
 	TEST(iApaLsSession.StartApp(*commandline)==KErrNone);
 	
-	INFO_PRINTF1(_L("Test running the application via the legacy recogniser code."));
-	TEST(iApaLsSession.TestExeRecognizerL(*commandline)==KErrNone);
-
 	INFO_PRINTF1(_L("Test running the application via StartDocument."));
 	TThreadId threadId;
 	TEST(iApaLsSession.StartDocument(_L("z:\fakename.doc"), KLargeStackAppUid, threadId, RApaLsSession::ELaunchNewApp)==KErrNone);

@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,15 +15,11 @@
 // 
 //
 
-
-
 /**
  @file
  @test
  @internalComponent - Internal Symbian test code
 */
-
-#include <platform_paths.hrh>
 
 TARGET        		tupgradeiconapp.exe
 TARGETTYPE    		exe
@@ -36,14 +32,13 @@ SOURCEPATH    	.
 SOURCE		tupgradeiconapp.cpp
 
 USERINCLUDE   	.
-SYSTEMINCLUDE 	/epoc32/include
-SYSTEMINCLUDE 	/epoc32/include/techview
-
-MW_LAYER_SYSTEMINCLUDE
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+//SYSTEMINCLUDE 	/epoc32/include/techview
 
 SOURCEPATH	.
-RESOURCE 	tupgradeiconapp.RSS
-START RESOURCE	tupgradeiconapp.RSS
+RESOURCE 	tupgradeiconapp.rss
+START RESOURCE	tupgradeiconapp.rss
 TARGETPATH	/resource/apps
 LANG		SC
 END
@@ -55,3 +50,5 @@ END
 
 
 LIBRARY       euser.lib apparc.lib cone.lib eikcore.lib gdi.lib
+
+SMPSAFE

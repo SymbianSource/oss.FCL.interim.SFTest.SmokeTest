@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -14,17 +14,20 @@
 // Test MRU list\n
 // Tests MRU list by calling CApaProcess::SetMainDocFileName().\n
 // 
+// t_mrustep.cpp
 //
 
-
-
 /**
- @file
+ @file t_mrustep.cpp
  @internalComponent - Internal Symbian test code
 */
 
 #include <f32file.h>
 #include <apaid.h>
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <apaidpartner.h>
+#include <apgicnflpartner.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 #include <apgaplst.h>
 #include <apgicnfl.h>
 #include <apgdoor.h>
@@ -336,3 +339,4 @@ TVerdict CT_MruStep::doTestStepL()
 	INFO_PRINTF1(_L("Testing T_Mru Completed!"));
 	return TestStepResult();
 	}
+

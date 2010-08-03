@@ -1,7 +1,7 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -16,11 +16,11 @@
 #include "APSRECCACHE.h"
 #include "APSSES.H"
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Constants
 
 const TUint KMaxNumberOfEntries = 200;
-//////////////////////////////////////////////////////////////////////////////
+//
 
 CRecognitionResultHashMapEntry* CRecognitionResultHashMapEntry::NewL(const TDesC& aFileName, TTime aLastModified, const TDataRecognitionResult& aResult, CRecognitionResultHashMapEntry* aNext)
 	{
@@ -56,9 +56,9 @@ void CRecognitionResultHashMapEntry::UpdateL(TTime aLastModified, const TDataRec
 	iLastModified = aLastModified;
 	}
 
-///////////////////////////////////////////////////////////////////////
+//
 // CRecognitionResultHashMap
-///////////////////////////////////////////////////////////////////////
+//
 
 CRecognitionResultHashMap::CRecognitionResultHashMap()
 	{
@@ -130,9 +130,9 @@ TUint CRecognitionResultHashMap::GetIndex(const TDesC& aKey) const
 	}
 	
 
-///////////////////////////////////////////////////////////////////////
+//
 // CCacheDirectoryEntry
-///////////////////////////////////////////////////////////////////////
+//
 
 CCacheDirectoryEntry* CCacheDirectoryEntry::NewL(const TDesC& aDirectory)
 	{
@@ -154,9 +154,9 @@ CCacheDirectoryEntry::~CCacheDirectoryEntry()
 
 const TInt CCacheDirectoryEntry::iOffset = _FOFF(CCacheDirectoryEntry,iDlink);
 
-///////////////////////////////////////////////////////////////////////
+//
 // CApsRecognitionCache
-///////////////////////////////////////////////////////////////////////
+//
 
 CApsRecognitionCache::CApsRecognitionCache(RFs& aFs)
 	: iFs(aFs),

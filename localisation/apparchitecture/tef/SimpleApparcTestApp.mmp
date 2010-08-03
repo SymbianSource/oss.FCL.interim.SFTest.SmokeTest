@@ -1,7 +1,7 @@
 // Copyright (c) 2000-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,12 +15,10 @@
 // 
 //
 
-#include <platform_paths.hrh>
-
-target		SimpleApparcTestApp.EXE
+target		simpleapparctestapp.exe
 TARGETTYPE 	exe
 	
-targetpath	/SYS/BIN
+targetpath	/sys/bin
 UID           	0x100039CE 0x12008ACE
 VENDORID 	0x70000001
 CAPABILITY 	All -Tcb
@@ -30,10 +28,10 @@ SOURCEPATH    	.
 SOURCE		SimpleApparcTestApp.cpp
 
 USERINCLUDE   	.
-SYSTEMINCLUDE 	/epoc32/include
-SYSTEMINCLUDE 	/epoc32/include/techview
 
-MW_LAYER_SYSTEMINCLUDE
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+//SYSTEMINCLUDE 	/epoc32/include/techview
 
 // Application exe specific resource which is localised to the application
 RESOURCE	SimpleApparcTestApp.rss
@@ -44,14 +42,16 @@ end
 
 
 // Application exe registration resource file
-START RESOURCE	SimpleApparcTestApp_reg.rss
+START RESOURCE	SimpleApparcTestApp_Reg.RSS
 TARGETPATH	/private/10003a3f/apps
 lang		sc
 END
 
  
-LIBRARY       	APPARC.LIB  
-LIBRARY       	CONE.LIB 
-LIBRARY       	EIKCORE.LIB
-LIBRARY       	EUSER.LIB 
-LIBRARY       	GDI.LIB
+LIBRARY       	apparc.lib  
+LIBRARY       	cone.lib 
+LIBRARY       	eikcore.lib
+LIBRARY       	euser.lib 
+LIBRARY       	gdi.lib
+
+SMPSAFE

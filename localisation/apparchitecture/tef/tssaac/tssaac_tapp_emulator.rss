@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -21,9 +21,9 @@
 
 #include "startup.rh"
 
-/////////////////////////////////////////////
+//
 // ENTRY POINT
-/////////////////////////////////////////////
+//
 
 // THIS MUST BE THE FIRST RESOURCE. The system relies on
 // this having a resource ID of 1
@@ -32,13 +32,13 @@ RESOURCE STARTUP_ENTRY_POINT r_entry_point
 	{
 	entry_point = r_startup_state_critical_static; 
 	}
-/////////////////////////////////////////////
+//
 
 
 
-/////////////////////////////////////////////
+//
 // CRITICAL-STATIC startup state
-/////////////////////////////////////////////
+//
 RESOURCE STATE_INFO r_startup_state_critical_static
 	{
 	id = EStartupStateCriticalStatic;
@@ -93,9 +93,9 @@ RESOURCE COMMAND_ARRAY r_critical_static_commands
 		};
 	}
 
-/////////////////////////////////////////////
+//
 // CRITICAL-DYNAMIC startup state
-/////////////////////////////////////////////
+//
 RESOURCE STATE_INFO r_startup_state_critical_dynamic
 	{
 	id = EStartupStateCriticalDynamic;
@@ -137,9 +137,9 @@ RESOURCE COMMAND_ARRAY r_critical_dynamic_commands
 		};
 	}
 
-/////////////////////////////////////////////
+//
 // Networking-CRITICAL startup state
-/////////////////////////////////////////////
+//
 RESOURCE STATE_INFO  r_startup_state_networking_critical
 	{
 	id = EStartupStateNetworkingCritical;   
@@ -170,9 +170,9 @@ RESOURCE COMMAND_ARRAY r_networking_critical_commands
 		};
 	}
 
-/////////////////////////////////////////////
+//
 // NON-CRITICAL startup state
-/////////////////////////////////////////////
+//
 RESOURCE STATE_INFO r_startup_state_non_critical
 	{
 	id = EStartupStateNonCritical;
@@ -227,3 +227,5 @@ RESOURCE COMMAND_ARRAY r_non_critical_commands
 			}
 		};
 	}
+
+

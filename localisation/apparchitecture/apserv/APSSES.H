@@ -1,7 +1,7 @@
-// Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+// Copyright (c) 1997-2010 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -11,63 +11,53 @@
 // Contributors:
 //
 // Description:
+// apsses.h
 //
 
-#if !defined(__APSSES_H__)
+#ifndef __APSSES_H__
 #define __APSSES_H__
 
-#if !defined(__E32BASE_H__)
 #include <e32base.h>
-#endif
-#if !defined(__APSSERV_H__)
-#include <APSSERV.H>
-#endif
-#if !defined(__F32FILE_H__)
+#include "apsserv.h"
 #include <f32file.h>
-#endif
-#if !defined(__APAID_H__)
 #include <apaid.h>
-#endif
-#if !defined(__APSCLSV_H__)
 #include "APSCLSV.H"
-#endif
-
 #include "APGAPLST.H"
 #include "APSRECUTIL.H"
 
-// classes defined
-class CApaAppListServSession;
-//
 // classes referenced
 class CApaAppList;
 class CApaAppData;
-class CApaFileRecognizer;
-class CApaScanningDataRecognizer;
 class TDataType;
-class CTypeStoreManager;
 class CApsNonNativeApplicationsManager;
-//
 class MArrayItemWriter;
-
 class CFileRecognitionUtility;
 
-class CApaAppListServSession : public CSession2
+class CApaAppListServSession : public CBase
 	{
 public:
-	// construct/destruct
-	static CApaAppListServSession* NewL(CApaAppListServer& aServer, RFs& aFs);
+	static CApaAppListServSession* NewL(RFs& aFs, CApaAppArcServer& aAppArcSrv, CApaAppList& aAppList);
 	~CApaAppListServSession();
-	//service request
-	virtual void ServiceL(const RMessage2 &aMessage);
-	void NotifyClients(TInt aReason);
-	void NotifyClientForCompletionOfListPopulation();
-	void NotifyClientOfDataMappingChange();
+
+	CApaAppList& AppList();
+
 	void NotifyScanComplete();
-private:
-	CApaAppListServSession(CApaAppListServer& aServer, RFs& aFs);
-	void ConstructL();
-	void NotifyOnDataMappingChange(const RMessage2& aMessage);
-	void CancelNotifyOnDataMappingChange();
+	void SetNotify(const RMessage2& aMessage);
+	void CancelNotify();
+	void NotifyClients(TInt aReason);
+	
+	void NotifyClientForCompletionOfListPopulation();
+	void CancelListPopulationCompleteObserver();
+public:
+	CApaAppData& FindAppInListL(TUid aUid);
+	const CApaAppData& FindAppInListL(TUid aUid) const { return const_cast<CApaAppListServSession*>(this)->FindAppInListL(aUid); }
+	TBool FindAppInList(CApaAppData*& aApp, TApaAppEntry& aEntry, TUid aAppUid);
+	TBool FindAppInList(const CApaAppData*& aApp, TApaAppEntry& aEntry, TUid aAppUid) const 
+		{ return const_cast<CApaAppListServSession*>(this)->FindAppInList(const_cast<CApaAppData*&>(aApp), aEntry, aAppUid); }	
+	TUid AppUidFromFullFileNameL(const TDesC& aFullFileName) const;
+	CApaAppData* FindSpecificAppL(TUid aAppUid);
+public:
+	void DoServiceL(const RMessage2& aMessage);
 private:
 	enum TAppListType {
 		ENoList,
@@ -75,15 +65,15 @@ private:
 		EListCapabilityAttrFilteredApps,
 		EListServerApps
 		};
-	enum TAppListDocumentStart {
-		EStart,
-		EStartByDataType,
-		EStartByUid,
-		ECreateByUid
-		};
 private:
-	class CApaAppInfo;
-private:
+	CApaAppListServSession(RFs& aFs, CApaAppArcServer& aAppArcSrv, CApaAppList& aAppList);
+	void ConstructL();
+private:	
+	void GetAppTypeL(const RMessage2& aMessage);
+	void ForceRegistrationL(const RMessage2& aMessage);	
+	void RegisterListPopulationCompleteObserver(const RMessage2& aMessage);
+	void MatchesSecurityPolicyL(const RMessage2& aMessage);
+	
 	void AppCount(const RMessage2& aMessage) const;
 	void EmbedCount(const RMessage2& aMessage) const;
 	void GetNextAppL(const RMessage2& aMessage);
@@ -92,55 +82,97 @@ private:
 	void GetAppInfoL(TUid aUid, TApaAppInfo& aInfo);
 	void GetAppCapabilityL(const RMessage2& aMessage);
 	void GetDefaultScreenNumberL(const RMessage2& aMessage);
-	void StartAppL(const RMessage2& aMessage, TBool aReturnThreadId);
-	//
+	
+	void IconForAppL(const RMessage2& aMessage);
+	void IconForAppBySizeL(const RMessage2& aMessage);
+	void AppIconSizesL(const RMessage2& aMessage);
+	void IconFileHandleForAppL(const RMessage2& aMessage);
+	void AppViewsL(const RMessage2& aMessage);
+	void IconForViewBySizeL(const RMessage2& aMessage);
+	void AppFileOwnershipInfoL(const RMessage2& aMessage);
+
+	void NumberOfOwnDefinedIconsL(const RMessage2& aMessage);
+
+	void AppInfoProvidedByRegistrationFileL(const RMessage2& aMessage);
+	void IconFileNameL(const RMessage2& aMessage);
+	void ViewIconFileNameL(const RMessage2& aMessage);
+	
+	void ApplicationLanguageL(const RMessage2& aMessage);
+	void SetAppShortCaptionL(const RMessage2& aMessage);
+private:		
+	static TInt NextDriveToScan(TInt aCurrentDrive);	
+	static TBool AppIsControlPanelItem(const CApaAppData& aAppData);
+	TBool AppMatchesEmbeddabilityFilter(const CApaAppData& aAppData, const TApaEmbeddabilityFilter& aEmbeddabilityFilter) const;
+	TBool AppMatchesCapabilityAttrFilter(const CApaAppData& aAppData) const;
+	void SendArrayL(const MArrayItemWriter& aArrayItemWriter,const RMessage2& aMessage) const;	
+private:
+	class CApaAppInfo;
+private:
+	enum TFlags
+		{
+		ENotifyPresent=0x01,
+		EAppListPopulationPending=0x02
+		};
+private:
+	RFs& iFs;
+	TInt iFlags;
+	CApaAppArcServer& iAppArcSrv;
+	CApaAppList& iAppList;
+	RMessage2 iNotifyMessage;
+	RMessage2 iNotifyOnScanCompleteMsg;
+	CApsNonNativeApplicationsManager* iNonNativeApplicationsManager;
+	RMessage2 iCompletionOfListPopulationObserverMsg;
+		
+	TAppListType iAppListType;
+	TInt iAppListScreenMode;
+	TApaEmbeddabilityFilter iEmbeddabilityFilter;
+	TUint iCapabilityAttrFilterMask; // contains bit flags from TCapabilityAttribute
+	TUint iCapabilityAttrFilterValue; // contains bit flags from TCapabilityAttribute
+	TUid iServiceUid;
+	RPointerArray<CApaAppInfo> iApaAppInfoArray;	//contains the most recent "snapshot" of the applist taken by GetNextAppL.
+	};
+	
+	
+class CApaAppArcServSession : public CSession2
+	{
+public:
+	// construct/destruct
+	static CApaAppArcServSession* NewL(CApaAppArcServer& aServer, RFs& aFs);
+	~CApaAppArcServSession();
+	//service request
+	virtual void ServiceL(const RMessage2 &aMessage);
+
+	void NotifyClientOfDataMappingChange();
+	void NotifyClients(TInt aReason);
+	void NotifyScanComplete();
+	void NotifyClientForCompletionOfListPopulation();
+private:
+	CApaAppArcServSession(CApaAppArcServer& aServer, RFs& aFs);
+	void ConstructL();
+	void NotifyOnDataMappingChange(const RMessage2& aMessage);
+	void CancelNotifyOnDataMappingChange();
+private:
 	// Data recognition stuff
 	void RecognizeDataL(const RMessage2& aMessage);
 	void RecognizeDataPassedByFileHandleL(const RMessage2& aMessage);
 	void RecognizeSpecificDataL(const RMessage2& aMessage);
 	void RecognizeSpecificDataPassedByFileHandleL(const RMessage2& aMessage);
-	static void DoRecognizeUnpackLC(HBufC*& aName, HBufC8*& aBuffer, const RMessage2& aMessage);
-	//
+	static TPtrC8 DoRecognizeUnpackLC(HBufC*& aName, RChunk& aLocalChunk, const RMessage2& aMessage);
+
 	void AppForDataTypeL(const RMessage2& aMessage);
-	void StartDocumentL(const RMessage2& aMessage,TAppListDocumentStart aStartType);
-	TThreadId StartDocumentL(const TDesC& aFileName, TUid aUid, TApaCommand aCommand);
-	void GetExecutableNameGivenDocumentL(const RMessage2& aMessage);
-	void GetExecutableNameGivenDocumentPassedByFileHandleL(const RMessage2& aMessage);
-	void GetExecutableNameGivenDataTypeL(const RMessage2& aMessage);
-	void GetExecutableNameGivenAppUidL(const RMessage2& aMessage);
-	void GetExecutableNameL(const RMessage2& aMessage, TUid aAppUid);
-	void GetNativeExecutableNameIfNonNativeL(const RMessage2& aMessage);
-	void WriteNativeExecutableIfNonNativeAndPrepareForClientRetrievalOfOpaqueDataL(const RMessage2& aMessage, TInt aMessageSlotForNativeExecutable, const CApaAppData& aAppData);
-	void GetOpaqueDataL(const RMessage2& aMessage);
 	TUid AppForDataTypeL(const TDataType& aDataType, const TUid* aServiceUid);
 	void AppForDocumentL(const RMessage2& aMessage, const TUid* aServiceUid);
-	//
-	void IconForAppL(const RMessage2& aMessage);
-	//
-	void IconForAppBySizeL(const RMessage2& aMessage);
-	void AppIconSizesL(const RMessage2& aMessage);
-	void IconFileHandleForAppL(const RMessage2& aMessage);
-	//
-	void AppViewsL(const RMessage2& aMessage);
-	void IconForViewBySizeL(const RMessage2& aMessage);
-	void AppFileOwnershipInfoL(const RMessage2& aMessage);
-	//
-	void NumberOfOwnDefinedIconsL(const RMessage2& aMessage);
-	//
-	void AppInfoProvidedByRegistrationFileL(const RMessage2& aMessage);
-	void IconFileNameL(const RMessage2& aMessage);
-	void ViewIconFileNameL(const RMessage2& aMessage);
-	//
+
 	void RecognizeFilesL(const RMessage2& aMessage);
 	void TransferRecognitionResultL(const RMessage2& aMessage);
 	void RecognizeFilesAsyncL(const RMessage2& aMessage);
-	void RuleBasedLaunchingL(const RMessage2& aMessage);
+	void AquirePermissionToLaunchAppL(const RMessage2& aMessage) const;
 	void CancelRecognizeFiles();
-	//
+
 	void InsertDataMappingL(const RMessage2& aMessage);
 	void DeleteDataMappingL(const RMessage2& aMessage);
 	void GetAppByDataTypeL(const RMessage2& aMessage) const;
-	//
+
 	void GetAppServicesL(const RMessage2& aMessage);
 	CBufBase* GetServiceBufferL(const RMessage2& aMessage) const;
 	void AppForDataTypeAndServiceL(const RMessage2& aMessage);
@@ -149,15 +181,14 @@ private:
 	void RegisterNonNativeApplicationTypeL(const RMessage2& aMessage);
 	void DeregisterNonNativeApplicationTypeL(const RMessage2& aMessage);
 
-	void GetAppTypeL(const RMessage2& aMessage);
-	void ForceRegistrationL(const RMessage2& aMessage);
-	inline const CApaAppList& AppList() const;
-	inline CApaFileRecognizer* FileRecognizer() const;
-	CApaAppData& FindAppInListL(TUid aUid);
-	TBool FindAppInList(CApaAppData*& aApp,TApaAppEntry& aEntry,TUid aAppUid);
-	TBool AppMatchesEmbeddabilityFilter(const CApaAppData& aAppData, const TApaEmbeddabilityFilter& aEmbeddabilityFilter) const;
-	TBool AppMatchesCapabilityAttrFilter(const CApaAppData& aAppData) const;
-	static TBool AppIsControlPanelItem(const CApaAppData& aAppData);
+	void GetExecutableNameGivenDocumentL(const RMessage2& aMessage);
+	void GetExecutableNameGivenDocumentPassedByFileHandleL(const RMessage2& aMessage);
+	void GetExecutableNameGivenDataTypeL(const RMessage2& aMessage);
+	void GetExecutableNameGivenAppUidL(const RMessage2& aMessage);
+	void GetExecutableNameL(const RMessage2& aMessage, TUid aAppUid);
+	void GetNativeExecutableNameIfNonNativeL(const RMessage2& aMessage);
+	void WriteNativeExecutableIfNonNativeAndPrepareForClientRetrievalOfOpaqueDataL(const RMessage2& aMessage, TInt aMessageSlotForNativeExecutable, const CApaAppData& aAppData);
+	void GetOpaqueDataL(const RMessage2& aMessage);
 
 	void GetConfidenceL(const RMessage2& aMessage);
 	void SetConfidence(const RMessage2& aMessage);
@@ -165,63 +196,20 @@ private:
 	void SetBufSize(const RMessage2& aMessage);
 	void GetDataTypesCountL(const RMessage2& aMessage);
 	void GetDataTypesL(const RMessage2& aMessage);
-	void SetNotify(const RMessage2& aMessage);
-	void CancelNotify();
-	//
-	void SendArrayL(const MArrayItemWriter& aArrayItemWriter,const RMessage2& aMessage) const;
-	//
-	void ApplicationLanguageL(const RMessage2& aMessage);
-	void RegisterListPopulationCompleteObserver(const RMessage2& aMessage);
-	void CancelListPopulationCompleteObserver();
-	void MatchesSecurityPolicyL(const RMessage2& aMessage);
-	//
-	void SetAppShortCaptionL(const RMessage2& aMessage);
-
-	static void NullifyAppCommandLinePointer(TAny* aServer);
-	TInt PreferredBufSize() const;
-	CApaAppData* FindSpecificAppL(TUid aAppUid);
-	TUid AppUidFromFullFileNameL(const TDesC& aFullFileName) const;
-	static TInt NextDriveToScan(TInt aCurrentDrive);
 	
+	TInt PreferredBufSize() const;
 private:
-	enum
-		{
-		ENotifyPresent=0x01,
-		EAppListPopulationPending=0x02
-		};
-
-private:
-	CApaAppListServer& iServ;
-	TInt iFlags;
+	CApaAppArcServer& iServ;
+	CApaAppListServSession* iAppListSession;
 	RFs& iFs;
 	TInt iMaxBufSize;
 	CBufBase* iBuffer;
-	RMessage2 iNotifyMessage;
-	RMessage2 iNotifyOnScanCompleteMsg;
-	RPointerArray<CApaAppInfo> iApaAppInfoArray;	//contains the most recent "snapshot" of the applist taken by GetNextAppL.
-	TAppListType iAppListType;
-	TInt iAppListScreenMode;
-	TApaEmbeddabilityFilter iEmbeddabilityFilter;
-	TUint iCapabilityAttrFilterMask; // contains bit flags from TCapabilityAttribute
-	TUint iCapabilityAttrFilterValue; // contains bit flags from TCapabilityAttribute
-	TUid iServiceUid;
-	RMessage2 iCompletionOfListPopulationObserverMsg;
 	CDirectoryRecognitionResult* iRecognitionResult;
 	CFileRecognitionUtility* iFileRecognitionUtility;
 	TBool iAsyncRecognitionActive;
 	HBufC8* iOpaqueData_pendingDispatchToClient;
 	RMessagePtr2 iMessage_NotifyOnDataMappingChange;
-	CApsNonNativeApplicationsManager* iNonNativeApplicationsManager;
 	};
 
-//
-// inlines
-//
 
-inline const CApaAppList& CApaAppListServSession::AppList() const
-	{ return ((CApaAppListServer*)Server())->AppList(); } 
-
-inline CApaFileRecognizer* CApaAppListServSession::FileRecognizer() const
-	{ return ((CApaAppListServer*)Server())->FileRecognizer(); }
-
-#endif
+#endif	// __APSSES_H__

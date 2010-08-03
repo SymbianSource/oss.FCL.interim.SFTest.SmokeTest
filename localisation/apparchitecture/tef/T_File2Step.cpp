@@ -1,7 +1,7 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,17 +13,17 @@
 // Description:
 // Tests CApaAppRegFinder APIs.
 // 
+// t_file2step.cpp
 //
 
-
-
 /**
- @file
+ @file t_file2step.cpp
  @internalComponent - Internal Symbian test code
 */
 
 #include "T_File2Step.h"
-#include "..\apfile\aprfndr.h"
+#include "../aplist/aplappregfinder.h"	// class CApaAppRegFinder
+#include "../aplist/aplapplistitem.h"	// class TApaAppEntry
 
 //
 #if !defined(__E32TEST_H__)
@@ -58,16 +58,17 @@ void CT_File2Step::testFindAllAppsRegL()
 	fSession.Connect();
 	CApaAppRegFinder* regFinder=CApaAppRegFinder::NewL(fSession);
 	//
-	TRAPD(ret, regFinder->FindAllAppsL() );
+	TRAPD(ret, regFinder->FindAllAppsL(CApaAppRegFinder::EScanAllDrives) );
 	TEST(ret==KErrNone);
 	//
+	CDesCArray* dummyArray = new (ELeave) CDesCArraySeg(1);
+	CleanupStack::PushL(dummyArray);
 	TBool more=ETrue;
 	TInt count=0;
 	while (more) 
 		{
 		TApaAppEntry entry;
-		RPointerArray<HBufC> dummy;
-		TRAPD(ret, more=regFinder->NextL(entry, dummy) );
+		TRAPD(ret, more=regFinder->NextL(entry, *dummyArray) );
 		TEST(ret==KErrNone);
 		if (more)
 			count++;
@@ -75,6 +76,7 @@ void CT_File2Step::testFindAllAppsRegL()
 	TEST(count>0);
 	INFO_PRINTF2(_L("     Apps found: %D"),count);
 	//
+	CleanupStack::PopAndDestroy(dummyArray);
 	delete regFinder;
 	fSession.Close();
 	}
@@ -131,3 +133,4 @@ TVerdict CT_File2Step::doTestStepL()
 	INFO_PRINTF1(_L("Test completed!"));
 	return TestStepResult();
 	}
+

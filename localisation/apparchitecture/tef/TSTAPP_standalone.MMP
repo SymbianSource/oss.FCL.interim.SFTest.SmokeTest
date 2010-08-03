@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,15 +13,13 @@
 // Description:
 //
 
-
-
 /**
  @file
  @test
  @internalComponent - Internal Symbian test code 
 */
 
-#include <platform_paths.hrh>
+
 
  TARGET        	tstapp.exe
  TARGETTYPE    	exe
@@ -34,21 +32,22 @@ VENDORID 		0x70000001
 EPOCSTACKSIZE 	0x5000
 
 SOURCEPATH    	.
-SOURCE        	TSTAPP_standalone.cpp
+SOURCE        	TSTAPP_standalone.CPP
 
 USERINCLUDE   	.
-SYSTEMINCLUDE 	/epoc32/include
-SYSTEMINCLUDE 	/epoc32/include/techview
-systeminclude 	/EPOC32/INCLUDE/ECOM
 
-MW_LAYER_SYSTEMINCLUDE
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+//SYSTEMINCLUDE 	/epoc32/include/techview
+//systeminclude 	/epoc32/include/ecom
+
 
 //reg added for Datacaging
 START RESOURCE	tstapp_reg.rss
 TARGETPATH		/private/10003a3f/import/apps
 END
 
-START RESOURCE 	tstapp.rss
+START RESOURCE 	TSTAPP.rss
 TARGETPATH 		/resource/apps
 END
 
@@ -101,3 +100,5 @@ SOURCE 			c8,1 tstappicon40x55.bmp tstappicon40x55m.bmp
 END
 
 LIBRARY 	euser.lib apparc.lib eikcore.lib cone.lib  
+
+SMPSAFE

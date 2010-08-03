@@ -1,7 +1,7 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -13,18 +13,15 @@
 // Description:
 //
 
-
-
 /**
  @file
  @test
  @internalComponent - Internal Symbian test code 
 */
 
-#include <platform_paths.hrh>
 
-target			TSTAPP_embedded.DLL
-TARGETPATH		/SYS/BIN
+target			tstapp_embedded.dll
+TARGETPATH		/sys/bin
 TARGETTYPE 		PLUGIN
 UID 			0x10009d8d 0x10004c66
 
@@ -35,19 +32,17 @@ VENDORID 		0x70000001
 sourcepath		.
 source          TSTAPP.CPP
 
-systeminclude   ../INC 	// your public include directory should be here
-systeminclude   /EPOC32/INCLUDE
-systeminclude   /EPOC32/INCLUDE/techview
-systeminclude 	/EPOC32/INCLUDE/ECOM
-
-MW_LAYER_SYSTEMINCLUDE
-
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+userinclude		../inc // your public include directory should be here
 userinclude     .
 
 
 START RESOURCE 	10004c66.rss
-TARGET 			TSTAPP_embedded.rsc
+TARGET 			tstapp_embedded.rsc
 END
 
-library         EUSER.LIB APPARC.LIB GDI.LIB ESTOR.LIB EFSRV.LIB APGRFX.LIB eikcore.lib CONE.LIB
-library			ECOM.LIB
+library         euser.lib apparc.lib gdi.lib estor.lib efsrv.lib apgrfx.lib eikcore.lib cone.lib
+library			ecom.lib
+
+SMPSAFE

@@ -1,7 +1,7 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Eclipse Public License v1.0"
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
 // at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
@@ -15,9 +15,8 @@
 // 
 //
 
-#include <platform_paths.hrh>
 
-TARGET        	TAppEmbeddableOnly.dll
+TARGET        	tappembeddableonly.dll
 TARGETTYPE    	PLUGIN
 TARGETPATH	/sys/bin
 UID           	0x10009d8d 0x10004c5C
@@ -29,11 +28,11 @@ SOURCEPATH    	.
 SOURCE        	TAppEmbeddableOnly.cpp
 
 USERINCLUDE   	.
-SYSTEMINCLUDE 	/epoc32/include
-SYSTEMINCLUDE 	/epoc32/include/techview
-SYSTEMINCLUDE 	/epoc32/include/Ecom
 
-MW_LAYER_SYSTEMINCLUDE
+MW_LAYER_SYSTEMINCLUDE_SYMBIAN
+APP_LAYER_SYSTEMINCLUDE_SYMBIAN
+//SYSTEMINCLUDE 	/epoc32/include/techview
+//SYSTEMINCLUDE 	/epoc32/include/ecom
 
 //reg added for Datacaging
 START RESOURCE	TAppEmbeddableOnly_reg.rss
@@ -41,13 +40,15 @@ TARGETPATH	/private/10003a3f/apps
 END
 
 START RESOURCE 	10004c5C.rss
-TARGET 		TAppEmbeddableOnly.rsc
+TARGET 		tappembeddableonly.rsc
 END
 
 
-LIBRARY       	APPARC.LIB
-LIBRARY       	CONE.LIB 
-LIBRARY       	EIKCORE.LIB 
-LIBRARY       	ECOM.LIB
-LIBRARY       	EUSER.LIB
-LIBRARY       	GDI.LIB
+LIBRARY       	apparc.lib
+LIBRARY       	cone.lib 
+LIBRARY       	eikcore.lib 
+LIBRARY       	ecom.lib
+LIBRARY       	euser.lib
+LIBRARY       	gdi.lib
+
+SMPSAFE
