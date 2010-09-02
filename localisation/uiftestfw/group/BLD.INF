@@ -30,7 +30,6 @@ PRJ_TESTMMPFILES
 
 PRJ_TESTEXPORTS
 // TestFramework IBY files
-../group/Smoketest_uitestfw.iby		/epoc32/rom/include/Smoketest_uitestfw.iby
 
 // TestFramework INCLUDE files
 ../inc/appfwk_test.h 				MW_LAYER_PLATFORM_EXPORT_PATH(test/appfwk_test.h)

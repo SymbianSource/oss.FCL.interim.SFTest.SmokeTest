@@ -1,7 +1,0 @@
-#ifndef SMOKETEST_UITESTFW_IBY
-#define SMOKETEST_UITESTFW_IBY
-
-file=ABI_DIR\DEBUG_DIR\appfwk_test_appui.dll	System\libs\appfwk_test_appui.dll
-file=ABI_DIR\DEBUG_DIR\appfwk_test_utils.dll	System\libs\appfwk_test_utils.dll
-
-#endif //SMOKETEST_UITESTFW_IBY

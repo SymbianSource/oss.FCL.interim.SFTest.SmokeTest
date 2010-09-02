@@ -11,6 +11,7 @@
 #include <Smoketest_http.iby>
 #include <Smoketest_InputMethods.iby>
 #include <Smoketest_lbs.iby>
+#include <Smoketest_localisation.iby>
 #include <Smoketest_Mediamgmt.iby>
 #include <Smoketest_Mess.iby>
 #include <Smoketest_notepad.iby>

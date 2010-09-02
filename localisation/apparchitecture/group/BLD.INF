@@ -134,4 +134,4 @@ PRJ_TESTEXPORTS
 //../tef/scripts/apparctest_T_Caption.script            		z:/apparctest/apparctest_t_caption.script
 ../tef/scripts/smoketest_language.script            		z:/smoketest/smoketest_language.script
 ../tef/scripts/setup_smoketest_language.script            	z:/smoketest/setup_smoketest_language.script
-../group/Smoketest_AppArchitecture.iby              /epoc32/rom/include/Smoketest_AppArchitecture.iby
+../group/Smoketest_localisation.iby              /epoc32/rom/include/Smoketest_localisation.iby
