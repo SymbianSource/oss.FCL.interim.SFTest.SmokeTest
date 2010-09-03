@@ -161,6 +161,25 @@
 			<type>NonTestExecuteTask</type>
 			<parameters>
 				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_language.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\smoketest_language.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_language.htm" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
 				<parameter name="parameters" value="z:\smoketest\setup_smoketest_bitmap.script" />
 				<parameter name="timeout" value="1200" />
 				<parameter name="local" value="false" />

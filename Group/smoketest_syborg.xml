@@ -31,11 +31,22 @@
                     <device rank="master" alias="Syborg_tef" />
                 </target>
 				<case id="" name="Run GENERIC smoke tests" harness="GENERIC" enabled="true" passrate="100">
-					<step id="" name="smoketest_apploader (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
+					<step name="setup_smoketest_apploader (execute)" passrate="100" id="" enabled="true" significant="true" harness="GENERIC">
+						<command>execute</command>
+						<params>
+							<param file="testexecute.exe" />
+							<param parameters="z:\smoketest\setup_smoketest_apploader.script" />
+							<param result-file="c:\logs\testexecute\setup_smoketest_apploader.htm" />
+							<param timeout="1200" />
+							<param parser="TEFTestResultParser" />
+							<param leave-old-result="true" />
+						</params>
+					</step>
+					<step id="" name="smoketest_apploader (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
-							<param parameters="c:\smoketest\smoketest_apploader.script"/>
+							<param parameters="z:\smoketest\smoketest_apploader.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_apploader.htm"/>
 							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
@@ -64,91 +75,212 @@
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="smoketest_contacts (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
+					<step name="setup_smoketest_contacts (execute)" passrate="100" id="" enabled="true" significant="true" harness="GENERIC">
+						<command>execute</command>
+						<params>
+							<param file="testexecute.exe" />
+							<param parameters="z:\smoketest\setup_smoketest_contacts.script" />
+							<param result-file="c:\logs\testexecute\setup_smoketest_contacts.htm" />
+							<param timeout="1200" />
+							<param parser="TEFTestResultParser" />
+							<param leave-old-result="true" />
+						</params>
+					</step>
+					<step id="" name="smoketest_contacts (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
-							<param parameters="c:\smoketest\smoketest_contacts.script"/>
+							<param parameters="z:\smoketest\smoketest_contacts.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_contacts.htm"/>
 							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="smoketest_mess (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
+					<step name="setup_smoketest_mess (execute)" passrate="100" id="" enabled="true" significant="true" harness="GENERIC">
+						<command>execute</command>
+						<params>
+							<param file="testexecute.exe" />
+							<param parameters="z:\smoketest\setup_smoketest_mess.script" />
+							<param result-file="c:\logs\testexecute\setup_smoketest_mess.htm" />
+							<param timeout="1200" />
+							<param parser="TEFTestResultParser" />
+							<param leave-old-result="true" />
+						</params>
+					</step>
+					<step id="" name="smoketest_mess (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
-							<param parameters="c:\smoketest\smoketest_mess.script"/>
+							<param parameters="z:\smoketest\smoketest_mess.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_mess.htm"/>
 							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="smoketest_timew (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
+					<step name="setup_smoketest_timew (execute)" passrate="100" id="" enabled="true" significant="true" harness="GENERIC">
+						<command>execute</command>
+						<params>
+							<param file="testexecute.exe" />
+							<param parameters="z:\smoketest\setup_smoketest_timew.script" />
+							<param result-file="c:\logs\testexecute\setup_smoketest_timew.htm" />
+							<param timeout="1200" />
+							<param parser="TEFTestResultParser" />
+							<param leave-old-result="true" />
+						</params>
+					</step>
+					<step id="" name="smoketest_timew (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
-							<param parameters="c:\smoketest\smoketest_timew.script"/>
+							<param parameters="z:\smoketest\smoketest_timew.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_timew.htm"/>
 							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="smoketest_email (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
+					<step name="setup_smoketest_email (execute)" passrate="100" id="" enabled="true" significant="true" harness="GENERIC">
+						<command>execute</command>
+						<params>
+							<param file="testexecute.exe" />
+							<param parameters="z:\smoketest\setup_smoketest_email.script" />
+							<param result-file="c:\logs\testexecute\setup_smoketest_email.htm" />
+							<param timeout="1200" />
+							<param parser="TEFTestResultParser" />
+							<param leave-old-result="true" />
+						</params>
+					</step>
+					<step id="" name="smoketest_email (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
-							<param parameters="c:\smoketest\smoketest_email.script"/>
+							<param parameters="z:\smoketest\smoketest_email.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_email.htm"/>
 							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="smoketest_lbs (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
+					<step name="setup_smoketest_lbs (execute)" passrate="100" id="" enabled="true" significant="true" harness="GENERIC">
+						<command>execute</command>
+						<params>
+							<param file="testexecute.exe" />
+							<param parameters="z:\smoketest\setup_smoketest_lbs.script" />
+							<param result-file="c:\logs\testexecute\setup_smoketest_lbs.htm" />
+							<param timeout="1200" />
+							<param parser="TEFTestResultParser" />
+							<param leave-old-result="true" />
+						</params>
+					</step>
+					<step id="" name="smoketest_lbs (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
-							<param parameters="c:\smoketest\smoketest_lbs.script"/>
+							<param parameters="z:\smoketest\smoketest_lbs.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_lbs.htm"/>
 							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="smoketest_language (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
+					<step name="setup_smoketest_language (execute)" passrate="100" id="" enabled="true" significant="true" harness="GENERIC">
+						<command>execute</command>
+						<params>
+							<param file="testexecute.exe" />
+							<param parameters="z:\smoketest\setup_smoketest_language.script" />
+							<param result-file="c:\logs\testexecute\setup_smoketest_language.htm" />
+							<param timeout="1200" />
+							<param parser="TEFTestResultParser" />
+							<param leave-old-result="true" />
+						</params>
+					</step>
+					<step id="" name="smoketest_language (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
-							<param parameters="c:\smoketest\smoketest_language.script"/>
+							<param parameters="z:\smoketest\smoketest_language.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_language.htm"/>
 							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="smoketest_bitmap (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
+					<step name="setup_smoketest_bitmap (execute)" passrate="100" id="" enabled="true" significant="true" harness="GENERIC">
+						<command>execute</command>
+						<params>
+							<param file="testexecute.exe" />
+							<param parameters="z:\smoketest\setup_smoketest_bitmap.script" />
+							<param result-file="c:\logs\testexecute\setup_smoketest_bitmap.htm" />
+							<param timeout="1200" />
+							<param parser="TEFTestResultParser" />
+							<param leave-old-result="true" />
+						</params>
+					</step>
+					<step id="" name="smoketest_bitmap (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
-							<param parameters="c:\smoketest\smoketest_bitmap.script"/>
+							<param parameters="z:\smoketest\smoketest_bitmap.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_bitmap.htm"/>
 							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
 					</step>
-					<step id="" name="smoketest_http (execute)" harness="GENERIC" enabled="false" passrate="100" significant="true">
+					<step name="setup_smoketest_http (execute)" passrate="100" id="" enabled="true" significant="true" harness="GENERIC">
+						<command>execute</command>
+						<params>
+							<param file="testexecute.exe" />
+							<param parameters="z:\smoketest\setup_smoketest_http.script" />
+							<param result-file="c:\logs\testexecute\setup_smoketest_http.htm" />
+							<param timeout="1200" />
+							<param parser="TEFTestResultParser" />
+							<param leave-old-result="true" />
+						</params>
+					</step>
+					<step id="" name="smoketest_http (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="testexecute.exe"/>
-							<param parameters="c:\smoketest\smoketest_http.script"/>
+							<param parameters="z:\smoketest\smoketest_http.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_http.htm"/>
 							<param timeout="1200"/>
 							<param parser="TEFTestResultParser"/>
+							<param leave-old-result="true"/>
+						</params>
+					</step>
+					<step id="" name="tst_smoke_qapplication (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
+						<command>execute</command>
+						<params>
+							<param file="tst_smoke_qapplication.exe"/>
+							<param parameters="-lightxml -o c:\logs\tst_smoke_qapplication.xml"/>
+							<param result-file="c:\logs\tst_smoke_qapplication.xml"/>
+							<param timeout="1200"/>
+							<param parser="QTestResultParser"/>
+							<param leave-old-result="true"/>
+						</params>
+					</step>
+					<step id="" name="tst_smoke_qwidget (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
+						<command>execute</command>
+						<params>
+							<param file="tst_smoke_qwidget.exe"/>
+							<param parameters="-lightxml -o c:\logs\tst_smoke_qwidget.xml"/>
+							<param result-file="c:\logs\tst_smoke_qwidget.xml"/>
+							<param timeout="1200"/>
+							<param parser="QTestResultParser"/>
+							<param leave-old-result="true"/>
+						</params>
+					</step>
+					<step id="" name="tst_smoke_qtgestures (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
+						<command>execute</command>
+						<params>
+							<param file="tst_smoke_qtgestures.exe"/>
+							<param parameters="-lightxml -o c:\logs\tst_smoke_qtgestures.xml"/>
+							<param result-file="c:\logs\tst_smoke_qtgestures.xml"/>
+							<param timeout="1200"/>
+							<param parser="QTestResultParser"/>
 							<param leave-old-result="true"/>
 						</params>
 					</step>
@@ -177,38 +309,38 @@
                             <param dir="c:\spd_logs\xml"/> 
                         </params>
                     </step>
-					<step id="" name="ProfileSmokeTestModule (execute)" harness="ATSINTERFACE" enabled="false" passrate="100" significant="true">
+					<step id="" name="ProfileSmokeTestModule (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="atsinterface.exe"/>
-							<param parameters="-testmodule testscripter -config c:\smoketest\ProfileSmokeTestModule.cfg"/>
+							<param parameters="-testmodule testscripter -config z:\smoketest\ProfileSmokeTestModule.cfg"/>
 							<param result-file="c:\spd_logs\xml\testscripter.xml"/>
 							<param timeout="1200"/>
 						</params>
 					</step>
-					<step id="" name="smoketest_notepad (execute)" harness="ATSINTERFACE" enabled="false" passrate="100" significant="true">
+					<step id="" name="smoketest_notepad (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="atsinterface.exe"/>
-							<param parameters="-testmodule testcombiner -config c:\smoketest\smoketest_notepad.cfg"/>
+							<param parameters="-testmodule testcombiner -config z:\smoketest\smoketest_notepad.cfg"/>
 							<param result-file="c:\spd_logs\xml\testcombiner.xml"/>
 							<param timeout="1200"/>
 						</params>
 					</step>
-					<step id="" name="AppInstallSmokeTestModule (execute)" harness="ATSINTERFACE" enabled="false" passrate="100" significant="true">
+					<step id="" name="AppInstallSmokeTestModule (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="atsinterface.exe"/>
-							<param parameters="-testmodule testscripter -config c:\smoketest\AppInstallSmokeTestModule.cfg"/>
+							<param parameters="-testmodule testscripter -config z:\smoketest\AppInstallSmokeTestModule.cfg"/>
 							<param result-file="c:\spd_logs\xml\testscripter.xml"/>
 							<param timeout="1200"/>
 						</params>
 					</step>
-					<step id="" name="smoketest_uiresources (execute)" harness="ATSINTERFACE" enabled="false" passrate="100" significant="true">
+					<step id="" name="smoketest_uiresources (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="atsinterface.exe"/>
-							<param parameters="-testmodule testcombiner -config c:\smoketest\smoketest_uiresources.cfg"/>
+							<param parameters="-testmodule testcombiner -config z:\smoketest\smoketest_uiresources.cfg"/>
 							<param result-file="c:\spd_logs\xml\testcombiner.xml"/>
 							<param timeout="1200"/>
 						</params>
@@ -222,11 +354,11 @@
 							<param timeout="1200"/>
 						</params>
 					</step>					
-					<step id="" name="ui_browser_control_smoke (execute)" harness="ATSINTERFACE" enabled="false" passrate="100" significant="true">
+					<step id="" name="ui_browser_control_smoke (execute)" harness="ATSINTERFACE" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
 							<param file="atsinterface.exe"/>
-							<param parameters="-testmodule testscripter -config c:\smoketest\ui_browser_control_smoke.cfg"/>
+							<param parameters="-testmodule testscripter -config z:\smoketest\ui_browser_control_smoke.cfg"/>
 							<param result-file="c:\spd_logs\xml\testscripter.xml"/>
 							<param timeout="1500"/>
 						</params>
@@ -235,7 +367,7 @@
 						<command>execute</command>
 						<params>
 							<param file="atsinterface.exe"/>
-							<param parameters="-testmodule testcombiner -config c:\smoketest\MediaMgmtSmokeTestModule.cfg"/>
+							<param parameters="-testmodule testcombiner -config z:\smoketest\MediaMgmtSmokeTestModule.cfg"/>
 							<param result-file="c:\spd_logs\xml\testcombiner.xml"/>
 							<param timeout="1200"/>
 						</params>
