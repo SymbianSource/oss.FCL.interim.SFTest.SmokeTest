@@ -195,6 +195,7 @@
 				<parameter name="timeout" value="1200" />
 			</parameters>
 		</task>
+<!-- Http test hangs due to ethernet not configured
 		<task agents="target">
 			<type>NonTestExecuteTask</type>
 			<parameters>
@@ -214,6 +215,7 @@
 				<parameter name="timeout" value="1200" />
 			</parameters>
 		</task>
+-->
 		<task agents="target">
 			<type>ExecutableTestCaseTask</type>
 			<parameters>
@@ -231,7 +233,7 @@
 				<parameter name="parameters" value="-testmodule testcombiner -config z:\smoketest\smoketest_notepad.cfg" />
 				<parameter name="parser" value="STIFXMLParser" />
 				<parameter name="result-file" value="c:\spd_logs\xml\testcombiner.xml" />
-				<parameter name="timeout" value="1200" />
+				<parameter name="timeout" value="3600" />
 			</parameters>
 		</task>
 		<task agents="target">
