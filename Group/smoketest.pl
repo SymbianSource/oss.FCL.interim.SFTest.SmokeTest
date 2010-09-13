@@ -63,6 +63,8 @@ unlink "smoketest.zip";
 rmtree "temp";
 mkpath "temp";
 
+my $epoc=$ENV{'EPOCROOT'} . "epoc32/";
+
 if ($target eq "WINSCW") { # Build ATS test drop for Emulator.
 	mkpath "temp/smoketest/general";
 	mkpath "temp/smoketest/winscw_udeb";
@@ -78,7 +80,6 @@ if ($target eq "WINSCW") { # Build ATS test drop for Emulator.
 	mkpath "temp/smoketest/ethernet/general";
 	mkpath "temp/smoketest/web/general";
 
-	my $epoc=$ENV{'EPOCROOT'} . "epoc32/";
 	if (lc($ats_version) eq "ats3") { copy("smoketest.xml",				"temp/test.xml"); } # Use ATS3 test plan.
 	if (lc($ats_version) eq "ats4") { copy("ats4_smoketest.xml",		"temp/test.xml"); } # Use ATS4 test plan.
 	copy($epoc . "data/z/smoketest/smoketest_agenda.ini",				"temp/smoketest/general/smoketest_agenda.ini");
