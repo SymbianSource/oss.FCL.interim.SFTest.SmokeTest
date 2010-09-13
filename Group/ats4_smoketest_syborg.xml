@@ -18,31 +18,40 @@
 				</parameters>
 			</task>
 			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\general\*" name="src"/>
+					<parameter value="c:\smoketest\" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\emailmessage\general\20KBody.txt" name="src"/>
+					<parameter value="c:\smoketest\emailmessage\20KBody.txt" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\emailsettings\general\popsettings_test908.txt" name="src"/>
+					<parameter value="c:\smoketest\emailsettings\popsettings_test908.txt" name="dst"/>
+				</parameters>
+			</task>	
+			<task agents="target">
+				<type>FileUploadTask</type>
+				<parameters>
+					<parameter value="smoketest\web\general\loadtest2.html" name="src"/>
+					<parameter value="c:\smoketest\web\loadtest2.html" name="dst"/>
+				</parameters>
+			</task>
+			<task agents="target">
 				<type>CreateDirTask</type>
 				<parameters>
 					<parameter name="dir" value="c:\spd_logs\xml" />
 				</parameters>
 			</task>
 		</initialization>
-		<task agents="target">
-			<type>NonTestExecuteTask</type>
-			<parameters>
-				<parameter name="file" value="testexecute.exe"/>
-				<parameter name="parameters" value="z:\smoketest\setup_smoketest_apploader.script" />
-				<parameter name="timeout" value="1200" />
-				<parameter name="local" value="false" />
-			</parameters>
-		</task>
-		<task agents="target">
-			<type>ExecutableTestCaseTask</type>
-			<parameters>
-				<parameter name="file" value="testexecute.exe"/>
-				<parameter name="parameters" value="z:\smoketest\smoketest_apploader.script" />
-				<parameter name="parser" value="TEFResultParser" />
-				<parameter name="result-file" value="c:\logs\testexecute\smoketest_apploader.htm" />
-				<parameter name="timeout" value="1200" />
-			</parameters>
-		</task>
 		<task agents="target">
 			<type>NonTestExecuteTask</type>
 			<parameters>
@@ -246,6 +255,16 @@
 				<parameter name="timeout" value="1200" />
 			</parameters>
 		</task>
+<!-- Temporary fix for limited data transfer on Syborg: Copy jpg file from z: to c: drive -->
+		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_uiresources.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
+			</parameters>
+		</task>
 		<task agents="target">
 			<type>ExecutableTestCaseTask</type>
 			<parameters>
@@ -300,6 +319,28 @@
 				<parameter name="file" value="tst_smoke_qtgestures.exe"/>
 				<parameter name="parameters" value="-lightxml -o c:\logs\tst_smoke_qtgestures.xml" />
 				<parameter name="result-file" value="c:\logs\tst_smoke_qtgestures.xml" />
+				<parameter name="timeout" value="1200" />
+			</parameters>
+		</task>
+<!-- apploader tests moved to the end of this test plan - launching eshell causes problems -->
+<!-- Setup script not needed for apploader as ini file uploaded (initialization section)
+		<task agents="target">
+			<type>NonTestExecuteTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\setup_smoketest_apploader.script" />
+				<parameter name="timeout" value="1200" />
+				<parameter name="local" value="false" />
+			</parameters>
+		</task>
+-->
+		<task agents="target">
+			<type>ExecutableTestCaseTask</type>
+			<parameters>
+				<parameter name="file" value="testexecute.exe"/>
+				<parameter name="parameters" value="z:\smoketest\smoketest_apploader.script" />
+				<parameter name="parser" value="TEFResultParser" />
+				<parameter name="result-file" value="c:\logs\testexecute\smoketest_apploader.htm" />
 				<parameter name="timeout" value="1200" />
 			</parameters>
 		</task>

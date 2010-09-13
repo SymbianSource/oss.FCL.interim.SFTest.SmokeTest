@@ -30,6 +30,8 @@ PRJ_TESTEXPORTS
 ../conf/smoketest_uiresources.cfg	c:/smoketest/smoketest_uiresources.cfg
 ../conf/ui_testsdkskinsu.cfg		c:/smoketest/ui_testsdkskinsu.cfg
 ../conf/ui_testsdkskinswu.cfg		c:/smoketest/ui_testsdkskinswu.cfg
+// Temporary fix for limited data transfer on Syborg
+../scripts/setup_smoketest_uiresources.script	z:/smoketest/setup_smoketest_uiresources.script
 // Wallpaper image file
 ../testdata/wallpaper/symbian_01_320x480.jpg	c:/smoketest/wallpaper/symbian_01_320x480.jpg
 

@@ -31,4 +31,5 @@ PRJ_TESTEXPORTS
 #ifndef _COMMON_EMAIL_FILES_
 #define _COMMON_EMAIL_FILES_
 ../testdata/EmailMessage/20KBody.txt	z:/smoketest/EmailMessage/20KBody.txt
+../testdata/EmailMessage/20KBody_syborg.txt	z:/smoketest/EmailMessage/20KBody_syborg.txt
 #endif //End of _COMMON_EMAIL_FILES_

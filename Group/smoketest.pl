@@ -202,8 +202,22 @@ if ($target eq "WINSCW") { # Build ATS test drop for Emulator.
 	copy($epoc . "release/winscw/udeb/tst_smoke_qtgestures.exe",		"temp/smoketest/winscw_udeb/tst_smoke_qtgestures.exe");
 }
 elsif ($target eq "SYBORG") { # Build ATS test drop for Syborg.
+	mkpath "temp/smoketest/general";
+	mkpath "temp/smoketest/emailmessage/general";
+	mkpath "temp/smoketest/emailsettings/general";
+	mkpath "temp/smoketest/web/general";
+
 	if (lc($ats_version) eq "ats3") { copy("smoketest_syborg.xml",		"temp/test.xml"); } # Use ATS3 test plan.
 	if (lc($ats_version) eq "ats4") { copy("ats4_smoketest_syborg.xml",	"temp/test.xml"); } # Use ATS4 test plan.
+	copy($epoc . "data/z/smoketest/smoketest_apploader_syborg.ini",		"temp/smoketest/general/smoketest_apploader.ini");
+	copy($epoc . "data/z/smoketest/MachineName.txt",					"temp/smoketest/general/MachineName.txt");
+	copy($epoc . "data/z/smoketest/emailmessage/20KBody_syborg.txt",	"temp/smoketest/emailmessage/general/20KBody.txt");
+	copy($epoc . "data/z/smoketest/emailsettings/popsettings_test908.txt",	"temp/smoketest/emailsettings/general/popsettings_test908.txt");
+	copy($epoc . "data/c/smoketest/ui_TestNpdApi.cfg",					"temp/smoketest/general/ui_TestNpdApi.cfg");
+	copy($epoc . "data/c/smoketest/ui_testsdkskinsu.cfg",				"temp/smoketest/general/ui_testsdkskinsu.cfg");
+	copy($epoc . "data/c/smoketest/ui_testsdkskinswu.cfg",				"temp/smoketest/general/ui_testsdkskinswu.cfg");
+	copy($epoc . "winscw/c/smoketest/UI_MediaMgmtSmokeTestModule.cfg",  "temp/smoketest/general/UI_MediaMgmtSmokeTestModule.cfg");
+	copy($epoc . "data/c/smoketest/web/loadtest2.html",					"temp/smoketest/web/general/loadtest2.html");
 }
 
 system("7z a -tzip smoketest.zip ./temp/*");

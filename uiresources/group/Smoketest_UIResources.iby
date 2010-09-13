@@ -8,4 +8,5 @@ data=EPOCROOT##epoc32\data\c\smoketest\smoketest_uiresources.cfg 	      smoketes
 data=EPOCROOT##epoc32\data\c\smoketest\ui_testsdkskinsu.cfg 	      smoketest\ui_testsdkskinsu.cfg
 data=EPOCROOT##epoc32\data\c\smoketest\ui_testsdkskinswu.cfg 	      smoketest\ui_testsdkskinswu.cfg
 data=EPOCROOT##epoc32\data\c\smoketest\wallpaper\symbian_01_320x480.jpg 	      smoketest\wallpaper\symbian_01_320x480.jpg 
+data=EPOCROOT##epoc32\data\z\smoketest\setup_smoketest_uiresources.script 	      smoketest\setup_smoketest_uiresources.script
 #endif //SMOKETEST_UIRESOURCES_IBY

@@ -21,6 +21,7 @@ Smoketest_Apploader.iby	/epoc32/rom/include/Smoketest_Apploader.iby
 ..\scripts\setup_smoketest_apploader.script	z:\smoketest\setup_smoketest_apploader.script
 ..\scripts\smoketest_apploader.script		z:\smoketest\smoketest_apploader.script
 ..\testdata\smoketest_apploader.ini			z:\smoketest\smoketest_apploader.ini
+..\testdata\smoketest_apploader_syborg.ini	z:\smoketest\smoketest_apploader_syborg.ini
 
 PRJ_TESTMMPFILES
 smoketest_apploader.mmp
