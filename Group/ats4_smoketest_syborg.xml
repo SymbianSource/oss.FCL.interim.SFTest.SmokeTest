@@ -245,11 +245,12 @@
 				<parameter name="timeout" value="3600" />
 			</parameters>
 		</task>
+<!-- AppInstallSmokeTestModule script run from c: drive (after being transferred to Syborg) -->
 		<task agents="target">
 			<type>ExecutableTestCaseTask</type>
 			<parameters>
 				<parameter name="file" value="atsinterface.exe"/>
-				<parameter name="parameters" value="-testmodule testscripter -config z:\smoketest\AppInstallSmokeTestModule.cfg" />
+				<parameter name="parameters" value="-testmodule testscripter -config c:\smoketest\AppInstallSmokeTestModule.cfg" />
 				<parameter name="parser" value="STIFXMLParser" />
 				<parameter name="result-file" value="c:\spd_logs\xml\testscripter.xml" />
 				<parameter name="timeout" value="1200" />

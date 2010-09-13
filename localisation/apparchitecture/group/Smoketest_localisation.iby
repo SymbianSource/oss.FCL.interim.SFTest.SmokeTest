@@ -6,7 +6,7 @@ file=ABI_DIR\DEBUG_DIR\appfwk_test_appui.dll	System\libs\appfwk_test_appui.dll
 file=ABI_DIR\DEBUG_DIR\appfwk_test_utils.dll	System\libs\appfwk_test_utils.dll
 
 file=ABI_DIR\DEBUG_DIR\apparctestserver.exe		System\libs\apparctestserver.exe
-file=ABI_DIR\DEBUG_DIR\tstapp_embedded.dll		System\libs\tstapp_embedded.dll
+
 file=ABI_DIR\DEBUG_DIR\tstapp.exe				System\libs\tstapp.exe
 file=ABI_DIR\DEBUG_DIR\ticonloaderandiconarrayforleaks.dll	System\libs\ticonloaderandiconarrayforleaks.dll
 

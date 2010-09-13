@@ -214,6 +214,7 @@ elsif ($target eq "SYBORG") { # Build ATS test drop for Syborg.
 	copy($epoc . "data/z/smoketest/MachineName.txt",					"temp/smoketest/general/MachineName.txt");
 	copy($epoc . "data/z/smoketest/emailmessage/20KBody_syborg.txt",	"temp/smoketest/emailmessage/general/20KBody.txt");
 	copy($epoc . "data/z/smoketest/emailsettings/popsettings_test908.txt",	"temp/smoketest/emailsettings/general/popsettings_test908.txt");
+	copy($epoc . "winscw/c/smoketest/AppInstallSmokeTestModule_z.cfg",	"temp/smoketest/general/AppInstallSmokeTestModule.cfg");
 	copy($epoc . "data/c/smoketest/ui_TestNpdApi.cfg",					"temp/smoketest/general/ui_TestNpdApi.cfg");
 	copy($epoc . "data/c/smoketest/ui_testsdkskinsu.cfg",				"temp/smoketest/general/ui_testsdkskinsu.cfg");
 	copy($epoc . "data/c/smoketest/ui_testsdkskinswu.cfg",				"temp/smoketest/general/ui_testsdkskinswu.cfg");
