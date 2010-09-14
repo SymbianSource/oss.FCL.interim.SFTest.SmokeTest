@@ -44,6 +44,7 @@ data=EPOCROOT##epoc32\data\Z\private\10003a3f\apps\T_groupname_reg.rsc	   	priva
 data=EPOCROOT##epoc32\data\Z\private\10003a3f\apps\T_groupnamever1_reg.rsc  private\10003a3f\apps\T_groupnamever1_reg.rsc
 data=EPOCROOT##epoc32\data\Z\private\10003a3f\apps\T_groupnamever2_reg.rsc  private\10003a3f\apps\T_groupnamever2_reg.rsc
 ECOM_PLUGIN(tstapp_embedded.dll,10004c66.rsc)
+data=EPOCROOT##epoc32\data\Z\resource\plugins\tstapp_embedded.rsc	   		resource\plugins\tstapp_embedded.rsc
 data=EPOCROOT##epoc32\data\Z\private\10003a3f\import\apps\tstapp_reg.rsc	private\10003a3f\import\apps\tstapp_reg.rsc
 data=ZRESOURCE\apps\tstapp.rsc 						Resource\apps\tstapp.rsc
 data=ZRESOURCE\apps\tstapp_loc.r01 					Resource\apps\tstapp_loc.r01
@@ -52,5 +53,6 @@ data=ZRESOURCE\apps\tstapp_loc.r03 					Resource\apps\tstapp_loc.r03
 data=ZRESOURCE\apps\tstapp_loc.r04 					Resource\apps\tstapp_loc.r04
 data=ZRESOURCE\apps\tstapp_loc.r05 					Resource\apps\tstapp_loc.r05
 data=ZRESOURCE\apps\tstapp_loc.rsc 					Resource\apps\tstapp_loc.rsc
+data=t_rapalssessionstep.rsc						t_rapalssessionstep.rsc
 
 #endif //SMOKETEST_LOCALISATION_IBY
