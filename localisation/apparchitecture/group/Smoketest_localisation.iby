@@ -53,6 +53,6 @@ data=ZRESOURCE\apps\tstapp_loc.r03 					Resource\apps\tstapp_loc.r03
 data=ZRESOURCE\apps\tstapp_loc.r04 					Resource\apps\tstapp_loc.r04
 data=ZRESOURCE\apps\tstapp_loc.r05 					Resource\apps\tstapp_loc.r05
 data=ZRESOURCE\apps\tstapp_loc.rsc 					Resource\apps\tstapp_loc.rsc
-data=ZSYSTEM\test\t_rapalssessionstep\t_rapalssessionstep.rsc						system\test\t_rapalssessionstep\t_rapalssessionstep.rsc
+data=ZSYSTEM\test\t_rapalssessionstep\t_rapalssessionstep.rsc				system\test\t_rapalssessionstep\t_rapalssessionstep.rsc
 
 #endif //SMOKETEST_LOCALISATION_IBY
