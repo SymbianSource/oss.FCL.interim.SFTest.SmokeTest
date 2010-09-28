@@ -3,7 +3,7 @@
 
 
 file=ABI_DIR\DEBUG_DIR\AppInstallSmokeTestModule.dll    System\libs\AppInstallSmokeTestModule.dll
-data=EPOCROOT##epoc32\data\c\smoketest\AppInstallSmokeTestModule.cfg	      smoketest\AppInstallSmokeTestModule.cfg
+data=EPOCROOT##epoc32\data\c\smoketest\AppInstallSmokeTestModule_z.cfg	      smoketest\AppInstallSmokeTestModule.cfg
 data=EPOCROOT##epoc32\data\z\smoketest\Appinstall\sistest.sisx	      smoketest\Appinstall\sistest.sisx
 
 #endif //SMOKETEST_APPINSTALL_IBY
