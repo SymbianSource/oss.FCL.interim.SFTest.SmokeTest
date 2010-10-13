@@ -1252,7 +1252,7 @@
 		<file>smoketest/general/ui_TestNpdApi.cfg</file>
         <file>smoketest/winscw_udeb/AppInstallSmokeTestModule.dll</file>
         <file>smoketest/general/AppInstallSmokeTestModule.cfg</file>
-        <file>smoketest/appinstall/general/sistest_winscw.sisx</file>
+        <file>smoketest/appinstall/general/sistest.sisx</file>
 		<file>smoketest/winscw_udeb/testsdkskins.dll</file>		
 		<file>smoketest/general/smoketest_uiresources.cfg</file>
 		<file>smoketest/general/ui_testsdkskinsu.cfg</file>
