@@ -754,36 +754,6 @@
 					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
 						<command>execute</command>
 						<params>
-							<param local="true"/>
-							<param file="perl"/>
-							<param dir="D:\ATS\winscw_smoketest\epoc32\winscw\c"/>
-							<param parameters="delproxy.pl ethernetced.xml"/>
-							<param timeout="1200"/>
-							<param async="false"/>
-						</params>
-					</step>
-					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
-						<command>execute</command>
-						<params>
-							<param local="true"/>
-							<param file="perl"/>
-							<param dir="D:\ATS\winscw_smoketest\epoc32\tools"/>
-							<param parameters="configchange.pl --config ethernetWithCommDB --kernel EKA2 --target winscw --variant UDEB"/>
-							<param timeout="1200"/>
-							<param async="false"/>
-						</params>
-					</step>
-					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
-						<command>execute</command>
-						<params>
-							<param file="dbcreator.exe"/>
-							<param parameters="-dtextshell -- f:c:\S60_32_default_snaps.xml"/>
-							<param timeout="1200"/>
-						</params>
-					</step>
-					<step id="" name="Test Step 2 (execute)" harness="GENERIC" enabled="true" passrate="100" significant="true">
-						<command>execute</command>
-						<params>
 							<param file="testexecute.exe"/>
 							<param parameters="c:\smoketest\smoketest_http.script"/>
 							<param result-file="c:\logs\testexecute\smoketest_http.htm"/>
