@@ -27,7 +27,7 @@ Smoketest_AppInstall.iby	/epoc32/rom/include/Smoketest_AppInstall.iby
 // 'abld test export'
 ../conf/AppInstallSmokeTestModule.cfg	c:/smoketest/AppInstallSmokeTestModule.cfg
 ../conf/AppInstallSmokeTestModule_z.cfg	c:/smoketest/AppInstallSmokeTestModule_z.cfg
-../data/sistest_winscw.sisx				c:/smoketest/appinstall/sistest.sisx
+../data/sistest_winscw.sisx				c:/smoketest/appinstall/sistest_winscw.sisx
 ../data/sistest.sisx                    z:/smoketest/AppInstall/sistest.sisx
 
 PRJ_TESTMMPFILES
