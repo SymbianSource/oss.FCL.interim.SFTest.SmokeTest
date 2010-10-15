@@ -170,6 +170,8 @@ void CHttpEboClientStep::InvokeHttpMethodL(const TDesC8& aUri, RStringF aMethod)
 	
 	// go to the first record 
 	User::LeaveIfError(commDBView->GotoFirstRecord());
+	// go to the next record
+	User::LeaveIfError(commDBView->GotoNextRecord());
 
 	// Declare a prefTableView Object.
 	CCommsDbConnectionPrefTableView::TCommDbIapConnectionPref pref;
